@@ -10,14 +10,50 @@
     ],
     'Bills': [
       'amazon web services',
+      'phone',
+      'internet',
+    ],
+    'Subscriptions': [
+      'spotify',
+      'jetbrains',
+      'netflix',
+    ],
+    'Eunice': [
+      'Food',
+    ],
+    'Haniya': [
+      'Adventures',
+    ],
+    'Transportation': [
+      'fuel',
     ],
   };
   const ITEM_REPLACEMENTS = {
     'Eating out': [
       'noodlebox',
+      'sams grill',
+      'WOK BOX',
     ],
     'Drinks to go': [
       ['tim hortons', (d, i, a) => a === 3.14],
+      'coco fresh tea',
+      'chatime',
+      'gotcha bubble tea',
+      'gongcha',
+    ],
+    'Internet': ['bell canada'],
+    'Phone': ['virgin plus'],
+    'Balance Protection Tax': ['Balance Protection Tax'],
+    'Balance Protection Insurance': ['Balance Protection Ins'],
+    'Spotify': ['Spotify'],
+    'Netflix': ['netflix'],
+    'JetBrains': ['jetbrains'],
+    'Food': ['sp royal canin'],
+    'Adventures': [
+      'the round table',
+    ],
+    'Fuel': [
+      'mobil@',
     ],
   };
 
@@ -39,7 +75,7 @@
   function parseDom(resp) {
     // the starting date
     // const raw = document.querySelector('input[type=date]').value;
-    const raw = '2024-08-10';
+    const raw = '2024-08-01';
     const date_include_left = new Date(raw);
 
     const top = document.createElement('div');
@@ -153,8 +189,15 @@
     all_success_rows.forEach((r) => {
       csv += `${r.date},${r.category},${r.item},${r.amount}\n`;
 
-      const item_class = r.original_item ? 'class="replaced"' : '';
-      result_table.insertAdjacentHTML('beforeend', `<tr><td>${r.date}</td><td>${r.category}</td><td ${item_class}>${r.item}</td><td class="amount">${r.amount}</td></tr>`);
+      const item_class = r.original_item ? 'replaced' : '';
+      result_table.insertAdjacentHTML('beforeend', `
+        <tr>
+          <td>${r.date}</td>
+          <td>${r.category}</td>
+          <td class="item ${item_class}">${r.item}${r.original_item ? ` (${r.original_item}) <span title="Modified by parsing rules" class="material-symbols-outlined">more_horiz</span>` : ''}</td>
+          <td class="amount">${r.amount.toFixed(2)}</td>
+        </tr>
+      `);
     });
     t.value = csv;
 
@@ -196,14 +239,6 @@
 
       return null;
     }
-
-    // const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    // const month = monthNames[dateObj.getMonth()]; // Get month name
-    // const day = dateObj.getDate(); // Get day of the month
-    // const year = dateObj.getFullYear(); // Get full year
-    // const formattedDate = `${month} ${day}, ${year}`;
-
-    // t.value = formattedDate; // Outputs: "Jan 30, 2022"
   }
 
   function getFormattedDate(date) {
