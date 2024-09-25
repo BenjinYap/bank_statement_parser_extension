@@ -1,16 +1,61 @@
 <html>
 <style>
+  * {
+    font-size:inherit;
+  }
+
   html {
     width:750px;
+    font-size:14px;
+  }
+
+  body {
+    font-size:inherit;
+    padding:0 10px;
+    margin:0;
+    background:#efefef;
+  }
+
+  h1 {
+    font-size: 1.2em;
+    font-weight:600;
+  }
+
+  section {
+    padding:10px;
+    margin:10px 0;
+    background:white;
+    border:1px solid #c3c3c3;
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  section h1 {
+    margin:0;
+    border-bottom:1px solid black;
   }
 
   table {
     border-collapse: collapse;
   }
 
+  th {
+    text-align: left;
+    font-weight:600;
+  }
+
   tr, th, td {
-    border:1px solid black;
+    border:1px solid #c3c3c3;
     padding: 5px;
+  }
+
+  #intro p {
+    margin:0;
+  }
+
+  #results button {
+    align-self: flex-start;
   }
 
   .success th {
@@ -22,7 +67,7 @@
     background: #96e093;
   }
 
-  td.amount {
+  table .amount {
     text-align:right;
   }
 
@@ -31,24 +76,36 @@
   }
 </style>
   <body>
-    <label>
-      <input type="date" />
-    </label>
-    <button>Do</button>
-    <div id="meta" class="hidden">
-      <h1></h1>
-    </div>
-    <table id="result-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Category</th>
-          <th>Item</th>
-          <th>Amount</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <section id="intro">
+      <h1>Bank Parserinator</h1>
+      <p>
+        Parsing rows from
+        <label>
+          <input type="date" />
+        </label>
+        to <span id="date-include-right"></span>
+        (inclusive)
+        <button id="parse-button">Parse</button>
+      </p>
+    </section>
+    <section id="meta" class="hidden">
+      <h1>Parsed Tables</h1>
+    </section>
+    <section id="results" class="hidden">
+      <h1>Combined Parsed Rows</h1>
+      <button id="csv-button">Copy CSV</button>
+      <table id="result-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Item</th>
+            <th class="amount">Amount</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
     <textarea></textarea>
   </body>
   <script src="popup.js"></script>

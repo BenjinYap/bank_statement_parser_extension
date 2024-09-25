@@ -21,12 +21,16 @@
     ],
   };
 
+  const date_include_right = new Date();
+  date_include_right.setHours(-1, 0, 0, 0);
+
   const meta = document.querySelector('#meta');
   const t = document.querySelector('textarea');
   const result_table = document.querySelector('#result-table');
-  result_table.addEventListener('click', () => navigator.clipboard.writeText(t.value));
+  document.querySelector('#csv-button').addEventListener('click', () => navigator.clipboard.writeText(t.value));
+  document.querySelector('#date-include-right').innerHTML = getFormattedDate(date_include_right);
 
-  document.querySelector('button').addEventListener('click', async () => {
+  document.querySelector('#parse-button').addEventListener('click', async () => {
     const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
     chrome.tabs.sendMessage(tab.id, {greeting: "hello"}, parseDom);
   });
@@ -35,10 +39,8 @@
   function parseDom(resp) {
     // the starting date
     // const raw = document.querySelector('input[type=date]').value;
-    const raw = '2024-08-29';
+    const raw = '2024-08-10';
     const date_include_left = new Date(raw);
-    const date_include_right = new Date();
-    date_include_right.setHours(-1, 0, 0, 0);
 
     const top = document.createElement('div');
     top.innerHTML = resp;
@@ -195,14 +197,6 @@
       return null;
     }
 
-    function getFormattedDate(date) {
-      let year = date.getFullYear();
-      let month = (1 + date.getMonth()).toString().padStart(2, '0');
-      let day = date.getDate().toString().padStart(2, '0');
-
-      return month + '/' + day + '/' + year;
-  }
-
     // const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     // const month = monthNames[dateObj.getMonth()]; // Get month name
     // const day = dateObj.getDate(); // Get day of the month
@@ -210,5 +204,13 @@
     // const formattedDate = `${month} ${day}, ${year}`;
 
     // t.value = formattedDate; // Outputs: "Jan 30, 2022"
+  }
+
+  function getFormattedDate(date) {
+    let year = date.getFullYear();
+    let month = (1 + date.getMonth()).toString().padStart(2, '0');
+    let day = date.getDate().toString().padStart(2, '0');
+
+    return month + '/' + day + '/' + year;
   }
 })();
