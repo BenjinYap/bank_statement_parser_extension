@@ -33,6 +33,17 @@
       'noodlebox',
       'sams grill',
       'WOK BOX',
+      'lazeez',
+      'fluffy glaze',
+      'kibo market union',
+    ],
+    'Eating out Haniya': [
+      'mcdonald',
+      'wendys',
+      'marble slab',
+      'a&w',
+      'popeyes',
+      'east side marios',
     ],
     'Drinks to go': [
       ['tim hortons', (d, i, a) => a === 3.14],
@@ -40,6 +51,12 @@
       'chatime',
       'gotcha bubble tea',
       'gongcha',
+      'gong cha',
+      ['centurion coffee', (d, i, a) => a === 5.59],
+      ['esso circle', (d, i, a) => a === 2.51],
+    ],
+    'Coffee shop': [
+      'java beans',
     ],
     'Internet': ['bell canada'],
     'Phone': ['virgin plus'],
@@ -51,6 +68,10 @@
     'Food': ['sp royal canin'],
     'Adventures': [
       'the round table',
+      'activate cambridge',
+      'exitus escape room',
+      'sky zone',
+      'claw me baby',
     ],
     'Fuel': [
       'mobil@',
