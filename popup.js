@@ -194,7 +194,7 @@
         <tr>
           <td>${r.date}</td>
           <td>${r.category}</td>
-          <td class="item ${item_class}">${r.item}${r.original_item ? ` (${r.original_item}) <span title="Modified by parsing rules" class="material-symbols-outlined">more_horiz</span>` : ''}</td>
+          <td class="item ${item_class}">${r.item}${r.original_item ? `<span class="original">(${r.original_item})</span> <span title="Modified by parsing rules" class="material-symbols-outlined">more_horiz</span>` : ''}</td>
           <td class="amount">${r.amount.toFixed(2)}</td>
         </tr>
       `);

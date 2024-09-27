@@ -1,6 +1,11 @@
 <html>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 <style>
+  :root {
+    --border-radius:3px;
+    --gutter:0.7em;
+  }
+
   * {
     font-size:inherit;
   }
@@ -12,7 +17,7 @@
 
   body {
     font-size:inherit;
-    padding:0 10px;
+    padding:0 var(--gutter);
     margin:0;
     background:#efefef;
   }
@@ -24,12 +29,13 @@
 
   section {
     padding:10px;
-    margin:10px 0;
+    margin:var(--gutter) 0;
     background:white;
     border:1px solid #c3c3c3;
+    border-radius:var(--border-radius);
     display:flex;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--gutter);
   }
 
   section h1 {
@@ -48,7 +54,7 @@
 
   tr, th, td {
     border:1px solid #c3c3c3;
-    padding: 5px;
+    padding: calc(var(--gutter) / 2);
   }
 
   #intro p {
@@ -67,12 +73,17 @@
   td.item {
     display:flex;
     align-items: center;
-    justify-content: space-between;
     border:none;
+    gap: calc(var(--gutter) / 2);
+  }
+
+  td.item .original {
+    font-size: 0.8em;
   }
 
   td.item .material-symbols-outlined {
     font-size:1.2em;
+    margin-left:auto;
   }
 
   td.replaced {
@@ -96,7 +107,7 @@
     <section id="intro">
       <h1>Bank Parserinator</h1>
       <p>
-        Parsing rows from
+        Parse rows from
         <label>
           <input type="date" />
         </label>
@@ -106,10 +117,10 @@
       </p>
     </section>
     <section id="meta" class="hidden">
-      <h1>Parsed Tables</h1>
+      <h1>Parsed Meta</h1>
     </section>
     <section id="results" class="hidden">
-      <h1>Combined Parsed Rows</h1>
+      <h1>Parsed Rows</h1>
       <button id="csv-button">Copy CSV</button>
       <table id="result-table">
         <thead>
