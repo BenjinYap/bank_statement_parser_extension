@@ -1,9 +1,4 @@
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    const awd = document.querySelector('.treetop').innerHTML;
-    sendResponse(awd);
-  }
-);
+
 
 let parse_date_str;
 
@@ -82,5 +77,13 @@ function showPopup (target, date_str) {
 }
 
 function handleClick() {
-
+  // send message to service worker to create the new tab
+  chrome.runtime.sendMessage({
+    action: 'new_tab',
+  }, () => {
+    // tab has been created
+    chrome.runtime.sendMessage({
+      bob: 'uncle',
+    });
+  });
 }

@@ -13,5 +13,8 @@
         "<all_urls>"
       ]
     }
-  ]
+  ],
+  "background": {
+    "service_worker": "service_worker.js"
+  }
 }
