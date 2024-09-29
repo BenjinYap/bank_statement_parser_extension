@@ -91,7 +91,7 @@
     const [tab] = await chrome.tabs.query({active: true, lastFocusedWindow: true});
     chrome.tabs.sendMessage(tab.id, {greeting: "hello"}, parseDom);
   });
-  document.querySelector('button').click();
+  // document.querySelector('button').click();
 
   function parseDom(resp) {
     // the starting date
