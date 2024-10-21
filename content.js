@@ -1,3 +1,4 @@
+// noinspection JSUnresolvedReference,JSDeprecatedSymbols
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     const awd = document.querySelector('.treetop').innerHTML;
@@ -88,10 +89,12 @@ function showPopup (target, date_str) {
 
 function handleClick() {
   // send message to service worker to create the new tab
+  // noinspection JSUnresolvedReference
   chrome.runtime.sendMessage({
     action: 'new_tab',
   }, () => {
     // tab has been created
+    // noinspection JSUnresolvedReference
     chrome.runtime.sendMessage({
       action: 'tab_opened',
       html: document.querySelector('.treetop')?.innerHTML,
