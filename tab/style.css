@@ -1,0 +1,101 @@
+:root {
+  --border-radius:3px;
+  --gutter:0.7em;
+}
+
+* {
+  font-size:inherit;
+}
+
+html {
+  width:750px;
+  font-size:14px;
+}
+
+body {
+  font-size:inherit;
+  padding:0 var(--gutter);
+  margin:0;
+  background:#efefef;
+}
+
+h1 {
+  font-size: 1.2em;
+  font-weight:600;
+}
+
+section {
+  padding:10px;
+  margin:var(--gutter) 0;
+  background:white;
+  border:1px solid #c3c3c3;
+  border-radius:var(--border-radius);
+  display:flex;
+  flex-direction: column;
+  gap: var(--gutter);
+}
+
+section h1 {
+  margin:0;
+  border-bottom:1px solid black;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  font-weight:600;
+}
+
+tr, th, td {
+  border:1px solid #c3c3c3;
+  padding: calc(var(--gutter) / 2);
+}
+
+#intro p {
+  margin:0;
+}
+
+#results button {
+  align-self: flex-start;
+}
+
+.success th {
+  width: 1px;
+  white-space: nowrap;
+}
+
+td.item {
+  display:flex;
+  align-items: center;
+  border:none;
+  gap: calc(var(--gutter) / 2);
+}
+
+td.item .original {
+  font-size: 0.8em;
+}
+
+td.item .material-symbols-outlined {
+  font-size:1.2em;
+  margin-left:auto;
+}
+
+td.replaced {
+  background: #d5edff;
+}
+
+table .amount {
+  text-align:right;
+}
+
+textarea {
+  display:none;
+}
+
+.material-symbols-outlined {
+  font-size:inherit;
+  cursor: default;
+}

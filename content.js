@@ -67,6 +67,10 @@ window.addEventListener('load', () => {
       popup.classList.add('hidden');
     }
   });
+
+  // TESTING
+  parse_date_str = 'Sep 10, 2024';
+  handleClick();
 });
 
 function showPopup (target, date_str) {

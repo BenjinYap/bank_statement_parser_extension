@@ -1,3 +1,4 @@
+
 const CATEGORY_REPLACEMENTS = {
   'Food': [
     'drinks to go',
