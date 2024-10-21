@@ -96,7 +96,7 @@
   function parseDom(resp) {
     // the starting date
     // const raw = document.querySelector('input[type=date]').value;
-    const raw = '2024-08-01';
+    const raw = '2024-09-15';
     const date_include_left = new Date(raw);
 
     const top = document.createElement('div');

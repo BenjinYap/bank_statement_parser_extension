@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener(
 
           // create the extension tab
           const new_tab = await chrome.tabs.create({
-            active: false,
+            active: true,
             index: tab.index + 1,
             url: chrome.runtime.getURL('bla.html'),
           });

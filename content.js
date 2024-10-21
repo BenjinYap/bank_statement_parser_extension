@@ -1,3 +1,9 @@
+chrome.runtime.onMessage.addListener(
+  function(request, sender, sendResponse) {
+    const awd = document.querySelector('.treetop').innerHTML;
+    sendResponse(awd);
+  }
+);
 
 
 let parse_date_str;
@@ -83,7 +89,9 @@ function handleClick() {
   }, () => {
     // tab has been created
     chrome.runtime.sendMessage({
-      bob: 'uncle',
+      action: 'tab_opened',
+      html: document.querySelector('.treetop')?.innerHTML,
+      date_from: parse_date_str,
     });
   });
 }
