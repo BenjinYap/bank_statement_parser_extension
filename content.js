@@ -70,8 +70,10 @@ window.addEventListener('load', () => {
   });
 
   // TESTING
-  parse_date_str = 'Sep 10, 2024';
-  handleClick();
+  if (document.querySelector('.tduf-account-selector-es-acct-name')) {
+    parse_date_str = 'Sep 10, 2024';
+    handleClick();
+  }
 });
 
 function showPopup (target, date_str) {
