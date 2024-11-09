@@ -26,7 +26,8 @@ chrome.runtime.onMessage.addListener(
           const new_tab = await chrome.tabs.create({
             active: true,
             index: tab.index + 1,
-            url: chrome.runtime.getURL('tab/tab.html'),
+            // url: chrome.runtime.getURL('tab/tab.html'),
+            url: chrome.runtime.getURL('app/dist/index.html'),
           });
 
           // remember important things so we can call after tab loads

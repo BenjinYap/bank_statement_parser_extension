@@ -1,0 +1,21 @@
+:root {
+  --border-radius:3px;
+  --gutter:0.7em;
+}
+
+* {
+  font-size:inherit;
+}
+
+html {
+  width:750px;
+  font-size:14px;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+  font-size:inherit;
+  padding:0 var(--gutter);
+  margin:0;
+  background:#efefef;
+}
