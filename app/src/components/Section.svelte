@@ -4,7 +4,9 @@
 
 <section>
   <h1>{props.title}</h1>
-  {@render props.children()}
+  {#if props.children}
+    {@render props.children()}
+  {/if}
 </section>
 
 <style>

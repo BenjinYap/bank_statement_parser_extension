@@ -19,3 +19,17 @@ body {
   margin:0;
   background:#efefef;
 }
+
+table {
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  font-weight:600;
+}
+
+tr, th, td {
+  border:1px solid #c3c3c3;
+  padding: calc(var(--gutter) / 2);
+}
