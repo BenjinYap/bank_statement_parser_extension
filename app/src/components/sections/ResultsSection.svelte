@@ -2,10 +2,17 @@
   import Section from "../Section.svelte";
 
   let props = $props();
+  let csv = $derived.by(() => {
+    let csv = '';
+    props.rows?.forEach((r) => {
+      csv += `${r.date},${r.category},${r.item},${r.amount}\n`;
+    });
+    return csv;
+  });
 </script>
 
 <Section title="Parsed Rows">
-  <button>Copy CSV</button>
+  <button onclick={() => navigator.clipboard.writeText(csv)}>Copy CSV</button>
   <table>
     <thead>
       <tr>

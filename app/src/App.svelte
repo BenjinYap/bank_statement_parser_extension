@@ -31,7 +31,8 @@
       } else {  // local dev mode
         date_include_left = new Date('Sep 10, 2024');
         dom = mock;
-        resolve();
+        setTimeout(() => resolve(), 100);
+        // resolve();
       }
     });
 
