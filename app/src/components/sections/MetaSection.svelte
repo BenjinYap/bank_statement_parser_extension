@@ -1,6 +1,5 @@
 <script>
   import Section from "../Section.svelte";
-  import { getFormattedDate } from "../../utils/date.mjs";
 
   let props = $props();
 </script>

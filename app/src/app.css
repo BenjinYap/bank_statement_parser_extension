@@ -33,3 +33,8 @@ tr, th, td {
   border:1px solid #c3c3c3;
   padding: calc(var(--gutter) / 2);
 }
+
+.material-symbols-outlined {
+  font-size:inherit;
+  cursor: default;
+}
