@@ -8,8 +8,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        entryFileNames: 'assets/main.js',
-        chunkFileNames: 'assets/main.js',
+        entryFileNames: 'assets/script.js',
+        chunkFileNames: 'assets/script.js',
         assetFileNames: (asset) => {
           const names = (asset.names ?? []).filter((name) => {
             return /\.css$/.test(name ?? '');
