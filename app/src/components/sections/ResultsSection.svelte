@@ -29,9 +29,9 @@
           <td>{row.category}</td>
           <td class="item {row.original_item ? 'replaced' : ''}">
             {row.item}
-            <!--{#if row.original_item}-->
+            {#if row.original_item}
               {@html `<span class="original">(${row.original_item})</span> <span title="Modified by parsing rules" class="material-symbols-outlined">more_horiz</span>`}
-            <!--{/if}-->
+            {/if}
           </td>
           <td class="amount">{row.amount.toFixed(2)}</td>
         </tr>
