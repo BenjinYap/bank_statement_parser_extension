@@ -1,5 +1,7 @@
 <script>
   import Section from "../Section.svelte";
+  import ModifiedRowEditor from "./results_section/ModifiedRowEditor.svelte";
+  import ResultsRow from "./results_section/ResultsRow.svelte";
 
   let props = $props();
   let csv = $derived.by(() => {
@@ -9,35 +11,44 @@
     });
     return csv;
   });
+
+  let selected_row = $state();
+
+  $effect(() => {
+    if (props.rows && !selected_row) {
+      selected_row = props.rows[0];
+    }
+  })
+
 </script>
 
 <Section title="Parsed Rows">
   <button onclick={() => navigator.clipboard.writeText(csv)}>Copy CSV</button>
-  <table>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Category</th>
-        <th>Item</th>
-        <th class="amount">Amount</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each props.rows as row}
+  <div>
+    <table>
+      <thead>
         <tr>
-          <td>{row.date}</td>
-          <td>{row.category}</td>
-          <td class="item {row.original_item ? 'replaced' : ''}">
-            {row.item}
-            {#if row.original_item}
-              {@html `<span class="original">(${row.original_item})</span> <span title="Modified by parsing rules" class="material-symbols-outlined">more_horiz</span>`}
-            {/if}
-          </td>
-          <td class="amount">{row.amount.toFixed(2)}</td>
+          <th>Date</th>
+          <th>Category</th>
+          <th>Item</th>
+          <th class="amount">Amount</th>
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {#each props.rows as row}
+          <ResultsRow
+            row={row}
+            onClick={(r) => selected_row = r}
+          />
+        {/each}
+      </tbody>
+    </table>
+    {#if selected_row}
+      <ModifiedRowEditor
+        row={selected_row}
+      />
+    {/if}
+  </div>
 </Section>
 
 <style>
@@ -45,27 +56,13 @@
     align-self: flex-start;
   }
 
-  .item {
+  div {
     display:flex;
-    align-items: center;
-    border:none;
-    gap: calc(var(--gutter) / 2);
+    align-items: flex-start;
+    gap: var(--gutter);
   }
 
-  td :global(.original) {
-    font-size: 0.8em;
-  }
-
-  td :global(.material-symbols-outlined) {
-    font-size:1.2em;
-    margin-left:auto;
-  }
-
-  .replaced {
-    background: #d5edff;
-  }
-
-  .amount {
-    text-align:right;
+  table {
+    flex: 1;
   }
 </style>

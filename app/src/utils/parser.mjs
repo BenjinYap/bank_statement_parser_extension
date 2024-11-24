@@ -1,5 +1,6 @@
 import { CATEGORY_REPLACEMENTS, doReplacement, ITEM_REPLACEMENTS } from "./replacements.mjs";
 import { getFormattedDate } from "./date.mjs";
+import { ParsedRow } from "../models/ParsedRow.mjs";
 
 export function parseDom (html, date_include_left, date_include_right) {
   const table_stats = [];
@@ -89,17 +90,14 @@ export function parseDom (html, date_include_left, date_include_right) {
 }
 
 function buildSuccessRow(date, item_raw, amount) {
-  const obj = {
-    date: getFormattedDate(date),
-    category: '',
-    item: doReplacement(date, item_raw, amount, ITEM_REPLACEMENTS) ?? item_raw,
-    amount: amount,
-  };
-  obj.category = doReplacement(date, obj.item, amount, CATEGORY_REPLACEMENTS) ?? '';
+  const item = doReplacement(date, item_raw, amount, ITEM_REPLACEMENTS) ?? item_raw;
 
-  // add original item if item was changed
-  if (obj.item !== item_raw) {
-    obj.original_item = item_raw;
-  }
-  return obj;
+  const parsed_row = new ParsedRow(
+    getFormattedDate(date),
+    doReplacement(date, item, amount, CATEGORY_REPLACEMENTS) ?? '',
+    item,
+    amount,
+    item !== item_raw ? item_raw : undefined  // add original item if item was changed
+  );
+  return parsed_row;
 }
