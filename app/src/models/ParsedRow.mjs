@@ -6,20 +6,4 @@ export class ParsedRow {
     this.amount = amount;
     this.original_item = original_item;
   }
-
-  getDate() {
-    return this.date;
-  }
-
-  getCategory() {
-    return this.category;
-  }
-
-  getItem() {
-    return this.item;
-  }
-
-  getAmount() {
-    return this.amount;
-  }
 }

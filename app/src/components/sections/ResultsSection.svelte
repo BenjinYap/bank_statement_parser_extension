@@ -1,25 +1,31 @@
 <script>
+
+  import { ParsedRow } from "../../models/ParsedRow.mjs";
   import Section from "../Section.svelte";
   import ModifiedRowEditor from "./results_section/ModifiedRowEditor.svelte";
   import ResultsRow from "./results_section/ResultsRow.svelte";
 
   let props = $props();
-  let csv = $derived.by(() => {
-    let csv = '';
-    props.rows?.forEach((r) => {
-      csv += `${r.date},${r.category},${r.item},${r.amount}\n`;
-    });
-    return csv;
-  });
+  // let csv = $derived.by(() => {
+  //   let csv = '';
+  //   props.rows?.forEach((r) => {
+  //     csv += `${r.date},${r.category},${r.item},${r.amount}\n`;
+  //   });
+  //   return csv;
+  // });
 
-  let selected_row = $state();
+  let rows = $derived(props.rows);
+  let selected_row_index = $state(-1);
 
   $effect(() => {
-    if (props.rows && !selected_row) {
-      selected_row = props.rows[0];
+    if (rows && selected_row_index === -1) {
+      selected_row_index = 0;
     }
   })
 
+  function handleModifiedRowEditorSave(index, modified_row) {
+    rows.splice(index, 1, modified_row);
+  }
 </script>
 
 <Section title="Parsed Rows">
@@ -35,17 +41,25 @@
         </tr>
       </thead>
       <tbody>
-        {#each props.rows as row}
-          <ResultsRow
-            row={row}
-            onClick={(r) => selected_row = r}
-          />
-        {/each}
+        {#if rows === undefined }
+          <h1>Loading</h1>
+        {:else}
+          {#each rows as row, i}
+            {#key row}
+              <ResultsRow
+                row={row}
+                onclick={() => {selected_row_index = i; console.log(i)}}
+              />
+            {/key}
+          {/each}
+        {/if}
       </tbody>
     </table>
-    {#if selected_row}
+    {#if selected_row_index !== -1}
       <ModifiedRowEditor
-        row={selected_row}
+        row={rows[selected_row_index]}
+        onSave={(r) => handleModifiedRowEditorSave(selected_row_index, r)}
+        onCancel={() => selected_row_index = -1}
       />
     {/if}
   </div>

@@ -10,7 +10,7 @@
   date_include_right.setHours(-1, 0, 0, 0);
 
   let table_stats;
-  let all_success_rows;
+  let all_success_rows = $state(undefined);
 
   (async () => {
     let dom;
@@ -41,6 +41,7 @@
     all_success_rows = table_stats.flatMap(table => table.success_rows);
     // sort by ascending date
     all_success_rows.sort((a, b) => new Date(a.date) > new Date(b.date) ? 1 : -1);
+    all_success_rows = all_success_rows.slice(0, 5);
   })();
 </script>
 
@@ -57,7 +58,7 @@
 <MetaSection
   {table_stats}
 />
-
+<p onclick={() => console.log(all_success_rows)}>awd</p>
 <ResultsSection
   rows={all_success_rows}
 />
