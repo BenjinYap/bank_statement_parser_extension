@@ -1,6 +1,7 @@
 <script>
   import { ParsedRow } from "../../../models/ParsedRow.mjs";
   import { ModifiedRow } from "../../../models/ModifiedRow.svelte.js";
+  import IconButton from "../../IconButton.svelte";
 
   const CATEGORIES = [
     'Bills',
@@ -10,36 +11,49 @@
 
   let { ...props } = $props();
 
-  let row = $derived(props.row instanceof ParsedRow ? new ModifiedRow(props.row) : props.row);
-  let entries = $state(row.entries.map((e) => {
-    return {...e};
-  }));
-
+  // let row = $derived(props.row instanceof ParsedRow ? new ModifiedRow(props.row) : props.row);
+  let row = $derived.by(() => {
+    const awd = props.row instanceof ParsedRow ? new ModifiedRow(props.row) : props.row;
+    console.log('aaa', awd, props.row);
+    return awd;
+    
+  });
+  // let entries = $state(row.entries.map((e) => {
+  //   return {...e};
+  // }));
+  // let entries = $derived.by(() => {
+  //   const awd = row.entries.map((e) => {
+  //     return {...e};
+  //   });
+  //   return awd;
+  // });
+  // let entries = [];
+  
   function handleSave() {
-    row.entries = $state.snapshot(entries);
+    // row.entries = $state.snapshot(entries);
     props.onSave(row);
   }
 </script>
 
 <section>
-  <h2 onclick={() => console.log(entries)}>Modify Row</h2>
+  <h2 onclick={() => console.log(JSON.stringify($state.snapshot(row.entries)))}>Modify Row</h2>
   <table>
     <tbody>
       <tr>
-        <th onclick={() => entries.push({category: 'a', item: 'hu', amount:1})}>Date</th>
-        <td>{row.date}</td>
+        <th onclick={() => row.entries.push({category: 'a', item: 'hu', amount:1})}>Date</th>
+        <td>{row instanceof ParsedRow ? row.date : row.parsed_row.date}</td>
       </tr>
       <tr>
         <th>Category</th>
-        <td>{row.category}</td>
+        <td>{row instanceof ParsedRow ? row.category : row.parsed_row.category}</td>
       </tr>
       <tr>
         <th>Item</th>
-        <td>{row.item}</td>
+        <td>{row instanceof ParsedRow ? row.item : row.parsed_row.item}</td>
       </tr>
       <tr>
         <th>Amount</th>
-        <td>{row.amount}</td>
+        <td>{row instanceof ParsedRow ? row.amount : row.parsed_row.amount}</td>
       </tr>
     </tbody>
   </table>
@@ -52,7 +66,7 @@
       </tr>
     </thead>
     <tbody>
-      {#each entries as entry, i}
+      {#each row.entries as entry, i}
         <tr>
           <td>
             <select bind:value={entry.category}>
@@ -73,18 +87,15 @@
             <input type="number" bind:value={entry.amount} />
           </td>
           <td class="actions-col">
-            <span
-              class="material-symbols-outlined"
-              onclick={() => entries.push({category:'', item:'', amount:0})}
-            >
-              add
-            </span>
-            <span
-              class="material-symbols-outlined"
-              onclick={() => entries.splice(i, 1)}
-            >
-              delete
-            </span>
+            <IconButton
+              onclick={() => row.entries.push({category:row.entries.at(-1).category, item:'', amount:0})}
+              code="add"
+            />
+            <IconButton
+              onclick={() => row.entries.splice(i, 1)}
+              disabled={row.entries.length <= 1}
+              code="delete"
+            />
           </td>
         </tr>
       {/each}
@@ -118,5 +129,6 @@
 
   .actions-col {
     white-space: nowrap;
-  }
+    cursor: default;
+  } 
 </style>

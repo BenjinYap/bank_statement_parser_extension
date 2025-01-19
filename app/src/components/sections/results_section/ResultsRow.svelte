@@ -13,6 +13,7 @@
         item: props.row.item,
         amount: props.row.amount,
         original_item: props.row.original_item,
+        awdawd: 1,
       }];
     } else {
       return props.row.entries.map((e) => {
@@ -29,7 +30,7 @@
 
   let color = $state([255, 255, 255]);
   onMount(() => {
-    color = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
+    // color = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
   });
 </script>
 

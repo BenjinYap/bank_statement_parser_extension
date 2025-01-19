@@ -25,6 +25,7 @@
 
   function handleModifiedRowEditorSave(index, modified_row) {
     rows.splice(index, 1, modified_row);
+    selected_row_index = -1;
   }
 </script>
 

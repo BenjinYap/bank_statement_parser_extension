@@ -3,6 +3,7 @@
 </script>
 
 <tr onclick={props.onclick} style="background-color:rgb({props.color})">
+  <td>{props.awdawd ? 'original' : 'modified'}</td>
   <td>{props.date}</td>
   <td>{props.category}</td>
   <td class="item {props.original_item ? 'replaced' : ''}">
