@@ -2,8 +2,12 @@
   let props = $props();
 </script>
 
-<tr onclick={props.onclick} style="background-color:rgb({props.color})">
-  <td>{props.awdawd ? 'original' : 'modified'}</td>
+<tr
+  onclick={props.onclick}
+  class="{props.is_first_entry ? 'first' : ''} {props.is_last_entry ? 'last' : ''}"
+  style="background-color:rgb({props.color})"
+>
+  <td>{!props.is_modified ? 'original' : 'modified'}</td>
   <td>{props.date}</td>
   <td>{props.category}</td>
   <td class="item {props.original_item ? 'replaced' : ''}">
@@ -16,6 +20,54 @@
 </tr>
 
 <style>
+  tr {
+    position: relative;
+  }
+  
+  .first:before {
+    position: absolute;
+    top:0;
+    left:0;
+    width:0;
+    height:0;
+    border-top: var(--gutter) solid #c3c3c3;
+    border-right: var(--gutter) solid transparent;
+    content:'';
+  }
+  
+  .first:after {
+    position: absolute;
+    top:0;
+    right:0;
+    width:0;
+    height:0;
+    border-top: var(--gutter) solid #c3c3c3;
+    border-left: var(--gutter) solid transparent;
+    content:'';
+  }
+  
+  .last:before {
+    position: absolute;
+    bottom:0;
+    left:0;
+    width:0;
+    height:0;
+    border-bottom: var(--gutter) solid #c3c3c3;
+    border-right: var(--gutter) solid transparent;
+    content:'';
+  }
+  
+  .last:after {
+    position: absolute;
+    bottom:0;
+    right:0;
+    width:0;
+    height:0;
+    border-bottom: var(--gutter) solid #c3c3c3;
+    border-left: var(--gutter) solid transparent;
+    content:'';
+  }
+  
   .item {
     display:flex;
     align-items: center;
