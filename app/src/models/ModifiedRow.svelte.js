@@ -8,6 +8,7 @@ export class ModifiedRow {
       category: this.parsed_row.category,
       item: this.parsed_row.item,
       amount: this.parsed_row.amount,
+      applied_tax: true,
     }];
   }
   

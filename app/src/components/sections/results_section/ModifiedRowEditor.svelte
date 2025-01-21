@@ -9,7 +9,7 @@
 
   ];
 
-  let { ...props } = $props();
+  let props = $props();
 
   let row = $derived(props.row instanceof ParsedRow ? new ModifiedRow(props.row) : ModifiedRow.clone(props.row));
   
@@ -20,6 +20,12 @@
   function handleRevert() {
     props.onSave(row.parsed_row);
   }
+  
+  function handleTaxClick(entry) {
+    entry.applied_tax = !entry.applied_tax;
+    const tax = 1.13;
+    entry.amount = Number((entry.applied_tax ? entry.amount * tax : entry.amount / tax).toFixed(2)); 
+  }
 </script>
 
 <section>
@@ -28,7 +34,7 @@
   <table>
     <tbody>
       <tr>
-        <th onclick={() => row.entries.push({category: 'a', item: 'hu', amount:1})}>Date</th>
+        <th>Date</th>
         <td>{row.parsed_row.date}</td>
       </tr>
       <tr>
@@ -73,11 +79,15 @@
             <input bind:value={entry.item} />
           </td>
           <td>
-            <input type="number" bind:value={entry.amount} />
+            <input bind:value={entry.amount} />
           </td>
           <td class="actions-col">
             <IconButton
-              onclick={() => row.entries.push({category:row.entries.at(-1).category, item:'', amount:0})}
+              onclick={() => handleTaxClick(entry)}
+              code="percent"
+            />
+            <IconButton
+              onclick={() => row.entries.push({category:row.entries.at(-1).category, item:'', amount:0.00, applied_tax: true})}
               code="add"
             />
             <IconButton
