@@ -10,4 +10,15 @@ export class ModifiedRow {
       amount: this.parsed_row.amount,
     }];
   }
+  
+  static clone(row) {
+    // noinspection PointlessBooleanExpressionJS
+    if (row instanceof ModifiedRow === false) {
+      throw new Error('aaaa');
+    }
+    
+    const c = new ModifiedRow(row.parsed_row);
+    c.entries = row.entries.map((a) => {return {...a}});
+    return c;
+  }
 }

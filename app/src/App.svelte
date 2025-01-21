@@ -4,6 +4,9 @@
   import MetaSection from "./components/sections/MetaSection.svelte";
   import { parseDom } from "./utils/parser.mjs";
   import ResultsSection from "./components/sections/ResultsSection.svelte";
+  import { ParsedRow } from "./models/ParsedRow.mjs";
+  import { getFormattedDate } from "./utils/date.mjs";
+  import { CATEGORY_REPLACEMENTS, doReplacement } from "./utils/replacements.mjs";
 
   let date_include_left;
   let date_include_right = new Date();
@@ -49,6 +52,17 @@
   <title>awd</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </svelte:head>
+
+<button onclick={() => {
+  
+  all_success_rows.push(new ParsedRow(
+    getFormattedDate(new Date()),
+    'a',
+    'b',
+    5,
+    
+  ));
+}}>awd</button>
 
 <IntroSection
   {date_include_left}

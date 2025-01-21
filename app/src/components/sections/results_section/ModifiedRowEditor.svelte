@@ -13,7 +13,7 @@
 
   // let row = $derived(props.row instanceof ParsedRow ? new ModifiedRow(props.row) : props.row);
   let row = $derived.by(() => {
-    const awd = props.row instanceof ParsedRow ? new ModifiedRow(props.row) : props.row;
+    const awd = props.row instanceof ParsedRow ? new ModifiedRow(props.row) : ModifiedRow.clone(props.row);
     console.log('aaa', awd, props.row);
     return awd;
     
