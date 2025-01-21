@@ -7,7 +7,6 @@
   class="{props.is_first_entry ? 'first' : ''} {props.is_last_entry ? 'last' : ''}"
   style="background-color:rgb({props.color})"
 >
-  <td>{!props.is_modified ? 'original' : 'modified'}</td>
   <td>{props.date}</td>
   <td>{props.category}</td>
   <td class="item {props.original_item ? 'replaced' : ''}">
