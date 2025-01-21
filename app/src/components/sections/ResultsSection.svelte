@@ -6,14 +6,6 @@
   import ResultsRow from "./results_section/ResultsRow.svelte";
 
   let props = $props();
-  // let csv = $derived.by(() => {
-  //   let csv = '';
-  //   props.rows?.forEach((r) => {
-  //     csv += `${r.date},${r.category},${r.item},${r.amount}\n`;
-  //   });
-  //   return csv;
-  // });
-
   let rows = $derived(props.rows);
   let selected_row_index = $state(-1);
 
@@ -27,10 +19,25 @@
     rows.splice(index, 1, modified_row);
     selected_row_index = -1;
   }
+  
+  function handleCsvClick() {
+    let csv = '';
+    rows.forEach((r) => {
+      if (r instanceof ParsedRow) {
+        csv += `${r.date},${r.category},${r.item},${r.amount}\n`;
+      } else {
+        r.entries.forEach((a) => {
+          csv += `${r.parsed_row.date},${a.category},${a.item},${a.amount}\n`;
+        });
+      }
+      
+    });
+    navigator.clipboard.writeText(csv);
+  }
 </script>
 
 <Section title="Parsed Rows">
-  <button onclick={() => navigator.clipboard.writeText(csv)}>Copy CSV</button>
+  <button onclick={handleCsvClick}>Copy CSV</button>
   <div>
     <table>
       <thead>
