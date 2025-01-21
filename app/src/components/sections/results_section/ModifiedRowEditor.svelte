@@ -33,6 +33,10 @@
     // row.entries = $state.snapshot(entries);
     props.onSave(row);
   }
+  
+  function handleRevert() {
+    props.onSave(row.parsed_row);
+  }
 </script>
 
 <section>
@@ -104,7 +108,7 @@
   <div>
     <button onclick={handleSave}>Save</button>
     <button onclick={props.onCancel}>Cancel</button>
-    <button>Revert to Original</button>
+    <button onclick={handleRevert}>Revert to Original</button>
   </div>
 </section>
 
