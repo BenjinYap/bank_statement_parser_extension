@@ -11,26 +11,9 @@
 
   let { ...props } = $props();
 
-  // let row = $derived(props.row instanceof ParsedRow ? new ModifiedRow(props.row) : props.row);
-  let row = $derived.by(() => {
-    const awd = props.row instanceof ParsedRow ? new ModifiedRow(props.row) : ModifiedRow.clone(props.row);
-    console.log('aaa', awd, props.row);
-    return awd;
-    
-  });
-  // let entries = $state(row.entries.map((e) => {
-  //   return {...e};
-  // }));
-  // let entries = $derived.by(() => {
-  //   const awd = row.entries.map((e) => {
-  //     return {...e};
-  //   });
-  //   return awd;
-  // });
-  // let entries = [];
+  let row = $derived(props.row instanceof ParsedRow ? new ModifiedRow(props.row) : ModifiedRow.clone(props.row));
   
   function handleSave() {
-    // row.entries = $state.snapshot(entries);
     props.onSave(row);
   }
   
@@ -40,27 +23,29 @@
 </script>
 
 <section>
-  <h2 onclick={() => console.log(JSON.stringify($state.snapshot(row.entries)))}>Modify Row</h2>
+  <h2>Modify Row</h2>
+  <h3>Original Row</h3>
   <table>
     <tbody>
       <tr>
         <th onclick={() => row.entries.push({category: 'a', item: 'hu', amount:1})}>Date</th>
-        <td>{row instanceof ParsedRow ? row.date : row.parsed_row.date}</td>
+        <td>{row.parsed_row.date}</td>
       </tr>
       <tr>
         <th>Category</th>
-        <td>{row instanceof ParsedRow ? row.category : row.parsed_row.category}</td>
+        <td>{row.parsed_row.category}</td>
       </tr>
       <tr>
         <th>Item</th>
-        <td>{row instanceof ParsedRow ? row.item : row.parsed_row.item}</td>
+        <td>{row.parsed_row.item}</td>
       </tr>
       <tr>
         <th>Amount</th>
-        <td>{row instanceof ParsedRow ? row.amount : row.parsed_row.amount}</td>
+        <td>{row.parsed_row.amount}</td>
       </tr>
     </tbody>
   </table>
+  <h3>Custom Entries</h3>
   <table>
     <thead>
       <tr>
@@ -108,7 +93,9 @@
   <div>
     <button onclick={handleSave}>Save</button>
     <button onclick={props.onCancel}>Cancel</button>
-    <button onclick={handleRevert}>Revert to Original</button>
+    {#if props.row instanceof ModifiedRow}
+      <button onclick={handleRevert}>Revert to Original</button>
+    {/if}
   </div>
 </section>
 
@@ -127,6 +114,13 @@
   h2 {
     font-size: 1.1em;
     font-weight:600;
+    margin:0;
+    border-bottom:1px solid black;
+  }
+  
+  h3 {
+    font-size: 1em;
+    font-weight:500;
     margin:0;
     border-bottom:1px solid black;
   }
