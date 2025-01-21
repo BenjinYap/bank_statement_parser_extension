@@ -20,11 +20,11 @@
 </tr>
 
 <style>
-  tr {
+  .first td, .last td {
     position: relative;
   }
   
-  .first:before {
+  .first td:first-child:before {
     position: absolute;
     top:0;
     left:0;
@@ -35,7 +35,7 @@
     content:'';
   }
   
-  .first:after {
+  .first td:last-child:after {
     position: absolute;
     top:0;
     right:0;
@@ -46,7 +46,7 @@
     content:'';
   }
   
-  .last:before {
+  .last td:first-child:before {
     position: absolute;
     bottom:0;
     left:0;
@@ -57,7 +57,7 @@
     content:'';
   }
   
-  .last:after {
+  .last td:last-child:after {
     position: absolute;
     bottom:0;
     right:0;
