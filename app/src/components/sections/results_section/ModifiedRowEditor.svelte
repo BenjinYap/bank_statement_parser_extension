@@ -79,12 +79,13 @@
             <input bind:value={entry.item} />
           </td>
           <td>
-            <input bind:value={entry.amount} />
+            <input type="number" bind:value={entry.amount} />
           </td>
           <td class="actions-col">
             <IconButton
               onclick={() => handleTaxClick(entry)}
               code="percent"
+              color="{entry.applied_tax ? 'green' : ''}"
             />
             <IconButton
               onclick={() => row.entries.push({category:row.entries.at(-1).category, item:'', amount:0.00, applied_tax: true})}
