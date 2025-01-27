@@ -2,23 +2,25 @@
   let props = $props();
   
   const COLOR_CLASSES = {
-    primary: 'bg-primary-600',
-    secondary: 'bg-secondary-600',
-    accent: 'bg-accent-600',
+    primary: 'bg-primary-500',
+    secondary: 'bg-secondary-400',
+    tertiary: 'bg-tertiary-400',
   };
   const ENABLED_COLOR_CLASSES = {
-    primary: 'hover:bg-primary-700 active:bg-primary-500',
-    secondary: 'hover:bg-secondary-700 active:bg-secondary-500',
-    accent: 'hover:bg-accent-700 active:bg-accent-500',
+    primary: 'hover:bg-primary-600 active:bg-primary-700',
+    secondary: 'hover:bg-secondary-500 active:bg-secondary-600',
+    tertiary: 'hover:bg-tertiary-500 active:bg-tertiary-600',
   };
   const ENABLED_CLASSES = 'cursor-pointer';
   const DISABLED_CLASSES = 'opacity-20 cursor-default';
 
   const final_classes = `${COLOR_CLASSES[props.color]} ${(props.disabled ? DISABLED_CLASSES : `${ENABLED_CLASSES} ${ENABLED_COLOR_CLASSES[props.color]}`)}`;
+  
+  const NOT_ICON_CLASSES = 'px-2';
 </script>
 
 <button
-  class="{props.class} p-1 font-medium text-text-50 rounded-sm {final_classes}"
+  class="{props.class} p-1 font-medium text-text-200 rounded-sm {final_classes} {!props.icon ? NOT_ICON_CLASSES : ''}"
   type="button"
   onclick={props.onclick}
   disabled={props.disabled}

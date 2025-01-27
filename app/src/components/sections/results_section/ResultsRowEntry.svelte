@@ -25,7 +25,7 @@
   }
   
   .first td:first-child:before {
-    @apply border-t-[0.7em] border-t-accent-800 border-r-[0.7em] border-r-transparent;
+    @apply border-t-[0.7em] border-t-surface-700 border-r-[0.7em] border-r-transparent;
     position: absolute;
     top:0;
     left:0;
@@ -35,7 +35,7 @@
   }
   
   .first td:last-child:after {
-    @apply border-t-[0.7em] border-t-accent-800 border-l-[0.7em] border-l-transparent;
+    @apply border-t-[0.7em] border-t-surface-700 border-l-[0.7em] border-l-transparent;
     position: absolute;
     top:0;
     right:0;
@@ -45,7 +45,7 @@
   }
   
   .last td:first-child:before {
-    @apply border-b-[0.7em] border-b-accent-800 border-r-[0.7em] border-r-transparent;
+    @apply border-b-[0.7em] border-b-surface-700 border-r-[0.7em] border-r-transparent;
     position: absolute;
     bottom:0;
     left:0;
@@ -55,7 +55,7 @@
   }
   
   .last td:last-child:after {
-    @apply border-b-[0.7em] border-b-accent-800 border-l-[0.7em] border-l-transparent;
+    @apply border-b-[0.7em] border-b-surface-700 border-l-[0.7em] border-l-transparent;
     position: absolute;
     bottom:0;
     right:0;

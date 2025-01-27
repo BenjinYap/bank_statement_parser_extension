@@ -3,6 +3,7 @@
   import { ModifiedRow } from "../../../models/ModifiedRow.svelte.js";
   import Button from "../../Button.svelte";
   import Divider from "../../Divider.svelte";
+  import Section from "../../Section.svelte";
 
   const CATEGORIES = [
     'Bills',
@@ -29,11 +30,9 @@
   }
 </script>
 
-<section class="flex flex-col gap-2 bg-background-950 p-2 rounded-sm bg-white">
-  <h2 class="text-lg font-medium">Modify Row</h2>
-  <Divider/>
+<Section title="Modify Row">
+<!--  <h2 class="text-lg font-medium">Modify Row</h2>-->
   <h3 class="text-base font-medium">Original Row</h3>
-  <Divider/>
   <table>
     <thead>
       <tr>
@@ -53,7 +52,6 @@
     </tbody>
   </table>
   <h3 class="text-base font-medium">Custom Entries</h3>
-  <Divider/>
   <table>
     <thead>
       <tr>
@@ -65,7 +63,7 @@
     <tbody>
       {#each row.entries as entry, i}
         <tr>
-          <td>
+          <td class="px-1">
             <select bind:value={entry.category}>
               {#each CATEGORIES as cat}
                 <option
@@ -77,10 +75,10 @@
               {/each}
             </select>
           </td>
-          <td>
+          <td class="px-1">
             <input class="w-full" bind:value={entry.item} />
           </td>
-          <td>
+          <td class="px-1">
             <input class="w-full" type="number" bind:value={entry.amount} />
           </td>
           <td class="actions-col">
@@ -107,9 +105,9 @@
   </table>
   <div>
     <Button onclick={handleSave} text="Save" color="primary"/>
-    <Button onclick={props.onCancel} text="Cancel" color="secondary"/>
+    <Button onclick={props.onCancel} text="Cancel" color="tertiary"/>
     {#if props.row instanceof ModifiedRow}
-      <Button onclick={handleRevert} text="Revert to Original" color="primary"/>
+      <Button onclick={handleRevert} text="Revert to Original" color="secondary"/>
     {/if}
   </div>
-</section>
+</Section>

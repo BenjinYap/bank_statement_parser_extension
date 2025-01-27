@@ -3,7 +3,7 @@
 
 @layer base {
   html {
-    @apply text-text-50 h-full bg-white;
+    @apply text-text-400 h-full bg-surface-950;
     font-size:16px;
     font-family: "Segoe UI", Tahoma, sans-serif;
   }
@@ -12,12 +12,16 @@
     @apply flex flex-col items-center;
   }
   
+  h1, h2, h3,  h4, h5, h6 {
+    @apply text-text-200;
+  }
+  
   table, th, td {
-    @apply border border-accent-800 p-1;
+    @apply border-2 border-surface-700 px-2 py-1 border-collapse;
   }
   
   table {
-    @apply text-sm bg-stone-50;
+    @apply text-sm;
   }
   
   th {
@@ -29,12 +33,12 @@
   }
   
   input, select {
-    @apply bg-background-950 p-2 outline-none rounded-sm;
+    @apply border-surface-700 hover:border-surface-300 focus:border-surface-300 border-2 bg-surface-950 p-2 outline-none rounded-sm;
   }
   
   select {
-    @apply border-r-transparent;
-    border-right-width: --spacing(2);
+    /*@apply border-r-transparent;*/
+    /*border-right-width: --spacing(1);*/
   }
 }
 

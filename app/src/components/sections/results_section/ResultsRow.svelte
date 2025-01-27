@@ -39,30 +39,3 @@
     {...entry}
   />
 {/each}
-
-<!--{#if props.row instanceof ParsedRow}-->
-<!--  <ResultsRowEntry-->
-<!--     onclick={() => props.onClick(props.row)}-->
-<!--  />-->
-<!--{:else}-->
-<!--  {#each props.row.getEntries() as entry}-->
-<!--&lt;!&ndash;    <ResultsRowEntry&ndash;&gt;-->
-
-<!--&lt;!&ndash;    />&ndash;&gt;-->
-<!--  {/each}-->
-<!--{/if}-->
-
-
-<!--<tr onclick={() => props.onClick(props.row)}>-->
-<!--  <td>{props.row.date}</td>-->
-<!--  <td>{props.row.category}</td>-->
-<!--  <td class="item {props.row.original_item ? 'replaced' : ''}">-->
-<!--    {props.row.item}-->
-<!--    {#if props.row.original_item}-->
-<!--      {@html `<span class="original">(${props.row.original_item})</span> <span title="Modified by parsing rules" class="material-symbols-outlined">more_horiz</span>`}-->
-<!--    {/if}-->
-<!--  </td>-->
-<!--  <td class="amount">{props.row.amount.toFixed(2)}</td>-->
-<!--</tr>-->
-
-
