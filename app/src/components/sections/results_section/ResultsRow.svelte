@@ -1,11 +1,9 @@
 <script>
   import { ParsedRow } from "../../../models/ParsedRow.mjs";
   import ResultsRowEntry from "./ResultsRowEntry.svelte";
-  import { onMount } from "svelte";
 
   let props = $props();
   let temp = $derived.by(() => {
-    // console.log('aaaaaaaa', props.row);
     if (props.row instanceof ParsedRow) {
       return [{
         date: props.row.date,
@@ -36,6 +34,7 @@
 {#each temp as entry, i}
   <ResultsRowEntry
     onclick={props.onclick}
+    is_selected={props.is_selected}
     {...entry}
   />
 {/each}

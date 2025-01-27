@@ -62,6 +62,7 @@
               {#key row}
                 <ResultsRow
                   row={row}
+                  is_selected={selected_row_index === i}
                   onclick={() => {selected_row_index = i; console.log(i)}}
                 />
               {/key}

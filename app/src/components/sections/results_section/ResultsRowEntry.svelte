@@ -4,14 +4,14 @@
 
 <tr
   onclick={props.onclick}
-  class="{props.is_first_entry ? 'first' : ''} {props.is_last_entry ? 'last' : ''}"
+  class="{props.is_selected ? 'bg-surface-700' : ''} {props.is_first_entry ? 'first' : ''} {props.is_last_entry ? 'last' : ''}"
 >
   <td>{props.date}</td>
   <td>{props.category}</td>
-  <td class="item {props.original_item ? 'replaced' : ''}">
+  <td>
     {props.item}
     {#if props.original_item}
-      {@html `<span class="text-xs">(${props.original_item})</span> <span title="Modified by parsing rules" class="material-symbols-outlined">more_horiz</span>`}
+      {@html `<span class="text-xs">(${props.original_item})</span>`}
     {/if}
   </td>
   <td class="text-right">{props.amount.toFixed(2)}</td>
@@ -63,28 +63,4 @@
     height:0;
     content:'';
   }
-  
-  /*.item {*/
-  /*  display:flex;*/
-  /*  align-items: center;*/
-  /*  border:none;*/
-  /*  gap: calc(var(--gutter) / 2);*/
-  /*}*/
-  
-  /*td :global(.original) {*/
-  /*  font-size: 0.8em;*/
-  /*}*/
-  
-  /*td :global(.material-symbols-outlined) {*/
-  /*  font-size:1.2em;*/
-  /*  margin-left:auto;*/
-  /*}*/
-  
-  /*.replaced {*/
-  /*  background: #d5edff;*/
-  /*}*/
-  
-  /*.amount {*/
-  /*  text-align:right;*/
-  /*}*/
 </style>
