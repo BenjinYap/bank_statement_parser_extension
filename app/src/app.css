@@ -28,9 +28,14 @@
     @apply text-nowrap;
   }
   
-  .material-symbols-outlined {
-    /*@apply !text-[length:inherit];*/
-  } 
+  input, select {
+    @apply bg-background-950 p-2 outline-none rounded-sm;
+  }
+  
+  select {
+    @apply border-r-transparent;
+    border-right-width: --spacing(2);
+  }
 }
 
 /** {*/
