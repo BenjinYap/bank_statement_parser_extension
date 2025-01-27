@@ -1,40 +1,64 @@
-:root {
-  --border-radius:3px;
-  --gutter:0.7em;
+@import "tailwindcss";
+@import "./colors.css";
+
+@layer base {
+  html {
+    @apply text-text-50 h-full bg-white;
+    font-size:16px;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+  }
+  
+  #app {
+    @apply flex flex-col items-center;
+  }
+  
+  table, th, td {
+    @apply border border-accent-800 p-1;
+  }
+  
+  table {
+    @apply text-sm bg-stone-50;
+  }
+  
+  th {
+    @apply font-medium text-left;
+  }
+  
+  td {
+    @apply text-nowrap;
+  }
+  
+  .material-symbols-outlined {
+    /*@apply !text-[length:inherit];*/
+  } 
 }
 
-* {
-  font-size:inherit;
-}
+/** {*/
+/*  font-size:inherit;*/
+/*}*/
 
-html {
-  width:1000px;
-  font-size:14px;
-  font-family: "Segoe UI", Tahoma, sans-serif;
-}
+/*body {*/
+/*  font-size:inherit;*/
+/*  padding:0 var(--gutter);*/
+/*  margin:0;*/
+/*  background:#efefef;*/
+/*}*/
 
-body {
-  font-size:inherit;
-  padding:0 var(--gutter);
-  margin:0;
-  background:#efefef;
-}
+/*table {*/
+/*  border-collapse: collapse;*/
+/*}*/
 
-table {
-  border-collapse: collapse;
-}
+/*th {*/
+/*  text-align: left;*/
+/*  font-weight:600;*/
+/*}*/
 
-th {
-  text-align: left;
-  font-weight:600;
-}
+/*tr, th, td {*/
+/*  border:1px solid #c3c3c3;*/
+/*  padding: calc(var(--gutter) / 2);*/
+/*}*/
 
-tr, th, td {
-  border:1px solid #c3c3c3;
-  padding: calc(var(--gutter) / 2);
-}
-
-.material-symbols-outlined {
-  font-size:inherit;
-  cursor: default;
-}
+/*.material-symbols-outlined {*/
+/*  font-size:inherit;*/
+/*  !*cursor: default;*!*/
+/*}*/

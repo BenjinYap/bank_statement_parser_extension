@@ -31,18 +31,12 @@
       });
     }
   });
-
-  let color = $state([255, 255, 255]);
-  onMount(() => {
-    // color = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
-  });
 </script>
 
 {#each temp as entry, i}
   <ResultsRowEntry
     onclick={props.onclick}
     {...entry}
-    {color}
   />
 {/each}
 

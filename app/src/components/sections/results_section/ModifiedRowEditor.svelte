@@ -1,7 +1,8 @@
 <script>
   import { ParsedRow } from "../../../models/ParsedRow.mjs";
   import { ModifiedRow } from "../../../models/ModifiedRow.svelte.js";
-  import IconButton from "../../IconButton.svelte";
+  import Button from "../../Button.svelte";
+  import Divider from "../../Divider.svelte";
 
   const CATEGORIES = [
     'Bills',
@@ -28,30 +29,31 @@
   }
 </script>
 
-<section>
-  <h2>Modify Row</h2>
-  <h3>Original Row</h3>
+<section class="flex flex-col gap-2 bg-background-950 p-2 rounded-sm bg-white">
+  <h2 class="text-lg font-medium">Modify Row</h2>
+  <Divider/>
+  <h3 class="text-base font-medium">Original Row</h3>
+  <Divider/>
   <table>
-    <tbody>
+    <thead>
       <tr>
         <th>Date</th>
-        <td>{row.parsed_row.date}</td>
-      </tr>
-      <tr>
         <th>Category</th>
-        <td>{row.parsed_row.category}</td>
-      </tr>
-      <tr>
         <th>Item</th>
-        <td>{row.parsed_row.item}</td>
-      </tr>
-      <tr>
         <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{row.parsed_row.date}</td>
+        <td>{row.parsed_row.category}</td>
+        <td>{row.parsed_row.item}</td>
         <td>{row.parsed_row.amount}</td>
       </tr>
     </tbody>
   </table>
-  <h3>Custom Entries</h3>
+  <h3 class="text-base font-medium">Custom Entries</h3>
+  <Divider/>
   <table>
     <thead>
       <tr>
@@ -76,25 +78,27 @@
             </select>
           </td>
           <td>
-            <input bind:value={entry.item} />
+            <input class="w-full" bind:value={entry.item} />
           </td>
           <td>
-            <input type="number" bind:value={entry.amount} />
+            <input class="w-full" type="number" bind:value={entry.amount} />
           </td>
           <td class="actions-col">
-            <IconButton
+            <Button
               onclick={() => handleTaxClick(entry)}
-              code="percent"
-              color="{entry.applied_tax ? 'green' : ''}"
+              icon="percent"
+              color={entry.applied_tax ? 'accent' : ''}
             />
-            <IconButton
+            <Button
               onclick={() => row.entries.push({category:row.entries.at(-1).category, item:'', amount:0.00, applied_tax: true})}
-              code="add"
+              icon="add"
+              color="primary"
             />
-            <IconButton
+            <Button
               onclick={() => row.entries.splice(i, 1)}
               disabled={row.entries.length <= 1}
-              code="delete"
+              icon="delete"
+              color="secondary"
             />
           </td>
         </tr>
@@ -102,42 +106,10 @@
     </tbody>
   </table>
   <div>
-    <button onclick={handleSave}>Save</button>
-    <button onclick={props.onCancel}>Cancel</button>
+    <Button onclick={handleSave} text="Save" color="primary"/>
+    <Button onclick={props.onCancel} text="Cancel" color="secondary"/>
     {#if props.row instanceof ModifiedRow}
-      <button onclick={handleRevert}>Revert to Original</button>
+      <Button onclick={handleRevert} text="Revert to Original" color="primary"/>
     {/if}
   </div>
 </section>
-
-<style>
-  section {
-    flex: 1;
-    padding:10px;
-    background:white;
-    border:1px solid #c3c3c3;
-    border-radius:var(--border-radius);
-    display:flex;
-    flex-direction: column;
-    gap: var(--gutter);
-  }
-
-  h2 {
-    font-size: 1.1em;
-    font-weight:600;
-    margin:0;
-    border-bottom:1px solid black;
-  }
-  
-  h3 {
-    font-size: 1em;
-    font-weight:500;
-    margin:0;
-    border-bottom:1px solid black;
-  }
-
-  .actions-col {
-    white-space: nowrap;
-    cursor: default;
-  } 
-</style>

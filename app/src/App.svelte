@@ -53,26 +53,17 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </svelte:head>
 
-<button onclick={() => {
+<div class="flex flex-col items-stretch gap-2 py-2 max-w-[1000px] w-full">  
+  <IntroSection
+    {date_include_left}
+    {date_include_right}
+  />
   
-  all_success_rows.push(new ParsedRow(
-    getFormattedDate(new Date()),
-    'a',
-    'b',
-    5,
-    
-  ));
-}}>awd</button>
-
-<IntroSection
-  {date_include_left}
-  {date_include_right}
-/>
-
-<MetaSection
-  {table_stats}
-/>
-<p onclick={() => console.log(all_success_rows)}>awd</p>
-<ResultsSection
-  rows={all_success_rows}
-/>
+  <MetaSection
+    {table_stats}
+  />
+  
+  <ResultsSection
+    rows={all_success_rows}
+  />
+</div>
