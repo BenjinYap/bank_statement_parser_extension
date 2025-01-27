@@ -4,6 +4,7 @@
   import Button from "../../Button.svelte";
   import Divider from "../../Divider.svelte";
   import Section from "../../Section.svelte";
+  import Stack from "../../Stack.svelte";
 
   const CATEGORIES = [
     'Bills',
@@ -31,8 +32,7 @@
 </script>
 
 <Section title="Modify Row">
-<!--  <h2 class="text-lg font-medium">Modify Row</h2>-->
-  <h3 class="text-base font-medium">Original Row</h3>
+  <h3 class="text-base font-medium">Original</h3>
   <table>
     <thead>
       <tr>
@@ -51,18 +51,29 @@
       </tr>
     </tbody>
   </table>
-  <h3 class="text-base font-medium">Custom Entries</h3>
+  <h3 class="text-base font-medium">Overrides</h3>
   <table>
     <thead>
       <tr>
+        <th class="bg-surface-700"></th>
         <th>Category</th>
         <th>Item</th>
         <th>Amount</th>
+        <th class="text-center">Tax</th>
       </tr>
     </thead>
     <tbody>
       {#each row.entries as entry, i}
         <tr>
+          <td class="px-1">
+            <Button
+              class="!p-0"
+              onclick={() => row.entries.splice(i, 1)}
+              disabled={row.entries.length <= 1}
+              icon="close"
+              color="error"
+            />
+          </td>
           <td class="px-1">
             <select bind:value={entry.category}>
               {#each CATEGORIES as cat}
@@ -81,33 +92,32 @@
           <td class="px-1">
             <input class="w-full" type="number" bind:value={entry.amount} />
           </td>
-          <td class="actions-col">
-            <Button
-              onclick={() => handleTaxClick(entry)}
-              icon="percent"
-              color={entry.applied_tax ? 'accent' : ''}
-            />
-            <Button
-              onclick={() => row.entries.push({category:row.entries.at(-1).category, item:'', amount:0.00, applied_tax: true})}
-              icon="add"
-              color="primary"
-            />
-            <Button
-              onclick={() => row.entries.splice(i, 1)}
-              disabled={row.entries.length <= 1}
-              icon="delete"
-              color="secondary"
+          <td class="px-1 text-center">
+            <input
+              type="checkbox"
+              onchange={() => handleTaxClick(entry)}
+              checked={entry.applied_tax}
             />
           </td>
         </tr>
       {/each}
+      <tr>
+        <td class="p-0 border-0" colspan="100">
+          <Button
+            class="w-full rounded-t-none"
+            color="secondary"
+            text="Add"
+            onclick={() => row.entries.push({category:row.entries.at(-1).category, item:'', amount:0.00, applied_tax: true})}
+          />
+        </td>
+      </tr>
     </tbody>
   </table>
-  <div>
+  <Stack direction="row">
     <Button onclick={handleSave} text="Save" color="primary"/>
     <Button onclick={props.onCancel} text="Cancel" color="tertiary"/>
     {#if props.row instanceof ModifiedRow}
       <Button onclick={handleRevert} text="Revert to Original" color="secondary"/>
     {/if}
-  </div>
+  </Stack>
 </Section>

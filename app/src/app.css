@@ -16,7 +16,7 @@
     @apply text-text-200;
   }
   
-  table, th, td {
+  th, td {
     @apply border-2 border-surface-700 px-2 py-1 border-collapse;
   }
   
@@ -33,7 +33,7 @@
   }
   
   input, select {
-    @apply border-surface-700 hover:border-surface-300 focus:border-surface-300 border-2 bg-surface-950 p-2 outline-none rounded-sm;
+    @apply border-primary-950 hover:border-primary-500 focus:border-primary-500 border-2 bg-surface-950 p-2 outline-none rounded-sm;
   }
   
   select {
@@ -67,7 +67,8 @@
 /*  padding: calc(var(--gutter) / 2);*/
 /*}*/
 
-/*.material-symbols-outlined {*/
-/*  font-size:inherit;*/
-/*  !*cursor: default;*!*/
-/*}*/
+span.material-symbols-outlined {
+  /*@apply !text-2xl;*/
+  font-size: 1.5em;
+  /*cursor: default;*/
+}

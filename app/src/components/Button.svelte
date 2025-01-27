@@ -5,16 +5,18 @@
     primary: 'bg-primary-500',
     secondary: 'bg-secondary-400',
     tertiary: 'bg-tertiary-400',
+    error: 'bg-error-400',
   };
   const ENABLED_COLOR_CLASSES = {
     primary: 'hover:bg-primary-600 active:bg-primary-700',
     secondary: 'hover:bg-secondary-500 active:bg-secondary-600',
     tertiary: 'hover:bg-tertiary-500 active:bg-tertiary-600',
+    error: 'hover:bg-error-700 active:bg-error-950',
   };
   const ENABLED_CLASSES = 'cursor-pointer';
   const DISABLED_CLASSES = 'opacity-20 cursor-default';
 
-  const final_classes = `${COLOR_CLASSES[props.color]} ${(props.disabled ? DISABLED_CLASSES : `${ENABLED_CLASSES} ${ENABLED_COLOR_CLASSES[props.color]}`)}`;
+  const final_classes = $derived(`${COLOR_CLASSES[props.color]} ${(props.disabled ? DISABLED_CLASSES : `${ENABLED_CLASSES} ${ENABLED_COLOR_CLASSES[props.color]}`)}`);
   
   const NOT_ICON_CLASSES = 'px-2';
 </script>
@@ -27,7 +29,7 @@
 >
   {#if props.icon}
     <span
-      class="material-symbols-outlined align-middle"
+      class="material-symbols-outlined align-top"
     >
       {props.icon}
     </span>

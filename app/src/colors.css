@@ -61,4 +61,17 @@
   --color-tertiary-800: #505963;
   --color-tertiary-900: #49515B;
   --color-tertiary-950: #454D56;
+  
+  --color-error-50: #F37575;
+  --color-error-100: #F36E6E;
+  --color-error-200: #F16060;
+  --color-error-300: #F05252;
+  --color-error-400: #EF4444;  /**/
+  --color-error-500: #EE3636;
+  --color-error-600: #ED2828;
+  --color-error-700: #EB1A1A;
+  --color-error-800: #E21313;
+  --color-error-900: #D41212;
+  --color-error-950: #CD1212;
+  
 }
