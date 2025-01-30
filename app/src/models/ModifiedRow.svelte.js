@@ -9,7 +9,7 @@ export class ModifiedRow {
       item: this.parsed_row.item,
       amount: this.parsed_row.amount,
       applied_tax: true,
-    }];
+    },{category:'Bbobbly flay', item:'loud noises aaaa', amount:23456.47, applied_tax: true}];
   }
   
   static clone(row) {

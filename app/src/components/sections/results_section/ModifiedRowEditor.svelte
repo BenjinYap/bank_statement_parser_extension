@@ -9,7 +9,7 @@
   const CATEGORIES = [
     'Bills',
     'Food',
-
+    'Bbobbly flay',
   ];
 
   let props = $props();
@@ -52,20 +52,26 @@
     </tbody>
   </table>
   <h3 class="text-base font-medium">Overrides</h3>
-  <table>
-    <thead>
-      <tr>
-        <th class="bg-surface-700"></th>
-        <th>Category</th>
-        <th>Item</th>
-        <th>Amount</th>
-        <th class="text-center">Tax</th>
-      </tr>
-    </thead>
-    <tbody>
+  <div class="flex flex-col border p-1 gap-1">
+    <div class="border p-1">
+      <div class="flex p-1 border gap-1">
+        <div class="border px-1 bg-surface-700">
+          <Button
+            class="!p-0 invisible"
+            icon="close"
+            color="error"
+          />
+        </div>
+        <div class="border px-1">Category</div>
+        <div class="border px-1">Item</div>
+        <div class="border px-1">Amount</div>
+        <div class="border px-1 text-center">Tax</div>
+      </div>
+    </div>
+    <div class="border p-1">
       {#each row.entries as entry, i}
-        <tr>
-          <td class="px-1">
+        <div class="flex p-1 border gap-1">
+          <div class="border px-1">
             <Button
               class="!p-0"
               onclick={() => row.entries.splice(i, 1)}
@@ -73,8 +79,8 @@
               icon="close"
               color="error"
             />
-          </td>
-          <td class="px-1">
+          </div>
+          <div class="border px-1">
             <select bind:value={entry.category}>
               {#each CATEGORIES as cat}
                 <option
@@ -85,34 +91,95 @@
                 </option>
               {/each}
             </select>
-          </td>
-          <td class="px-1">
+          </div>
+          <div class="border px-1">
             <input class="w-full" bind:value={entry.item} />
-          </td>
-          <td class="px-1">
+          </div>
+          <div class="border px-1">
             <input class="w-full" type="number" bind:value={entry.amount} />
-          </td>
-          <td class="px-1 text-center">
+          </div>
+          <div class="border px-1 text-center">
             <input
               type="checkbox"
               onchange={() => handleTaxClick(entry)}
               checked={entry.applied_tax}
             />
-          </td>
-        </tr>
+          </div>
+        </div>
       {/each}
-      <tr>
-        <td class="p-0 border-0" colspan="5">
+      <div>
+        <div class="p-0 border-0" colspan="5">
           <Button
             class="w-full rounded-t-none"
             color="secondary"
             text="Add"
             onclick={() => row.entries.push({category:row.entries.at(-1).category, item:'', amount:0.00, applied_tax: true})}
           />
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--  <table>-->
+<!--    <thead>-->
+<!--      <tr>-->
+<!--        <th class="bg-surface-700"></th>-->
+<!--        <th>Category</th>-->
+<!--        <th>Item</th>-->
+<!--        <th>Amount</th>-->
+<!--        <th class="text-center">Tax</th>-->
+<!--      </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--      {#each row.entries as entry, i}-->
+<!--        <tr>-->
+<!--          <td class="px-1">-->
+<!--            <Button-->
+<!--              class="!p-0"-->
+<!--              onclick={() => row.entries.splice(i, 1)}-->
+<!--              disabled={row.entries.length <= 1}-->
+<!--              icon="close"-->
+<!--              color="error"-->
+<!--            />-->
+<!--          </td>-->
+<!--          <td class="px-1">-->
+<!--            <select bind:value={entry.category}>-->
+<!--              {#each CATEGORIES as cat}-->
+<!--                <option-->
+<!--                  value={cat}-->
+<!--                  selected={cat === entry.category}-->
+<!--                >-->
+<!--                  {cat}-->
+<!--                </option>-->
+<!--              {/each}-->
+<!--            </select>-->
+<!--          </td>-->
+<!--          <td class="px-1">-->
+<!--            <input class="w-full" bind:value={entry.item} />-->
+<!--          </td>-->
+<!--          <td class="px-1">-->
+<!--            <input class="w-full" type="number" bind:value={entry.amount} />-->
+<!--          </td>-->
+<!--          <td class="px-1 text-center">-->
+<!--            <input-->
+<!--              type="checkbox"-->
+<!--              onchange={() => handleTaxClick(entry)}-->
+<!--              checked={entry.applied_tax}-->
+<!--            />-->
+<!--          </td>-->
+<!--        </tr>-->
+<!--      {/each}-->
+<!--      <tr>-->
+<!--        <td class="p-0 border-0" colspan="5">-->
+<!--          <Button-->
+<!--            class="w-full rounded-t-none"-->
+<!--            color="secondary"-->
+<!--            text="Add"-->
+<!--            onclick={() => row.entries.push({category:row.entries.at(-1).category, item:'', amount:0.00, applied_tax: true})}-->
+<!--          />-->
+<!--        </td>-->
+<!--      </tr>-->
+<!--    </tbody>-->
+<!--  </table>-->
   <Stack direction="row">
     <Button onclick={handleSave} text="Save" color="primary"/>
     <Button onclick={props.onCancel} text="Cancel" color="tertiary"/>
