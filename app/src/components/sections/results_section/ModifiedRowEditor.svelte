@@ -102,7 +102,7 @@
         </tr>
       {/each}
       <tr>
-        <td class="p-0 border-0" colspan="100">
+        <td class="p-0 border-0" colspan="5">
           <Button
             class="w-full rounded-t-none"
             color="secondary"

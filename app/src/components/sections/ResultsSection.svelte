@@ -39,7 +39,7 @@
 
 <Section title="Parsed Rows">
   <div class="flex flex-row gap-2">
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 max-w-1/2">
       <Button
         onclick={handleCsvClick}
         color="primary"
@@ -72,11 +72,13 @@
       </table>
     </div>
     {#if selected_row_index !== -1}
-      <ModifiedRowEditor
-        row={rows[selected_row_index]}
-        onSave={(r) => handleModifiedRowEditorSave(selected_row_index, r)}
-        onCancel={() => selected_row_index = -1}
-      />
+      <div class="max-w-1/2">
+        <ModifiedRowEditor
+          row={rows[selected_row_index]}
+          onSave={(r) => handleModifiedRowEditorSave(selected_row_index, r)}
+          onCancel={() => selected_row_index = -1}
+        />
+      </div>
     {/if}
   </div>
 </Section>
