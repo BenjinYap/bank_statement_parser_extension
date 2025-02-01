@@ -2,14 +2,12 @@
   import { ParsedRow } from "../../../models/ParsedRow.mjs";
   import { ModifiedRow } from "../../../models/ModifiedRow.svelte.js";
   import Button from "../../Button.svelte";
-  import Divider from "../../Divider.svelte";
   import Section from "../../Section.svelte";
   import Stack from "../../Stack.svelte";
 
   const CATEGORIES = [
     'Bills',
     'Food',
-    'Bbobbly flay',
   ];
 
   let props = $props();
@@ -28,6 +26,17 @@
     entry.applied_tax = !entry.applied_tax;
     const tax = 1.13;
     entry.amount = Number((entry.applied_tax ? entry.amount * tax : entry.amount / tax).toFixed(2)); 
+  }
+  
+  function handleSplitClick(split_count) {
+    for (let i = row.entries.length; i < split_count; i++) {
+      row.entries.push({
+        category:row.entries[0].category,
+        item:'',
+        amount:0.00,
+        applied_tax: true,
+      });
+    }
   }
 </script>
 
@@ -51,6 +60,14 @@
       </div>
     </div>
   </div>
+  {#if !(props.row instanceof ModifiedRow)}
+    <Stack direction="row">
+      <Button color="secondary" onclick={() => handleSplitClick(2)} disabled={row.entries.length >= 2} text="Split x2"/>
+      <Button color="secondary" onclick={() => handleSplitClick(3)} disabled={row.entries.length >= 3} text="Split x3"/>
+      <Button color="secondary" onclick={() => handleSplitClick(4)} disabled={row.entries.length >= 4} text="Split x4"/>
+      <Button color="secondary" onclick={() => handleSplitClick(5)} disabled={row.entries.length >= 5} text="Split x5"/>
+    </Stack>
+  {/if}
   <h3 class="text-base font-medium">Overrides</h3>
   <div class="table">
     <div class="thead col-span-5">
@@ -96,7 +113,7 @@
             <input class="w-full" bind:value={entry.item} />
           </div>
           <div class="td text-right">
-            <input class="w-full text-right" type="number" bind:value={entry.amount} />
+            <input class="w-full text-right" bind:value={entry.amount} />
           </div>
           <div class="td flex items-center justify-center">
             <input
