@@ -36,7 +36,7 @@ export const ITEM_REPLACEMENTS = {
     'fluffy glaze',
     'kibo market union',
   ],
-  'Eating out Haniya': [
+  'Eating out Duo': [
     'mcdonald',
     'wendys',
     'marble slab',
