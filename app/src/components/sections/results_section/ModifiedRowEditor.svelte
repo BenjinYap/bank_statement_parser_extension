@@ -38,6 +38,20 @@
       });
     }
   }
+  
+  function handleAmountKeyUp(e, entry) {
+    // Enter key only
+    if (e.keyCode !== 13) {
+      return;
+    }
+    
+    // If the amount is an equation, eval it
+    const amount = entry.amount;
+    if (String(amount).match(/^=\d+(\.\d+)?([+*]\d+(\.\d+)?)*$/)) {
+      // I'm a bad boy
+      entry.amount = Number(eval(amount.substring(1)));
+    }
+  }
 </script>
 
 <Section title="Modify Row">
@@ -113,7 +127,7 @@
             <input class="w-full" bind:value={entry.item} />
           </div>
           <div class="td text-right">
-            <input class="w-full text-right" bind:value={entry.amount} />
+            <input class="w-full text-right" bind:value={entry.amount} onkeyup={(e) => handleAmountKeyUp(e, entry)} />
           </div>
           <div class="td flex items-center justify-center">
             <input
@@ -124,6 +138,10 @@
           </div>
         </div>
       {/each}
+      <div class="tr col-span-5">
+        <div class="th col-span-3 text-right">Total</div>
+        <div class="th text-right">{Number(row.entries.reduce((acc, obj) => Number(acc) + Number(obj.amount), 0)).toFixed(2)}</div>
+      </div>
       <div class="tr col-span-5">
         <div class="p-0 td border-0 col-span-5">
           <Button
