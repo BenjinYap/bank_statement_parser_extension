@@ -5,6 +5,7 @@
   import ModifiedRowEditor from "./results_section/ModifiedRowEditor.svelte";
   import ResultsRow from "./results_section/ResultsRow.svelte";
   import Button from "../Button.svelte";
+  import ResultsTable from "./results_section/ResultsTable.svelte";
 
   let props = $props();
   let rows = $derived(props.rows);
@@ -39,40 +40,20 @@
 
 <Section title="Parsed Rows">
   <div class="flex flex-row gap-2">
-    <div class="flex flex-col gap-2 max-w-1/2">
+    <div class="flex flex-col gap-2 max-w-1/2 flex-auto">
       <Button
         onclick={handleCsvClick}
         color="primary"
         text="Copy CSV"
       />
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Category</th>
-            <th>Item</th>
-            <th class="amount">Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#if rows === undefined }
-            <h1>Loading</h1>
-          {:else}
-            {#each rows as row, i}
-              {#key row}
-                <ResultsRow
-                  row={row}
-                  is_selected={selected_row_index === i}
-                  onclick={() => {selected_row_index = i; console.log(i)}}
-                />
-              {/key}
-            {/each}
-          {/if}
-        </tbody>
-      </table>
+      <ResultsTable
+        selected_row_index={selected_row_index}
+        onclick={(i) => { selected_row_index = i; console.log(selected_row_index) }}
+        rows={rows}
+      />
     </div>
     {#if selected_row_index !== -1}
-      <div class="max-w-1/2">
+      <div class="max-w-1/2 flex-auto">
         <ModifiedRowEditor
           row={rows[selected_row_index]}
           onSave={(r) => handleModifiedRowEditorSave(selected_row_index, r)}

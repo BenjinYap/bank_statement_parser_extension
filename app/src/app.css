@@ -16,20 +16,28 @@
     @apply text-text-200;
   }
   
-  th, td {
-    @apply border-2 border-surface-700 px-2 py-1 border-collapse;
+  .th, .td {
+    @apply border-1 border-surface-700 px-2 py-1 border-collapse;
   }
   
-  table {
-    @apply text-sm;
+  .table {
+    @apply !grid text-sm border-1 border-surface-700;
   }
   
-  th {
+  .th {
     @apply font-medium text-left;
   }
   
-  td {
-    @apply text-nowrap;
+  .thead, .tbody {
+    @apply grid grid-cols-subgrid;
+  }
+  
+  .thead {
+    @apply bg-surface-800;
+  }
+  
+  .tr {
+    @apply grid grid-cols-subgrid;
   }
   
   input, select {
