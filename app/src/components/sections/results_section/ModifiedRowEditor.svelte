@@ -86,13 +86,7 @@
   <div class="table">
     <div class="thead col-span-5">
       <div class="tr col-span-5">
-        <div class="td">
-          <Button
-            class="!p-0 invisible"
-            icon="close"
-            color="error"
-          />
-        </div>
+        <div class="th"></div>
         <div class="th">Category</div>
         <div class="th">Item</div>
         <div class="th text-right">Amount</div>

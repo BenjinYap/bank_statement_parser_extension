@@ -7,6 +7,8 @@
   import { ParsedRow } from "./models/ParsedRow.mjs";
   import { getFormattedDate } from "./utils/date.mjs";
   import { CATEGORY_REPLACEMENTS, doReplacement } from "./utils/replacements.mjs";
+  import { Settings } from "./models/Settings.mjs";
+  import SettingsSection from "./components/sections/SettingsSection.svelte";
 
   let date_include_left;
   let date_include_right = new Date();
@@ -14,9 +16,14 @@
 
   let table_stats;
   let all_success_rows = $state(undefined);
+  let settings = new Settings();
 
   (async () => {
     let dom;
+    
+    // await settings.save();
+    console.log(await settings.load());
+    console.log('aaaaaaa');
 
     await new Promise((resolve) => {
       // running in real extension mode
@@ -61,6 +68,10 @@
   
   <MetaSection
     {table_stats}
+  />
+  
+  <SettingsSection
+    {settings}
   />
   
   <ResultsSection
