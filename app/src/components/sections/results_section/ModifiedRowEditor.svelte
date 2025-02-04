@@ -6,9 +6,30 @@
   import Stack from "../../Stack.svelte";
 
   const CATEGORIES = [
-    'Bills',
+    'Electronics',
     'Food',
-  ];
+    'Transportation',
+    'Video Games',
+    'Travel',
+    'Office Supplies',
+    'Pay',
+    'Bills',
+    'Health',
+    'Books',
+    'Subscriptions',
+    'Furniture',
+    'Collectibles',
+    'Clothing',
+    'Home',
+    'Investments',
+    'Hobbies',
+    'Kitchen',
+    'Eunice',
+    'Haniya',
+    'Board games',
+    'Tranportation',
+    'Yuzu',
+  ].sort();
 
   let props = $props();
 
