@@ -12,7 +12,6 @@
           item: row.item,
           amount: row.amount,
           original_item: row.original_item,
-          awdawd: 1,
           is_modified: false,
         }];
       } else {
@@ -24,13 +23,22 @@
             amount: e.amount,
             original_item: row.parsed_row.original_item,
             is_modified: true,
-            is_first_entry: row.entries.length > 1 && i === 0,
-            is_last_entry: row.entries.length > 1 && i === row.entries.length - 1,
+            // is_first_entry: row.entries.length > 1 && i === 0,
+            // is_last_entry: row.entries.length > 1 && i === row.entries.length - 1,
           };
         });
       }
     }) : undefined;
   });
+  
+  const DEFAULT_ROW_CLASSES = {
+    background: 'bg-surface-900',
+    selected: 'bg-surface-700',
+  };
+  const MODIFIED_ROW_CLASSES = {
+    background: 'bg-secondary-900',
+    selected: 'bg-secondary-700',
+  };
 </script>
 
 <div class="table">
@@ -48,9 +56,10 @@
     {:else}
       {#each rows as row, i}
         {#each row as entry}
+          {@const row_classes = entry.is_modified ? MODIFIED_ROW_CLASSES : DEFAULT_ROW_CLASSES}
           <div
             onclick={() => props.onclick(i)}
-            class="tr col-span-4 {props.selected_row_index === i ? 'bg-surface-700' : ''} {entry.is_first_entry ? 'first' : ''} {entry.is_last_entry ? 'last' : ''}"
+            class="tr col-span-4 {props.selected_row_index === i ? row_classes.selected : row_classes.background} {entry.is_first_entry ? 'first' : ''} {entry.is_last_entry ? 'last' : ''}"
           >
             <div class="td">{entry.date}</div>
             <div class="td">{entry.category}</div>
