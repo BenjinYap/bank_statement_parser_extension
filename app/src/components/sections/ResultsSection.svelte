@@ -22,6 +22,10 @@
     selected_row_index = -1;
   }
   
+  function handleResultsTableRowClick(index) {
+    selected_row_index = index;
+  }
+  
   function handleCsvClick() {
     let csv = '';
     rows.forEach((r) => {
@@ -48,7 +52,7 @@
       />
       <ResultsTable
         selected_row_index={selected_row_index}
-        onclick={(i) => { selected_row_index = i; console.log(selected_row_index) }}
+        onclick={handleResultsTableRowClick}
         rows={rows}
       />
     </div>

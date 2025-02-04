@@ -54,7 +54,10 @@
   }
 </script>
 
-<Section title="Modify Row">
+<Section
+  class="sticky top-2"
+  title="Modify Row"
+>
   <h3 class="text-base font-medium">Original</h3>
   <div class="table">
     <div class="thead col-span-4">

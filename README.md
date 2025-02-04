@@ -2,7 +2,6 @@
 
 * replace eval with math parser
 * default to tax off?
-* modify widget should be sticky
 * add all the categories
 * improve tab indexes
 * add original item to everything
