@@ -145,7 +145,12 @@
             <input class="w-full" bind:value={entry.item} />
           </div>
           <div class="td text-right">
-            <input class="w-full text-right" bind:value={entry.amount} onkeyup={(e) => handleAmountKeyUp(e, entry)} />
+            <input
+              class="w-full text-right"
+              bind:value={entry.amount}
+              onkeyup={(e) => handleAmountKeyUp(e, entry)}
+              onbeforeinput={() => entry.applied_tax = false}
+            />
           </div>
           <div class="td flex items-center justify-center">
             <input

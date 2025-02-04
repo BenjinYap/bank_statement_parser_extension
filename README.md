@@ -1,7 +1,6 @@
 # bank_statement_parser_extension
 
 * replace eval with math parser
-* default to tax off?
 * improve tab indexes
 * add original item to everything
 * add bg color to modified rows?
