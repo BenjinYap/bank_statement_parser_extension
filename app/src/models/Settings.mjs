@@ -43,13 +43,13 @@ export class Settings {
   
   async load () {
     if (this.storage_area) {
-      raw = await this.storage_area.get(NAMESPACE);
+      // raw = await this.storage_area.get(NAMESPACE);
     } else {
       const json = JSON.parse(this.storage.getItem(NAMESPACE));
-      console.log(json, this.storage.getItem(NAMESPACE));
-      this.category_replacements = json.category_replacements;
-      this.item_replacements = json.item_replacements;
-      console.log(this);
+      // console.log(json, this.storage.getItem(NAMESPACE));
+      this.category_replacements = json.cr;
+      this.item_replacements = json.ir;
+      // console.log(this);
     }
   }
   

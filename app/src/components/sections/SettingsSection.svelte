@@ -16,28 +16,32 @@
       </div>
     </div>
     <div class="tbody col-span-3">
-      {#each props.settings.category_replacements as repl}
+      {#each Object.entries(props.settings.category_replacements) as [category, matches]}
         <div class="tr col-span-3">
           <div class="td flex items-center">
             <Button
               class="!p-0"
-              onclick={() => row.entries.splice(i, 1)}
-              disabled={row.entries.length <= 1}
+              onclick
+              disabled
               icon="close"
               color="error"
             />
           </div>
           <div class="td">
-            <select bind:value={entry.category}>
-              {#each CATEGORIES as cat}
-                <option
-                  value={cat}
-                  selected={cat === entry.category}
-                >
-                  {cat}
-                </option>
-              {/each}
-            </select>
+            <input class="w-full" value={category} />
+<!--            <select bind:value={entry.category}>-->
+<!--              {#each CATEGORIES as cat}-->
+<!--                <option-->
+<!--                  value={cat}-->
+<!--                  selected={cat === entry.category}-->
+<!--                >-->
+<!--                  {cat}-->
+<!--                </option>-->
+<!--              {/each}-->
+<!--            </select>-->
+          </div>
+          <div class="td">
+            <input class="w-full" value={category} />
           </div>
         </div>
       {/each}

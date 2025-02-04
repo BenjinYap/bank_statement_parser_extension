@@ -1,6 +1,10 @@
 # bank_statement_parser_extension
 
-* rewrite code to be better and have classes and shit
-* fix dev tools so i can use it
+* replace eval with math parser
+* default to tax off?
+* modify widget should be sticky
+* add all the categories
+* improve tab indexes
+* add original item to everything
+* add bg color to modified rows?
 * automatic td detect
-* highlight date on td and use as starting date, open popup automatically and parse

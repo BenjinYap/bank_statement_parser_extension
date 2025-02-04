@@ -22,7 +22,7 @@
     let dom;
     
     // await settings.save();
-    console.log(await settings.load());
+    await settings.load();
     console.log('aaaaaaa');
 
     await new Promise((resolve) => {
