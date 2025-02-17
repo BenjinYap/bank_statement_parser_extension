@@ -70,8 +70,20 @@
     // If the amount is an equation, eval it
     const amount = entry.amount;
     if (String(amount).match(/^=\d+(\.\d+)?([+\-*]\d+(\.\d+)?)*$/)) {
-      // I'm a bad boy
+      // If shift key, mark as tax applied without applying it for reasons like
+      // subtracting an item from a receipt total or something
+      if (e.shiftKey) {
+        entry.applied_tax = true;
+      }
+      
+      // TODO: Add error handling
       entry.amount = calculate(amount.substring(1));
+      
+      // If no shift key, apply tax after the calculation because I'm most likely
+      // using math to sum up items from the receipt, which needs to include tax afterwards
+      if (!e.shiftKey) {
+        handleTaxClick(entry);
+      }
     }
   }
 </script>
