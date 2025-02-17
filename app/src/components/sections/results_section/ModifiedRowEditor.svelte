@@ -92,15 +92,21 @@
   }
   
   function handleBodyKeyDown(e) {
-    if (e.ctrlKey && e.keyCode === 187) {
-      e.preventDefault();
+    if (e.ctrlKey) {
+      if ([187, 83].includes(e.keyCode)) {
+        e.preventDefault();
+      }
     }
   }
   
   function handleBodyKeyUp(e) {
-    // Ctrl + + to add new entry
-    if (e.ctrlKey && e.keyCode === 187) {
-      addNewEntry();
+    if (e.ctrlKey) {
+      
+      if (e.keyCode === 187) {  // Ctrl + + to add new entry
+        addNewEntry();
+      } else if (e.keyCode === 83) {  // Ctrl + S to save
+        handleSave();
+      }
     }
   }
 </script>
