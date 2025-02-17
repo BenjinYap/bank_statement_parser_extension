@@ -4,6 +4,7 @@
   import Button from "../../Button.svelte";
   import Section from "../../Section.svelte";
   import Stack from "../../Stack.svelte";
+  import { calculate } from "../../../utils/calculator.mjs";
 
   const CATEGORIES = [
     'Electronics',
@@ -68,9 +69,9 @@
     
     // If the amount is an equation, eval it
     const amount = entry.amount;
-    if (String(amount).match(/^=\d+(\.\d+)?([+*]\d+(\.\d+)?)*$/)) {
+    if (String(amount).match(/^=\d+(\.\d+)?([+\-*]\d+(\.\d+)?)*$/)) {
       // I'm a bad boy
-      entry.amount = Number(eval(amount.substring(1)));
+      entry.amount = calculate(amount.substring(1));
     }
   }
 </script>
