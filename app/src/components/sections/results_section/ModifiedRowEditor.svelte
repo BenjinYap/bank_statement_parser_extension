@@ -61,6 +61,10 @@
     }
   }
   
+  function addNewEntry() {
+    row.entries.push({category:row.entries.at(-1).category, item:'', amount:0.00, applied_tax: true})
+  }
+  
   function handleAmountKeyUp(e, entry) {
     // Enter key only
     if (e.keyCode !== 13) {
@@ -86,7 +90,22 @@
       }
     }
   }
+  
+  function handleBodyKeyDown(e) {
+    if (e.ctrlKey && e.keyCode === 187) {
+      e.preventDefault();
+    }
+  }
+  
+  function handleBodyKeyUp(e) {
+    // Ctrl + + to add new entry
+    if (e.ctrlKey && e.keyCode === 187) {
+      addNewEntry();
+    }
+  }
 </script>
+
+<svelte:body onkeydown={handleBodyKeyDown} onkeyup={handleBodyKeyUp} />
 
 <Section
   class="sticky top-2"
@@ -184,7 +203,7 @@
             class="w-full rounded-t-none"
             color="secondary"
             text="Add"
-            onclick={() => row.entries.push({category:row.entries.at(-1).category, item:'', amount:0.00, applied_tax: true})}
+            onclick={addNewEntry}
           />
         </div>
       </div>
