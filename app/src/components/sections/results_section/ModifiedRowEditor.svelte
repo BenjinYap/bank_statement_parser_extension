@@ -33,8 +33,8 @@
   ].sort();
 
   let props = $props();
-
   let row = $derived(props.row instanceof ParsedRow ? new ModifiedRow(props.row) : ModifiedRow.clone(props.row));
+  let category_inputs = $state([]);
   
   function handleSave() {
     props.onSave(row);
@@ -62,8 +62,16 @@
   }
   
   function addNewEntry() {
-    row.entries.push({category:row.entries.at(-1).category, item:'', amount:0.00, applied_tax: true})
+    row.entries.push({category: row.entries.at(-1).category, item: '', amount: 0.00, applied_tax: true});
   }
+  
+  // This feels very wrong, but it's an effect to auto focus the last Category select whenever
+  // rows are added or removed
+  $effect(() => {
+    // When a row is removed, the select is replaced with a null in the same spot, that's
+    // why I filter by the last element that isn't null to focus instead
+    category_inputs.findLast(a => !!a).focus();
+  });
   
   function handleAmountKeyUp(e, entry) {
     // Enter key only
@@ -170,7 +178,7 @@
             />
           </div>
           <div class="td">
-            <select bind:value={entry.category}>
+            <select bind:value={entry.category} bind:this={category_inputs[i]}>
               {#each CATEGORIES as cat}
                 <option
                   value={cat}
