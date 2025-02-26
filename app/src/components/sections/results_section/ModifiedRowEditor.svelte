@@ -35,6 +35,11 @@
   let props = $props();
   let row = $derived(props.row instanceof ParsedRow ? new ModifiedRow(props.row) : ModifiedRow.clone(props.row));
   let category_inputs = $state([]);
+  let item_inputs = $state([]);
+  let amount_inputs = $state([]);
+  // This is an array [x, y] where x is the column and y is the row for
+  // tracking the current focused input in the row entries
+  let focused_input = null;
   
   function handleSave() {
     props.onSave(row);
@@ -100,6 +105,14 @@
     }
   }
   
+  // Prevent the category select from propagating the up and down arrows
+  // so that we maintain the up/down function to select dropdown items
+  function handleSelectKeyUp(e) {
+    if ([38, 40].includes(e.keyCode)) {
+      e.stopPropagation();
+    }
+  }
+  
   function handleBodyKeyDown(e) {
     if (e.ctrlKey) {
       if ([187, 83].includes(e.keyCode)) {
@@ -110,13 +123,37 @@
   
   function handleBodyKeyUp(e) {
     if (e.ctrlKey) {
-      
       if (e.keyCode === 187) {  // Ctrl + + to add new entry
         addNewEntry();
       } else if (e.keyCode === 83) {  // Ctrl + S to save
         handleSave();
       }
+    } else {
+      // Handle up and down arrows to focus the previous/next row textfield within the same
+      // column, so pressing down in the amount field will focus the amount field below it
+      if (e.keyCode === 38) {
+        if (focused_input[1] > 0) {
+          if (focused_input[0] === 1) {
+            item_inputs[focused_input[1] - 1].focus();
+          } else if (focused_input[0] === 2) {
+            amount_inputs[focused_input[1] - 1].focus();
+          }
+        }
+      } else if (e.keyCode === 40) {
+        if (focused_input[1] < row.entries.length - 1) {
+          if (focused_input[0] === 1) {
+            item_inputs[focused_input[1] + 1].focus();
+          } else if (focused_input[0] === 2) {
+            amount_inputs[focused_input[1] + 1].focus();
+          }
+        }
+      }
     }
+  }
+  
+  // Track the current input that just got focused
+  function handleFocus(col, row) {
+    focused_input = [col, row];
   }
 </script>
 
@@ -178,7 +215,11 @@
             />
           </div>
           <div class="td">
-            <select bind:value={entry.category} bind:this={category_inputs[i]}>
+            <select
+              bind:value={entry.category}
+              bind:this={category_inputs[i]}
+              onkeyup={handleSelectKeyUp}
+            >
               {#each CATEGORIES as cat}
                 <option
                   value={cat}
@@ -190,12 +231,19 @@
             </select>
           </div>
           <div class="td">
-            <input class="w-full" bind:value={entry.item} />
+            <input
+              class="w-full"
+              bind:value={entry.item}
+              bind:this={item_inputs[i]}
+              onfocus={() => handleFocus(1, i)}
+            />
           </div>
           <div class="td text-right">
             <input
               class="w-full text-right"
               bind:value={entry.amount}
+              bind:this={amount_inputs[i]}
+              onfocus={() => handleFocus(2, i)}
               onkeyup={(e) => handleAmountKeyUp(e, entry)}
               onbeforeinput={() => entry.applied_tax = false}
             />
