@@ -24,11 +24,13 @@
     // await settings.save();
     await settings.load();
     console.log('aaaaaaa');
+    
+    const dev_mode = !chrome.runtime;
 
     await new Promise((resolve) => {
       // running in real extension mode
       // noinspection JSUnresolvedReference,JSDeprecatedSymbols
-      if (chrome.runtime) {
+      if (!dev_mode) {
         // noinspection JSUnresolvedReference,JSDeprecatedSymbols
         chrome.runtime.onMessage.addListener((req) => {
           if (req.action === 'tab_opened') {
@@ -51,7 +53,10 @@
     all_success_rows = table_stats.flatMap(table => table.success_rows);
     // sort by ascending date
     all_success_rows.sort((a, b) => new Date(a.date) > new Date(b.date) ? 1 : -1);
-    all_success_rows = all_success_rows.slice(0, 5);
+    
+    if (dev_mode) {
+      all_success_rows = all_success_rows.slice(0, 5);
+    }
   })();
 </script>
 
