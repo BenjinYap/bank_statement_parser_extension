@@ -26,6 +26,7 @@
   type="button"
   onclick={props.onclick}
   disabled={props.disabled}
+  tabindex={props.tabindex ?? 0}
 >
   {#if props.icon}
     <span

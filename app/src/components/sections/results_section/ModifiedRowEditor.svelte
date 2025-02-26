@@ -161,6 +161,7 @@
         <div class="tr col-span-5">
           <div class="td flex items-center">
             <Button
+              tabindex="-1"
               class="!p-0"
               onclick={() => row.entries.splice(i, 1)}
               disabled={row.entries.length <= 1}
@@ -194,6 +195,7 @@
           <div class="td flex items-center justify-center">
             <input
               type="checkbox"
+              tabindex="-1"
               onchange={() => handleTaxClick(entry)}
               checked={entry.applied_tax}
             />
