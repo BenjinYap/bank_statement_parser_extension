@@ -78,6 +78,15 @@
     category_inputs.findLast(a => !!a).focus();
   });
   
+  // Track the current input that just got focused
+  function handleFocus(col, row) {
+    if (col === null) {
+      focused_input = null;
+    } else {
+      focused_input = [col, row];
+    }
+  }
+  
   function handleAmountKeyUp(e, entry) {
     // Enter key only
     if (e.keyCode !== 13) {
@@ -112,6 +121,33 @@
     }
   }
   
+  function handleInputKeyUp(e) {
+    const focused_x = focused_input[0];
+    const focused_y = focused_input[1];
+    
+    // Handle up and down arrows to switch to the input above or below the current input, like in
+    // excel
+    if (e.keyCode === 38) {
+      if (focused_y > 0) {
+        const column_inputs_above = [
+          category_inputs[focused_y - 1],
+          item_inputs[focused_y - 1],
+          amount_inputs[focused_y - 1],
+        ];
+        column_inputs_above[focused_x].focus();
+      }
+    } else if (e.keyCode === 40) {
+      if (focused_y < row.entries.length - 1) {
+        const column_inputs_below = [
+          category_inputs[focused_y + 1],
+          item_inputs[focused_y + 1],
+          amount_inputs[focused_y + 1],
+        ];
+        column_inputs_below[focused_x].focus();
+      }
+    }
+  }
+  
   // Prevent the browser from handling these browser-specific hotkeys cause i am using them
   function handleBodyKeyDown(e) {
     if (e.ctrlKey) {
@@ -129,37 +165,7 @@
       } else if (e.keyCode === 83) {  // Ctrl + S to save
         handleSave();
       }
-    } else {
-      const focused_x = focused_input[0];
-      const focused_y = focused_input[1];
-      
-      // Handle up and down arrows to switch to the input above or below the current input, like in
-      // excel
-      if (e.keyCode === 38) {
-        if (focused_y > 0) {
-          const column_inputs_above = [
-            category_inputs[focused_y - 1],
-            item_inputs[focused_y - 1],
-            amount_inputs[focused_y - 1],
-          ];
-          column_inputs_above[focused_x].focus();
-        }
-      } else if (e.keyCode === 40) {
-        if (focused_y < row.entries.length - 1) {
-          const column_inputs_below = [
-            category_inputs[focused_y + 1],
-            item_inputs[focused_y + 1],
-            amount_inputs[focused_y + 1],
-          ];
-          column_inputs_below[focused_x].focus();
-        }
-      }
     }
-  }
-  
-  // Track the current input that just got focused
-  function handleFocus(col, row) {
-    focused_input = [col, row];
   }
 </script>
 
@@ -225,7 +231,9 @@
               bind:value={entry.category}
               bind:this={category_inputs[i]}
               onkeydown={handleInputKeyDown}
+              onkeyup={handleInputKeyUp}
               onfocus={() => handleFocus(0, i)}
+              onblur={() => handleFocus(null)}
             >
               {#each CATEGORIES as cat}
                 <option
@@ -243,7 +251,9 @@
               bind:value={entry.item}
               bind:this={item_inputs[i]}
               onkeydown={handleInputKeyDown}
+              onkeyup={handleInputKeyUp}
               onfocus={() => handleFocus(1, i)}
+              onblur={() => handleFocus(null)}
             />
           </div>
           <div class="td text-right">
@@ -252,8 +262,12 @@
               bind:value={entry.amount}
               bind:this={amount_inputs[i]}
               onfocus={() => handleFocus(2, i)}
+              onblur={() => handleFocus(null)}
               onkeydown={handleInputKeyDown}
-              onkeyup={(e) => handleAmountKeyUp(e, entry)}
+              onkeyup={(e) => {
+                handleInputKeyUp(e);
+                handleAmountKeyUp(e, entry);
+              }}
               onbeforeinput={() => entry.applied_tax = false}
             />
           </div>
