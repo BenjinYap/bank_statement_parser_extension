@@ -2,6 +2,8 @@
   import { ParsedRow } from "../../../models/ParsedRow.mjs";
   
   let props = $props();
+  let tbody;  // DOM node of the tbody
+  let is_table_focused = false;
   
   let rows = $derived.by(() => {
     return props.rows ? props.rows.map((row) => {
@@ -33,13 +35,33 @@
   
   const DEFAULT_ROW_CLASSES = {
     background: 'bg-surface-900',
-    selected: 'bg-surface-700',
+    selected: 'bg-surface-700 font-bold',
   };
   const MODIFIED_ROW_CLASSES = {
     background: 'bg-secondary-900',
-    selected: 'bg-secondary-700',
+    selected: 'bg-secondary-700 font-bold',
   };
+  
+  function handleBodyMouseDown(e) {
+    const element = document.elementFromPoint(e.clientX, e.clientY);
+    is_table_focused = tbody.contains(element);
+  }
+  
+  function handleBodyKeyDown(e) {
+    // if (is_table_focused) {
+    //   if (e.keyCode === 38) {
+    //     props.onclick(props.selected_row_index - 1);
+    //   } else if (e.keyCode === 40) {
+    //     props.onclick(props.selected_row_index + 1);
+    //   }
+    // }
+  }
 </script>
+
+<svelte:body
+  onmousedown={handleBodyMouseDown}
+  onkeydown={handleBodyKeyDown}
+/>
 
 <div class="table">
   <div class="thead col-span-4">
@@ -50,7 +72,7 @@
         <div class="th text-right">Amount</div>
       </div>
     </div>
-  <div class="tbody col-span-4">
+  <div class="tbody col-span-4" bind:this={tbody}>
     {#if rows === undefined }
       <h1>Loading</h1>
     {:else}
