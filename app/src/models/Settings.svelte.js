@@ -1,6 +1,9 @@
 const NAMESPACE = 'awdawd';
 
-export class Settings {
+export class SettingsSvelte {
+  category_replacements = $state({});
+  item_replacements = {};
+  
   constructor() {
     if (chrome.runtime) {
       this.storage_area = chrome.storage.local;
@@ -8,37 +11,35 @@ export class Settings {
       this.storage = window.localStorage;
     }
     
-    this.category_replacements = {
-  'Food': [
-    'drinks to go',
-    'drinks for home',
-    'eating out',
-    'groceries',
-    "haniya's fridge",
-    'snacks',
-  ],
-  'Bills': [
-    'amazon web services',
-    'phone',
-    'internet',
-  ],
-  'Subscriptions': [
-    'spotify',
-    'jetbrains',
-    'netflix',
-  ],
-  'Eunice': [
-    'Food',
-  ],
-  'Haniya': [
-    'Adventures',
-  ],
-  'Transportation': [
-    'fuel',
-  ],
-};
-    this.category_replacements = {};
-    this.item_replacements = {};
+//     this.category_replacements = {
+//   'Food': [
+//     'drinks to go',
+//     'drinks for home',
+//     'eating out',
+//     'groceries',
+//     "haniya's fridge",
+//     'snacks',
+//   ],
+//   'Bills': [
+//     'amazon web services',
+//     'phone',
+//     'internet',
+//   ],
+//   'Subscriptions': [
+//     'spotify',
+//     'jetbrains',
+//     'netflix',
+//   ],
+//   'Eunice': [
+//     'Food',
+//   ],
+//   'Haniya': [
+//     'Adventures',
+//   ],
+//   'Transportation': [
+//     'fuel',
+//   ],
+// };
   }
   
   async load () {

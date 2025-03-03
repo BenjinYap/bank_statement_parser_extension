@@ -7,7 +7,7 @@
   import { ParsedRow } from "./models/ParsedRow.mjs";
   import { getFormattedDate } from "./utils/date.mjs";
   import { CATEGORY_REPLACEMENTS, doReplacement } from "./utils/replacements.mjs";
-  import { Settings } from "./models/Settings.mjs";
+  import { SettingsSvelte } from "./models/Settings.svelte.js";
   import SettingsSection from "./components/sections/SettingsSection.svelte";
 
   let date_include_left;
@@ -16,14 +16,13 @@
 
   let table_stats;
   let all_success_rows = $state(undefined);
-  let settings = new Settings();
+  let settings = new SettingsSvelte();
 
   (async () => {
     let dom;
     
     // await settings.save();
     await settings.load();
-    console.log('aaaaaaa');
     
     const dev_mode = !chrome.runtime;
 
@@ -71,13 +70,13 @@
     {date_include_right}
   />
   
-  <MetaSection
-    {table_stats}
-  />
-  
-<!--  <SettingsSection-->
-<!--    {settings}-->
+<!--  <MetaSection-->
+<!--    {table_stats}-->
 <!--  />-->
+  
+  <SettingsSection
+    {settings}
+  />
   
   <ResultsSection
     rows={all_success_rows}
