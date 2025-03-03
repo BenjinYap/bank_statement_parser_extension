@@ -194,14 +194,14 @@
       </div>
     </div>
   </div>
-  {#if !(props.row instanceof ModifiedRow)}
-    <Stack direction="row">
-      <Button color="secondary" onclick={() => handleSplitClick(2)} disabled={row.entries.length >= 2} text="Split x2"/>
-      <Button color="secondary" onclick={() => handleSplitClick(3)} disabled={row.entries.length >= 3} text="Split x3"/>
-      <Button color="secondary" onclick={() => handleSplitClick(4)} disabled={row.entries.length >= 4} text="Split x4"/>
-      <Button color="secondary" onclick={() => handleSplitClick(5)} disabled={row.entries.length >= 5} text="Split x5"/>
-    </Stack>
-  {/if}
+  <!--{#if !(props.row instanceof ModifiedRow)}-->
+  <!--  <Stack direction="row">-->
+  <!--    <Button color="secondary" onclick={() => handleSplitClick(2)} disabled={row.entries.length >= 2} text="Split x2"/>-->
+  <!--    <Button color="secondary" onclick={() => handleSplitClick(3)} disabled={row.entries.length >= 3} text="Split x3"/>-->
+  <!--    <Button color="secondary" onclick={() => handleSplitClick(4)} disabled={row.entries.length >= 4} text="Split x4"/>-->
+  <!--    <Button color="secondary" onclick={() => handleSplitClick(5)} disabled={row.entries.length >= 5} text="Split x5"/>-->
+  <!--  </Stack>-->
+  <!--{/if}-->
   <h3 class="text-base font-medium">Overrides</h3>
   <div class="table">
     <div class="thead col-span-5">
