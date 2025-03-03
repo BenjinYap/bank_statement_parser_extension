@@ -13,7 +13,7 @@
   });
 </script>
 
-<Section title="Settings">
+<Section title="Settings" expanded={true}>
   <h3 class="text-base font-medium">Category Replacements</h3>
   <div class="table">
     <div class="thead col-span-3">

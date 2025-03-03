@@ -36,7 +36,6 @@
           csv += `${r.parsed_row.date},${a.category},${a.item},${a.amount}\n`;
         });
       }
-      
     });
     navigator.clipboard.writeText(csv);
   }
@@ -48,12 +47,17 @@
       <Button
         onclick={handleCsvClick}
         color="primary"
-        text="Copy CSV"
+        text="Re-parse Original Data"
       />
       <ResultsTable
         selected_row_index={selected_row_index}
         onclick={handleResultsTableRowClick}
         rows={rows}
+      />
+      <Button
+        onclick={handleCsvClick}
+        color="secondary"
+        text="Copy CSV"
       />
     </div>
     {#if selected_row_index !== -1}
