@@ -144,6 +144,3 @@ class CalculateError extends Error {
     this.data = data;
   }
 }
-
-const awd = '9-3+6';
-console.log(awd, '=', calculate(awd));
