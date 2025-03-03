@@ -105,14 +105,14 @@
     }
   }
   
-  // Prevent the category select from propagating the up and down arrows
-  // so that we maintain the up/down function to select dropdown items
-  function handleSelectKeyUp(e) {
+  // Prevent the the default up/down behavior for input fields because i have excel navigation
+  function handleInputKeyDown(e) {
     if ([38, 40].includes(e.keyCode)) {
-      e.stopPropagation();
+      e.preventDefault();
     }
   }
   
+  // Prevent the browser from handling these browser-specific hotkeys cause i am using them
   function handleBodyKeyDown(e) {
     if (e.ctrlKey) {
       if ([187, 83].includes(e.keyCode)) {
@@ -122,6 +122,7 @@
   }
   
   function handleBodyKeyUp(e) {
+    // Handle hotkeys with Ctrl
     if (e.ctrlKey) {
       if (e.keyCode === 187) {  // Ctrl + + to add new entry
         addNewEntry();
@@ -129,23 +130,28 @@
         handleSave();
       }
     } else {
-      // Handle up and down arrows to focus the previous/next row textfield within the same
-      // column, so pressing down in the amount field will focus the amount field below it
+      const focused_x = focused_input[0];
+      const focused_y = focused_input[1];
+      
+      // Handle up and down arrows to switch to the input above or below the current input, like in
+      // excel
       if (e.keyCode === 38) {
-        if (focused_input[1] > 0) {
-          if (focused_input[0] === 1) {
-            item_inputs[focused_input[1] - 1].focus();
-          } else if (focused_input[0] === 2) {
-            amount_inputs[focused_input[1] - 1].focus();
-          }
+        if (focused_y > 0) {
+          const column_inputs_above = [
+            category_inputs[focused_y - 1],
+            item_inputs[focused_y - 1],
+            amount_inputs[focused_y - 1],
+          ];
+          column_inputs_above[focused_x].focus();
         }
       } else if (e.keyCode === 40) {
-        if (focused_input[1] < row.entries.length - 1) {
-          if (focused_input[0] === 1) {
-            item_inputs[focused_input[1] + 1].focus();
-          } else if (focused_input[0] === 2) {
-            amount_inputs[focused_input[1] + 1].focus();
-          }
+        if (focused_y < row.entries.length - 1) {
+          const column_inputs_below = [
+            category_inputs[focused_y + 1],
+            item_inputs[focused_y + 1],
+            amount_inputs[focused_y + 1],
+          ];
+          column_inputs_below[focused_x].focus();
         }
       }
     }
@@ -218,7 +224,8 @@
             <select
               bind:value={entry.category}
               bind:this={category_inputs[i]}
-              onkeyup={handleSelectKeyUp}
+              onkeydown={handleInputKeyDown}
+              onfocus={() => handleFocus(0, i)}
             >
               {#each CATEGORIES as cat}
                 <option
@@ -235,6 +242,7 @@
               class="w-full"
               bind:value={entry.item}
               bind:this={item_inputs[i]}
+              onkeydown={handleInputKeyDown}
               onfocus={() => handleFocus(1, i)}
             />
           </div>
@@ -244,6 +252,7 @@
               bind:value={entry.amount}
               bind:this={amount_inputs[i]}
               onfocus={() => handleFocus(2, i)}
+              onkeydown={handleInputKeyDown}
               onkeyup={(e) => handleAmountKeyUp(e, entry)}
               onbeforeinput={() => entry.applied_tax = false}
             />
