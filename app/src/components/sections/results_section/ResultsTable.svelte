@@ -91,7 +91,7 @@
                 {@html `<span class="text-xs">(${entry.original_item})</span>`}
               {/if}
             </div>
-            <div class="td text-right">{entry.amount}</div>
+            <div class="td text-right">{entry.amount.toFixed(2)}</div>
           </div>
         {/each}
       {/each}

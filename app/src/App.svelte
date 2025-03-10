@@ -74,9 +74,9 @@
 <!--    {table_stats}-->
 <!--  />-->
   
-  <SettingsSection
-    {settings}
-  />
+<!--  <SettingsSection-->
+<!--    {settings}-->
+<!--  />-->
   
   <ResultsSection
     rows={all_success_rows}
