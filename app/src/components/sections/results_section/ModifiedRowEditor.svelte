@@ -71,11 +71,16 @@
   }
   
   // This feels very wrong, but it's an effect to auto focus the last Category select whenever
-  // rows are added or removed
+  // rows are added or removed, or when switching between different rows
   $effect(() => {
+    // This is a hack to trigger this effect whenever the row changes by
+    // switching between rows
+    // TODO: I don't know enough about effects and reactivity to have a better solution
+    row;
+    
     // When a row is removed, the select is replaced with a null in the same spot, that's
     // why I filter by the last element that isn't null to focus instead
-    category_inputs.findLast(a => !!a).focus();
+    category_inputs.findLast(a => !!a)?.focus();
   });
   
   // Track the current input that just got focused
