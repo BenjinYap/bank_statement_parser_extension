@@ -28,8 +28,8 @@
     'Eunice',
     'Haniya',
     'Board games',
-    'Tranportation',
     'Yuzu',
+    'Bicycle',
   ].sort();
 
   let props = $props();
