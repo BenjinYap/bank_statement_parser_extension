@@ -22,7 +22,7 @@
     let dom;
     
     // await settings.save();
-    await settings.load();
+    // await settings.load();
     
     const dev_mode = !chrome.runtime;
 
