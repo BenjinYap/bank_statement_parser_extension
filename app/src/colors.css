@@ -1,0 +1,77 @@
+@theme {
+  --color-surface-50: #54637D;
+  --color-surface-100: #515F79;
+  --color-surface-200: #4B5870;
+  --color-surface-300: #455166;
+  --color-surface-400: #3F4A5D;
+  --color-surface-500: #394354;
+  --color-surface-600: #333B4B;
+  --color-surface-700: #2C3442;
+  --color-surface-800: #262D39;
+  --color-surface-900: #202630;
+  --color-surface-950: #1D222B;
+  
+  
+  
+  --color-text-50: #f7f7f7;
+  --color-text-100: #ececed;
+  --color-text-200: #e2e2e3;  /*heading*/
+  --color-text-300: #c7c7c9;
+  --color-text-400: #acacae;
+  --color-text-500: #97979a;
+  --color-text-600: #87868a;
+  --color-text-700: #79797c;
+  --color-text-800: #656568;
+  --color-text-900: #535355;
+  --color-text-950: #353536;
+    
+  --color-primary-50: #FF9519;
+  --color-primary-100: #FF9111;
+  --color-primary-200: #FF8A02;
+  --color-primary-300: #F18200;
+  --color-primary-400: #E27A00;
+  --color-primary-500: #D37200;  /**/
+  --color-primary-600: #C36900;
+  --color-primary-700: #B46100;
+  --color-primary-800: #A55900;
+  --color-primary-900: #965100;
+  --color-primary-950: #8E4D00;
+  
+  --color-secondary-50: #619ED0;
+  --color-secondary-100: #5B9BCE;
+  --color-secondary-200: #4F94CA;
+  --color-secondary-300: #448CC7;
+  --color-secondary-400: #3A85C1;  /**/
+  --color-secondary-500: #367DB5;
+  --color-secondary-600: #3375A9;
+  --color-secondary-700: #2F6D9E;
+  --color-secondary-800: #2C6592;
+  --color-secondary-900: #285C86;
+  --color-secondary-950: #275880;
+  
+  
+  --color-tertiary-50: #87929E;
+  --color-tertiary-100: #838E9B;
+  --color-tertiary-200: #7A8694;
+  --color-tertiary-300: #727F8D;
+  --color-tertiary-400: #6B7785;  /**/
+  --color-tertiary-500: #646F7D;
+  --color-tertiary-600: #5D6874;
+  --color-tertiary-700: #57606C;
+  --color-tertiary-800: #505963;
+  --color-tertiary-900: #49515B;
+  --color-tertiary-950: #454D56;
+  
+  --color-error-50: #F37575;
+  --color-error-100: #F36E6E;
+  --color-error-200: #F16060;
+  --color-error-300: #F05252;
+  --color-error-400: #EF4444;  /**/
+  --color-error-500: #EE3636;
+  --color-error-600: #ED2828;
+  --color-error-700: #EB1A1A;
+  --color-error-800: #E21313;
+  --color-error-900: #D41212;
+  --color-error-950: #CD1212;
+  
+}

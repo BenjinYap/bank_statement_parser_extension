@@ -1,12 +1,23 @@
 import { getFormattedDate } from "./js/date.mjs";
 import { parseDom } from "./js/parser.mjs";
+import { mock } from "./mock.mjs";
 
+// running in real extension mode
 // noinspection JSUnresolvedReference,JSDeprecatedSymbols
-chrome.runtime.onMessage.addListener((request) => {
-  if (request.action === 'tab_opened') {
-    work(request);
-  }
-});
+if (chrome.runtime) {
+  // noinspection JSUnresolvedReference,JSDeprecatedSymbols
+  chrome.runtime.onMessage.addListener((request) => {
+    if (request.action === 'tab_opened') {
+      work(request);
+      console.log(JSON.stringify(request.html));
+    }
+  });
+} else {  // local dev mode
+  work({
+    date_from: 'Sep 10, 2024',
+    html: mock,
+  });
+}
 
 function work (request) {
   const t = document.querySelector('textarea');

@@ -6,6 +6,9 @@ export const CATEGORY_REPLACEMENTS = {
     'groceries',
     "haniya's fridge",
     'snacks',
+    'coffee shop',
+    'delivery',
+    'coco chicken',
   ],
   'Bills': [
     'amazon web services',
@@ -17,23 +20,23 @@ export const CATEGORY_REPLACEMENTS = {
     'jetbrains',
     'netflix',
   ],
-  'Eunice': [
-    'Food',
-  ],
   'Haniya': [
     'Adventures',
   ],
   'Transportation': [
     'fuel',
   ],
+  'Video Games': [
+    'steamgames',
+  ],
 };
 export const ITEM_REPLACEMENTS = {
   'Eating out': [
     'noodlebox',
     'sams grill',
+    'sam-s grill',
     'WOK BOX',
     'lazeez',
-    'fluffy glaze',
     'kibo market union',
   ],
   'Eating out Duo': [
@@ -43,19 +46,26 @@ export const ITEM_REPLACEMENTS = {
     'a&w',
     'popeyes',
     'east side marios',
+    'dominos pizza',
+  ],
+  'Delivery': ['skipthedishes'],
+  'Snacks': [
+    'fluffy glaze',
   ],
   'Drinks to go': [
-    ['tim hortons', (d, i, a) => a === 3.14],
+    'tim hortons',
     'coco fresh tea',
     'chatime',
     'gotcha bubble tea',
     'gongcha',
     'gong cha',
-    ['centurion coffee', (d, i, a) => a === 5.59],
-    ['esso circle', (d, i, a) => a === 2.51],
+    'kung fu tea',
+    ['esso circle', (d, i, a) => a < 10],
   ],
   'Coffee shop': [
     'java beans',
+    'centurion coffee',
+    'wfc 108 guelph',
   ],
   'Internet': ['bell canada'],
   'Phone': ['virgin plus'],
@@ -64,7 +74,6 @@ export const ITEM_REPLACEMENTS = {
   'Spotify': ['Spotify'],
   'Netflix': ['netflix'],
   'JetBrains': ['jetbrains'],
-  'Food': ['sp royal canin'],
   'Adventures': [
     'the round table',
     'activate cambridge',
@@ -74,6 +83,8 @@ export const ITEM_REPLACEMENTS = {
   ],
   'Fuel': [
     'mobil@',
+    'canadian tire gas bar',
+    'petro-canada',
   ],
 };
 
