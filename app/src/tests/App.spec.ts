@@ -1,21 +1,20 @@
 import { describe, expect, it, vi } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/svelte'
+import { render, waitFor } from '@testing-library/svelte'
 import App from '../App.svelte'
 
 describe('App', () => {
-  it('loads the mock bank page HTML into the textarea in dev mode', async () => {
-    // jsdom has no `chrome` global at all (unlike a real Chrome tab, where
-    // `chrome` exists but `chrome.runtime` is undefined outside an extension page).
+  it('renders parsed rows from the mock bank page in dev mode', async () => {
+    // jsdom has no `chrome` global; empty object → dev_mode path
     vi.stubGlobal('chrome', {})
 
     render(App)
 
-    const textarea = await waitFor(() => {
-      const el = screen.getByRole('textbox') as HTMLTextAreaElement
-      if (!el.value) throw new Error('textarea not populated yet')
-      return el
-    })
+    await waitFor(() => {
+      if (!document.body.textContent?.match(/\d{4}-\d{2}-\d{2}/)) {
+        throw new Error('rows not rendered yet')
+      }
+    }, { timeout: 5000 })
 
-    expect(textarea.value).toContain('_ngcontent-uyt-c435')
+    expect(document.body.textContent).toMatch(/\$\d+\.\d{2}/)
   })
 })
