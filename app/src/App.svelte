@@ -1,39 +1,39 @@
 <script lang="ts">
-  import { mock } from './mock'
-  import { parseDom } from './utils/parser'
-  import type { ParsedRow } from './models/ParsedRow'
+  import { mock } from './mock';
+  import { parseDom } from './utils/parser';
+  import type { ParsedRow } from './models/ParsedRow';
 
-  const DEV_DATE_FROM = new Date('Sep 10, 2024')
+  const DEV_DATE_FROM = new Date('Sep 10, 2024');
 
-  let rows: ParsedRow[] | undefined = $state(undefined)
+  let rows:ParsedRow[]|undefined = $state(undefined);
 
   ;(async () => {
-    const dev_mode = !chrome.runtime
+    const dev_mode = !chrome.runtime;
 
-    let html: string = ''
-    let dateFrom: Date = DEV_DATE_FROM
+    let html:string = '';
+    let dateFrom:Date = DEV_DATE_FROM;
 
     await new Promise<void>((resolve) => {
       if (!dev_mode) {
         chrome.runtime.onMessage.addListener((req) => {
           if (req.action === 'tab_opened') {
-            dateFrom = new Date(req.date_from)
-            dateFrom.setHours(0, 0, 0, 0)
-            html = req.html
-            resolve()
+            dateFrom = new Date(req.date_from);
+            dateFrom.setHours(0, 0, 0, 0);
+            html = req.html;
+            resolve();
           }
-        })
+        });
       } else {
-        html = mock
-        setTimeout(resolve, 100)
+        html = mock;
+        setTimeout(resolve, 100);
       }
-    })
+    });
 
-    const dateTo = new Date()
-    dateTo.setHours(-1, 0, 0, 0)
+    const dateTo = new Date();
+    dateTo.setHours(-1, 0, 0, 0);
 
-    const parsed = parseDom(html, dateFrom, dateTo)
-    rows = dev_mode ? parsed.slice(0, 5) : parsed
+    const parsed = parseDom(html, dateFrom, dateTo);
+    rows = dev_mode ? parsed.slice(0, 5) : parsed;
   })()
 </script>
 
