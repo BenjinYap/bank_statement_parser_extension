@@ -8,15 +8,17 @@
     amount: string;
   }
 
-  let { selectedGroup, onsave }: {
+  interface Props {
     selectedGroup: RowGroup;
     onsave: (newRows: ParsedRow[]) => void;
-  } = $props();
+  }
+
+  let props:Props = $props();
 
   let editRows:EditRow[] = $state([]);
 
   $effect(() => {
-    editRows = selectedGroup.current.map(r => ({
+    editRows = props.selectedGroup.current.map(r => ({
       category: r.category,
       item: r.item,
       amount: r.amount.toString(),
@@ -28,14 +30,14 @@
   }
 
   function save() {
-    const date = selectedGroup.original.date;
+    const date = props.selectedGroup.original.date;
     const newRows:ParsedRow[] = editRows.map(r => ({
       date,
       category: r.category,
       item: r.item,
       amount: parseFloat(r.amount) || 0,
     }));
-    onsave(newRows);
+    props.onsave(newRows);
   }
 </script>
 

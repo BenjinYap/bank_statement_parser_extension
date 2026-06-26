@@ -11,3 +11,5 @@
 * When importing multiple things from a module, keep them on the same line.
 * When defining types for a variable or parameter, do not add spaces between the colons and pipe symbols.
   * Good: `const foo:string|undefined = 5;`
+* Never destructure `$props()`. Always use it directly like `let props = $props();`.
+* Always define the type for `$props()`.
