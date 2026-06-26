@@ -14,3 +14,7 @@
 * Never destructure `$props()`. Always use it directly like `let props = $props();`.
 * Always define the type for `$props()`.
 * Never do single line if statements like `if (foo) return bar;`.
+
+## CSS Style
+* Always use the same padding, margin, and gap values.
+  * If you use `p-1`, use `1` for everything else too like `pt-1`, `gap-1`, etc.

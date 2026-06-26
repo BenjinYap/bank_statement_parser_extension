@@ -10,8 +10,8 @@
   let props:Props = $props();
 </script>
 
-<div class="flex-1 overflow-auto text-sm">
-  <div class="flex font-semibold text-gray-600 pb-1">
+<div class="w-1/2 overflow-auto text-sm">
+  <div class="flex font-semibold text-neutral-400 pb-1">
     <div class="w-24 pr-6">Date</div>
     <div class="flex-1 pr-6">Category</div>
     <div class="flex-1 pr-6">Item</div>
@@ -21,7 +21,7 @@
     <div class="group">
       {#each group.current as row, i}
         <div
-          class="flex cursor-pointer py-0.5 {group === props.selectedGroup ? 'font-bold bg-blue-50' : 'group-hover:bg-gray-50'}"
+          class="flex cursor-pointer py-0.5 {group === props.selectedGroup ? 'font-semibold bg-orange-950 text-orange-200' : 'group-hover:bg-neutral-800'}"
           onclick={() => props.onselect(group)}
         >
           <div class="w-24 tabular-nums pr-6 shrink-0">{i === 0 ? row.date : ''}</div>

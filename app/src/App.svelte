@@ -49,20 +49,22 @@
   }
 </script>
 
-<div class="flex items-start gap-4 py-2 w-full">
+<div class="max-w-6xl mx-auto w-full px-4 py-4">
   {#if rowGroups === undefined}
-    <div class="text-sm text-gray-500">Loading...</div>
+    <div class="text-sm text-neutral-400">Loading...</div>
   {:else if rowGroups.length === 0}
-    <div class="text-sm text-gray-500">No transactions found.</div>
+    <div class="text-sm text-neutral-400">No transactions found.</div>
   {:else}
-    <RowTable {rowGroups} {selectedGroup} onselect={(group) => selectedGroup = group} />
-    {#if selectedGroup === undefined}
-      <NoRowSelected />
-    {:else}
-      <RowEditPanel
-        {selectedGroup}
-        onsave={(newRows) => handleSave(selectedGroup!, newRows)}
-      />
-    {/if}
+    <div class="flex items-start gap-4">
+      <RowTable {rowGroups} {selectedGroup} onselect={(group) => selectedGroup = group} />
+      {#if selectedGroup === undefined}
+        <NoRowSelected />
+      {:else}
+        <RowEditPanel
+          {selectedGroup}
+          onsave={(newRows) => handleSave(selectedGroup!, newRows)}
+        />
+      {/if}
+    </div>
   {/if}
 </div>
