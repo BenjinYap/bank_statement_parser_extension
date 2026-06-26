@@ -3,4 +3,5 @@ export interface ParsedRow {
   category:string;
   item:string;
   amount:number;
+  originalItem?:string;
 }

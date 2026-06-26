@@ -39,7 +39,7 @@
     dateTo.setHours(-1, 0, 0, 0);
 
     const parsed = parseDom(html, dateFrom, dateTo);
-    const toUse = dev_mode ? parsed.slice(0, 5) : parsed;
+    const toUse = dev_mode ? parsed.slice(0, 15) : parsed;
     rowGroups = toUse.map(createRowGroup);
   })();
 

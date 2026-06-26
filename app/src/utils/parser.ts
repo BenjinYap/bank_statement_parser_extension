@@ -1,10 +1,21 @@
 import { getFormattedDate } from './date';
 import type { ParsedRow } from '../models/ParsedRow';
+import { doReplacement, ITEM_REPLACEMENTS, CATEGORY_REPLACEMENTS, type ReplacementMap } from './replacements';
 
 const DATE_COL = '.mat-column-transactionDt';
 const ITEM_COL = '.mat-column-transactionDescToDisplay';
 const AMOUNT_COL = '.mat-column-debitedAmount';
 const REQUIRED_COLS = [DATE_COL, ITEM_COL, AMOUNT_COL];
+
+export function applyReplacements(date:Date, itemRaw:string, amount:number, itemReplacements:ReplacementMap, categoryReplacements:ReplacementMap):Pick<ParsedRow, 'category'|'item'|'originalItem'> {
+  const item = doReplacement(date, itemRaw, amount, itemReplacements) ?? itemRaw;
+  const category = doReplacement(date, item, amount, categoryReplacements) ?? '';
+  return {
+    category,
+    item,
+    ...(item !== itemRaw ? { originalItem: itemRaw } : {}),
+  };
+}
 
 export function parseDom(html:string, dateFrom:Date, dateTo:Date):ParsedRow[] {
   const rows:ParsedRow[] = [];
@@ -31,11 +42,11 @@ export function parseDom(html:string, dateFrom:Date, dateTo:Date):ParsedRow[] {
       const amountMatch = amountRaw.match(/(\d+(\.\d+)?)/);
       if (!amountMatch) return;
 
+      const amount = Number(amountMatch[1]);
       rows.push({
         date: getFormattedDate(date),
-        category: '',
-        item: itemRaw,
-        amount: Number(amountMatch[1]),
+        amount,
+        ...applyReplacements(date, itemRaw, amount, ITEM_REPLACEMENTS, CATEGORY_REPLACEMENTS),
       });
     });
   });
