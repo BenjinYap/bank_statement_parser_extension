@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, waitFor } from '@testing-library/svelte'
-import App from '../App.svelte'
+import App from '../src/App.svelte'
 
 describe('App', () => {
   it('renders parsed rows from the mock bank page in dev mode', async () => {
