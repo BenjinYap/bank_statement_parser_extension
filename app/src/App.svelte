@@ -45,6 +45,7 @@
 
   function handleSave(group:RowGroup, newRows:ParsedRow[]) {
     group.current = newRows;
+    selectedGroup = undefined;
   }
 </script>
 
