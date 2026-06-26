@@ -1,6 +1,8 @@
 <script lang="ts">
   import { mock } from './mock';
   import { parseDom } from './utils/parser';
+  import type { RowGroup } from './models/RowGroup';
+  import { createRowGroup } from './models/RowGroup';
   import type { ParsedRow } from './models/ParsedRow';
   import RowTable from './components/RowTable.svelte';
   import RowEditPanel from './components/RowEditPanel.svelte';
@@ -8,8 +10,8 @@
 
   const DEV_DATE_FROM = new Date('Sep 10, 2024');
 
-  let rows:ParsedRow[]|undefined = $state(undefined);
-  let selectedRow:ParsedRow|undefined = $state(undefined);
+  let rowGroups:RowGroup[]|undefined = $state(undefined);
+  let selectedGroup:RowGroup|undefined = $state(undefined);
 
   ;(async () => {
     const dev_mode = !chrome.runtime;
@@ -37,21 +39,29 @@
     dateTo.setHours(-1, 0, 0, 0);
 
     const parsed = parseDom(html, dateFrom, dateTo);
-    rows = dev_mode ? parsed.slice(0, 5) : parsed;
-  })()
+    const toUse = dev_mode ? parsed.slice(0, 5) : parsed;
+    rowGroups = toUse.map(createRowGroup);
+  })();
+
+  function handleSave(group:RowGroup, newRows:ParsedRow[]) {
+    group.current = newRows;
+  }
 </script>
 
 <div class="flex items-start gap-4 py-2 w-full">
-  {#if rows === undefined}
+  {#if rowGroups === undefined}
     <div class="text-sm text-gray-500">Loading...</div>
-  {:else if rows.length === 0}
+  {:else if rowGroups.length === 0}
     <div class="text-sm text-gray-500">No transactions found.</div>
   {:else}
-    <RowTable {rows} {selectedRow} onselect={(row) => selectedRow = row} />
-    {#if selectedRow === undefined}
+    <RowTable {rowGroups} {selectedGroup} onselect={(group) => selectedGroup = group} />
+    {#if selectedGroup === undefined}
       <NoRowSelected />
     {:else}
-      <RowEditPanel {selectedRow} />
+      <RowEditPanel
+        {selectedGroup}
+        onsave={(newRows) => handleSave(selectedGroup!, newRows)}
+      />
     {/if}
   {/if}
 </div>
