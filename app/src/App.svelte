@@ -4,6 +4,7 @@
   import type { ParsedRow } from './models/ParsedRow';
   import RowTable from './components/RowTable.svelte';
   import RowEditPanel from './components/RowEditPanel.svelte';
+  import NoRowSelected from './components/NoRowSelected.svelte';
 
   const DEV_DATE_FROM = new Date('Sep 10, 2024');
 
@@ -47,6 +48,10 @@
     <div class="text-sm text-gray-500">No transactions found.</div>
   {:else}
     <RowTable {rows} {selectedRow} onselect={(row) => selectedRow = row} />
-    <RowEditPanel {selectedRow} />
+    {#if selectedRow === undefined}
+      <NoRowSelected />
+    {:else}
+      <RowEditPanel {selectedRow} />
+    {/if}
   {/if}
 </div>
