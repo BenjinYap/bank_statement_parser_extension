@@ -26,7 +26,7 @@
         >
           <div class="w-24 tabular-nums pr-6 shrink-0">{i === 0 ? row.date : ''}</div>
           <div class="flex-1 pr-6 truncate">{row.category}</div>
-          <div class="flex-1 pr-6 truncate">{row.item}</div>
+          <div class="flex-1 pr-6 truncate">{row.item}{group.original.originalItem ? ` (${group.original.originalItem})` : ''}</div>
           <div class="w-20 text-right tabular-nums shrink-0">${row.amount.toFixed(2)}</div>
         </div>
       {/each}
