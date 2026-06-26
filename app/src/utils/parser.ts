@@ -24,23 +24,35 @@ export function parseDom(html:string, dateFrom:Date, dateTo:Date):ParsedRow[] {
 
   root.querySelectorAll('.mat-table').forEach((table) => {
     const headerCols = table.querySelector('thead')?.querySelectorAll(REQUIRED_COLS.join(','));
-    if ((headerCols?.length ?? 0) < REQUIRED_COLS.length) return;
-    if (!table.getAttribute('aria-label')) return;
+    if ((headerCols?.length ?? 0) < REQUIRED_COLS.length) {
+      return;
+    }
+    if (!table.getAttribute('aria-label')) {
+      return;
+    }
 
     table.querySelectorAll('tbody tr:not(.uf-table-row-error)').forEach((row) => {
       const dateRaw = row.querySelector(DATE_COL)?.textContent?.trim();
       const itemRaw = row.querySelector(ITEM_COL)?.textContent?.trim();
       const amountRaw = row.querySelector(AMOUNT_COL)?.textContent?.trim();
 
-      if (!dateRaw || !itemRaw) return;
+      if (!dateRaw || !itemRaw) {
+        return;
+      }
 
       const date = new Date(dateRaw);
-      if (date.getTime() < dateFrom.getTime() || date.getTime() > dateTo.getTime()) return;
+      if (date.getTime() < dateFrom.getTime() || date.getTime() > dateTo.getTime()) {
+        return;
+      }
 
-      if (!amountRaw) return;
+      if (!amountRaw) {
+        return;
+      }
 
       const amountMatch = amountRaw.match(/(\d+(\.\d+)?)/);
-      if (!amountMatch) return;
+      if (!amountMatch) {
+        return;
+      }
 
       const amount = Number(amountMatch[1]);
       rows.push({

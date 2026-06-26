@@ -98,11 +98,15 @@ export function doReplacement(date:Date, itemRaw:string, amount:number, replacem
     for (const condition of replacements[replacement]) {
       if (typeof condition === 'string') {
         const re = new RegExp(`.*${condition}.*`, 'i');
-        if (itemRaw.match(re)) return replacement;
+        if (itemRaw.match(re)) {
+          return replacement;
+        }
       } else {
         const re = new RegExp(`.*${condition[0]}.*`, 'i');
         const filter = condition[1];
-        if (filter(date, itemRaw, amount) && itemRaw.match(re)) return replacement;
+        if (filter(date, itemRaw, amount) && itemRaw.match(re)) {
+          return replacement;
+        }
       }
     }
   }

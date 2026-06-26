@@ -13,3 +13,4 @@
   * Good: `const foo:string|undefined = 5;`
 * Never destructure `$props()`. Always use it directly like `let props = $props();`.
 * Always define the type for `$props()`.
+* Never do single line if statements like `if (foo) return bar;`.
