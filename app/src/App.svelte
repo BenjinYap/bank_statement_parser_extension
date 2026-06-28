@@ -41,6 +41,9 @@
     const parsed = parseDom(html, dateFrom, dateTo);
     const toUse = dev_mode ? parsed.slice(0, 15) : parsed;
     rowGroups = toUse.map(createRowGroup);
+    if (dev_mode) {
+      selectedGroup = rowGroups[0];
+    }
   })();
 
   function handleSave(group:RowGroup, newRows:ParsedRow[]) {

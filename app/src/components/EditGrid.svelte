@@ -74,7 +74,7 @@
       Add row
     </button>
     <button
-      class="bg-orange-500 text-white text-xs rounded px-3 py-1.5 hover:bg-orange-600"
+      class="bg-primary-600 text-white text-xs rounded px-3 py-1.5 hover:bg-primary-500 active:bg-primary-700"
       onclick={save}
     >
       Save

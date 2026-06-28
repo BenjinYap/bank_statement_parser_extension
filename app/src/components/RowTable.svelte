@@ -10,7 +10,7 @@
   let props:Props = $props();
 </script>
 
-<div class="w-1/2 overflow-auto text-sm">
+<div class="w-1/2 overflow-auto text-sm border-surface-800 border-1 rounded-sm p-2">
   <div class="flex font-semibold text-neutral-400 pb-1">
     <div class="w-24 pr-6">Date</div>
     <div class="flex-1 pr-6">Category</div>
