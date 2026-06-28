@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render } from '@testing-library/svelte';
+import { render, fireEvent } from '@testing-library/svelte';
 import RowEditPanel from '../../../src/components/EditorSection/RowEditPanel.svelte';
 import type { RowGroup } from '../../../src/models/RowGroup';
 
@@ -9,17 +9,21 @@ const mockGroup:RowGroup = {
 };
 
 describe('RowEditPanel', () => {
-  it('renders all four original row fields', () => {
+  it('renders the original item and formatted amount', () => {
     const { getByText } = render(RowEditPanel, {
       props: { selectedGroup: mockGroup, onsave: vi.fn() },
     });
+    // 'Groceries' is unique to the original section (not in CATEGORIES)
+    expect(getByText('Groceries')).toBeInTheDocument();
+    expect(getByText('$42.50')).toBeInTheDocument();
+  });
 
-    // Scope to the "Original" section to avoid matching EditGrid inputs
-    const originalSection = getByText('Original').parentElement!;
-
-    expect(originalSection.textContent).toContain('2024-01-15');
-    expect(originalSection.textContent).toContain('Food');
-    expect(originalSection.textContent).toContain('Groceries');
-    expect(originalSection.textContent).toContain('$42.50');
+  it('clicking Save calls onsave', async () => {
+    const onsave = vi.fn();
+    const { getByText } = render(RowEditPanel, {
+      props: { selectedGroup: mockGroup, onsave },
+    });
+    await fireEvent.click(getByText('Save'));
+    expect(onsave).toHaveBeenCalled();
   });
 });

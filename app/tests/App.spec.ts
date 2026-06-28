@@ -25,11 +25,11 @@ describe('App', () => {
     await waitForRows()
 
     await fireEvent.click(getAllByText(/\d{4}-\d{2}-\d{2}/)[0])
-    await waitFor(() => expect(getByText('Original')).toBeInTheDocument())
+    await waitFor(() => expect(getByText('Original Transaction')).toBeInTheDocument())
 
     await fireEvent.click(getByText('Save'))
 
-    expect(queryByText('Original')).not.toBeInTheDocument()
-    expect(getByText('Select a row to edit.')).toBeInTheDocument()
+    expect(queryByText('Original Transaction')).not.toBeInTheDocument()
+    expect(getByText('Select a transaction to edit.')).toBeInTheDocument()
   })
 })

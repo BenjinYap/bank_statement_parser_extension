@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render } from '@testing-library/svelte';
+import { render, fireEvent } from '@testing-library/svelte';
 import RowTable from '../../../src/components/EditorSection/RowTable.svelte';
 import type { RowGroup } from '../../../src/models/RowGroup';
 
@@ -48,5 +48,35 @@ describe('RowTable', () => {
 
     expect(getAllByText('Eating out (NOODLEBOX WATERLOO ON)')).toHaveLength(1);
     expect(getAllByText('Snacks (NOODLEBOX WATERLOO ON)')).toHaveLength(1);
+  });
+
+  it('calls onselect with the correct group when a row is clicked', async () => {
+    const onselect = vi.fn();
+    const { getByText } = render(RowTable, {
+      props: { rowGroups: [groupWithoutReplacement], selectedGroup: undefined, onselect },
+    });
+    await fireEvent.click(getByText('SOMETHING UNKNOWN'));
+    expect(onselect).toHaveBeenCalledWith(groupWithoutReplacement);
+  });
+
+  it('shows the date only on the first row of a multi-row group', () => {
+    const multiRowGroup:RowGroup = {
+      original: { ...baseRow, item: 'Eating out' },
+      current: [
+        { ...baseRow, item: 'Eating out' },
+        { ...baseRow, item: 'Snacks' },
+      ],
+    };
+    const { getAllByText } = render(RowTable, {
+      props: { rowGroups: [multiRowGroup], selectedGroup: undefined, onselect: vi.fn() },
+    });
+    expect(getAllByText('2024-01-15')).toHaveLength(1);
+  });
+
+  it('formats the amount as $XX.XX', () => {
+    const { getByText } = render(RowTable, {
+      props: { rowGroups: [groupWithoutReplacement], selectedGroup: undefined, onselect: vi.fn() },
+    });
+    expect(getByText('$12.50')).toBeInTheDocument();
   });
 });
