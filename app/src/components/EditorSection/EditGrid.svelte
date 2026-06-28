@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { RowGroup } from '../models/RowGroup';
-  import type { ParsedRow } from '../models/ParsedRow';
+  import type { RowGroup } from '../../models/RowGroup';
+  import type { ParsedRow } from '../../models/ParsedRow';
 
   interface EditRow {
     category: string;

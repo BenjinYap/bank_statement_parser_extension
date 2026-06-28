@@ -5,6 +5,7 @@
 * If you add any new files, always add them to Git.
 * Never use `<table>`.
 * Always play it safe and ask questions.
+* When reorganizing code, remember to update the tests as well.
 
 ## Code Style
 * Do not omit semicolons.
@@ -14,6 +15,7 @@
 * Never destructure `$props()`. Always use it directly like `let props = $props();`.
 * Always define the type for `$props()`.
 * Never do single line if statements like `if (foo) return bar;`.
+* If an html tag has more than one attribute, place each attribute on a new line.
 
 ## CSS Style
 * Always use the same padding, margin, and gap values.

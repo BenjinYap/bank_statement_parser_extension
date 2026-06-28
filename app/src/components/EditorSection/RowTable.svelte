@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { RowGroup } from '../models/RowGroup';
+  import type { RowGroup } from '../../models/RowGroup';
 
   interface Props {
     rowGroups: RowGroup[];
