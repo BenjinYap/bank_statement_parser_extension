@@ -13,7 +13,7 @@
     1: '',
     2: 'text-base',
   };
-  const HEADING_CLASSES = '';
+  const HEADING_CLASSES = 'border-t-3 border-primary-600';
   const finalClasses = $derived(`${HEADING_CLASSES} ${LEVEL_CLASSES[level]}`);
 </script>
 
