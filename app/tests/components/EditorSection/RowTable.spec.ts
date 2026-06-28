@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render } from '@testing-library/svelte';
-import RowTable from '../../src/components/RowTable.svelte';
-import type { RowGroup } from '../../src/models/RowGroup';
+import RowTable from '../../../src/components/EditorSection/RowTable.svelte';
+import type { RowGroup } from '../../../src/models/RowGroup';
 
 const baseRow = { date: '2024-01-15', category: 'Food', amount: 12.50 };
 

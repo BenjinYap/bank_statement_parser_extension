@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/svelte';
-import EditGrid from '../../src/components/EditGrid.svelte';
-import type { RowGroup } from '../../src/models/RowGroup';
+import EditGrid from '../../../src/components/EditorSection/EditGrid.svelte';
+import type { RowGroup } from '../../../src/models/RowGroup';
 
 const mockGroup:RowGroup = {
   original: { date: '2024-01-15', category: 'Food', item: 'Groceries', amount: 42.50 },
