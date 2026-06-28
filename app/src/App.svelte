@@ -44,7 +44,12 @@
   })();
 </script>
 
-<div class="max-w-6xl mx-auto w-full px-4 py-4">
+<svelte:head>
+  <title>awd</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</svelte:head>
+
+<div class="max-w-6xl mx-auto w-full py-4">
   {#if rowGroups === undefined}
     <div class="text-sm text-neutral-400">Loading...</div>
   {:else if rowGroups.length === 0}

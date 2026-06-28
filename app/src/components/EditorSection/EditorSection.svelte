@@ -5,6 +5,7 @@
   import RowEditPanel from './RowEditPanel.svelte';
   import NoRowSelected from './NoRowSelected.svelte';
   import Section from '../common/Section.svelte';
+  import Button from "../common/Button.svelte";
 
   type Props = {
     rowGroups: RowGroup[];
@@ -21,16 +22,35 @@
   }
 </script>
 
-<Section>
-  <div class="flex items-start gap-4">
-    <RowTable rowGroups={props.rowGroups} {selectedGroup} onselect={(group) => selectedGroup = group} />
-    {#if selectedGroup === undefined}
-      <NoRowSelected />
-    {:else}
-      <RowEditPanel
+<Section title="Editor">
+  <div class="grid grid-rows-[auto] grid-cols-2 gap-2">
+    <div class="">
+      <Button variant="primary">Hi</Button>
+    </div>
+
+    <div class="col-start-1">
+      <RowTable
+        rowGroups={props.rowGroups}
         {selectedGroup}
-        onsave={(newRows) => handleSave(selectedGroup, newRows)}
+        onselect={(group) => selectedGroup = group}
       />
-    {/if}
+    </div>
+
+    <div>
+      {#if selectedGroup === undefined}
+        <Section>
+          Select a transaction to edit.
+        </Section>
+      {:else}
+        <RowEditPanel
+          {selectedGroup}
+          onsave={(newRows) => handleSave(selectedGroup, newRows)}
+        />
+      {/if}
+    </div>
+
+    <div class="">
+      <Button variant="primary">Hi</Button>
+    </div>
   </div>
 </Section>

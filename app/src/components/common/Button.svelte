@@ -14,7 +14,7 @@
 
   const VARIANT_CLASSES:Record<Variant, string> = {
     primary: 'bg-primary-600 text-white rounded px-3 py-1.5 hover:bg-primary-500 active:bg-primary-700',
-    unfilled: 'border border-neutral-600 text-neutral-300 rounded px-3 py-1.5 hover:bg-neutral-800',
+    unfilled: 'border border-neutral-600 rounded px-3 py-1.5 hover:bg-neutral-800',
   };
 
   let restProps = $derived(

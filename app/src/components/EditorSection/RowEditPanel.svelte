@@ -2,6 +2,8 @@
   import type { RowGroup } from '../../models/RowGroup';
   import type { ParsedRow } from '../../models/ParsedRow';
   import EditGrid from './EditGrid.svelte';
+  import Section from "../common/Section.svelte";
+  import Heading from "../common/Heading.svelte";
 
   interface Props {
     selectedGroup: RowGroup;
@@ -11,14 +13,29 @@
   let props:Props = $props();
 </script>
 
-<div class="w-1/2 border-l border-neutral-700 pl-4 text-sm flex flex-col gap-4">
-  <div class="flex flex-col gap-1">
-    <div class="font-semibold text-neutral-200">Original</div>
-    <div><span class="text-neutral-400">Date: </span>{props.selectedGroup.original.date}</div>
-    <div><span class="text-neutral-400">Category: </span>{props.selectedGroup.original.category}</div>
-    <div><span class="text-neutral-400">Item: </span>{props.selectedGroup.original.item}</div>
-    <div><span class="text-neutral-400">Amount: </span>${props.selectedGroup.original.amount.toFixed(2)}</div>
+<Section
+  className=""
+  title="Edit Transaction"
+>
+  <div class="flex flex-col gap-2">
+    <Heading level="2">Original Transaction</Heading>
+    <table class="border-collapse rounded-md border-3 border-neutral-900">
+      <thead>
+        <tr class="bg-neutral-900">
+          <th class="px-2 pt-1 pb-1.5 font-normal text-left">Category</th>
+          <th class="px-2 pt-1 pb-1.5 font-normal text-left">Item</th>
+          <th class="px-2 pt-1 pb-1.5 font-normal text-right">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="px-2 py-1 border-y-1 border-neutral-900">{props.selectedGroup.original.category}</td>
+          <td class="px-2 py-1 border-y-1 border-neutral-900">{props.selectedGroup.original.item}</td>
+          <td class="px-2 py-1 border-y-1 border-neutral-900 text-right">${props.selectedGroup.original.amount.toFixed(2)}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <div class="border-t border-neutral-700"></div>
+
   <EditGrid selectedGroup={props.selectedGroup} onsave={props.onsave} />
-</div>
+</Section>

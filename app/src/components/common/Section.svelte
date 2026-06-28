@@ -2,12 +2,19 @@
   import type { Snippet } from 'svelte';
 
   interface Props {
-    children: Snippet;
+    children:Snippet;
+    title:string;
+    className?:string;
   }
 
   let props:Props = $props();
 </script>
 
-<section class="rounded-lg border border-neutral-800 bg-neutral-900 p-4">
-  {@render props.children()}
+<section class="rounded-md border-6 border-neutral-900 {props.className ?? ''}">
+  {#if props.title}
+    <div class="text-xl pl-2 pb-1.5 bg-neutral-900">{props.title}</div>
+  {/if}
+  <div class="p-2">
+    {@render props.children()}
+  </div>
 </section>
