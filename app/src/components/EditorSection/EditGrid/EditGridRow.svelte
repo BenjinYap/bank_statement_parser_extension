@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { EditRow } from '../../models/EditRow';
-  import { CATEGORIES } from '../../utils/categories';
+  import type { EditRow } from '../../../models/EditRow';
+  import { CATEGORIES } from '../../../utils/categories';
 
   interface Props {
     row: EditRow;

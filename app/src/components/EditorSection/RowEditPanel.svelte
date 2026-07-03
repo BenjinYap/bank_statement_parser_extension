@@ -2,7 +2,7 @@
   import type { RowGroup } from '../../models/RowGroup';
   import type { ParsedRow } from '../../models/ParsedRow';
   import type { EditRow } from '../../models/EditRow';
-  import EditGrid from './EditGrid.svelte';
+  import EditGrid from './EditGrid/EditGrid.svelte';
   import Section from "../common/Section.svelte";
   import Heading from "../common/Heading.svelte";
   import Button from "../common/Button.svelte";

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { EditRow } from '../../models/EditRow';
+  import type { EditRow } from '../../../models/EditRow';
   import EditGridRow from './EditGridRow.svelte';
 
   interface Props {

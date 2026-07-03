@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { render, fireEvent } from '@testing-library/svelte';
-import EditGrid from '../../../src/components/EditorSection/EditGrid.svelte';
-import type { EditRow } from '../../../src/models/EditRow';
+import EditGrid from '../../../../src/components/EditorSection/EditGrid/EditGrid.svelte';
+import type { EditRow } from '../../../../src/models/EditRow';
 
 const mockRows:EditRow[] = [
   { category: 'Food', item: 'Groceries', amount: 42.5 },

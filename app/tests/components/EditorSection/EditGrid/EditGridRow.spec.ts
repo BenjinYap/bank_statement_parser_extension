@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { render, fireEvent } from '@testing-library/svelte';
-import EditGridRow from '../../../src/components/EditorSection/EditGridRow.svelte';
-import type { EditRow } from '../../../src/models/EditRow';
+import EditGridRow from '../../../../src/components/EditorSection/EditGrid/EditGridRow.svelte';
+import type { EditRow } from '../../../../src/models/EditRow';
 
 describe('EditGridRow', () => {
   it('renders the initial amount as text', () => {
