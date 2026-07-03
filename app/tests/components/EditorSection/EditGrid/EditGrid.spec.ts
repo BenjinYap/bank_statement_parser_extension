@@ -40,4 +40,11 @@ describe('EditGrid', () => {
       { category: '', item: '', amount: 0 },
     ]);
   });
+
+  it('renders a bottom row with a sum of all the amounts', async () => {
+    const { getByText } = render(EditGrid, {
+      props: { editTransactions: mockTransactions },
+    });
+    expect(getByText('$45.70')).toBeInTheDocument();
+  });
 });

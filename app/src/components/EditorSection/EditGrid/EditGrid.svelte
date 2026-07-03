@@ -8,6 +8,10 @@
 
   let props:Props = $props();
 
+  let total = $derived(
+    props.editTransactions.reduce((sum, transaction) => sum + transaction.amount, 0)
+  );
+
   function addTransaction() {
     props.editTransactions.push({ category: '', item: '', amount: 0 });
   }
@@ -26,6 +30,10 @@
       {#each props.editTransactions as transaction}
         <EditGridTransaction transaction={transaction} />
       {/each}
+      <tr>
+        <td colspan="2" class="px-2 pt-1 pb-1.5 text-right">Total</td>
+        <td class="px-2 pt-1 pb-1.5 text-right">${total.toFixed(2)}</td>
+      </tr>
     </tbody>
   </table>
   <div class="mt-1 flex gap-2">
