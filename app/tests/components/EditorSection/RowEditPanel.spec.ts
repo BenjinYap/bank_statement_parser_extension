@@ -18,12 +18,14 @@ describe('RowEditPanel', () => {
     expect(getByText('$42.50')).toBeInTheDocument();
   });
 
-  it('clicking Save calls onsave', async () => {
+  it('clicking Save calls onsave with the parsed rows', async () => {
     const onsave = vi.fn();
     const { getByText } = render(RowEditPanel, {
       props: { selectedGroup: mockGroup, onsave },
     });
     await fireEvent.click(getByText('Save'));
-    expect(onsave).toHaveBeenCalled();
+    expect(onsave).toHaveBeenCalledWith([
+      { date: '2024-01-15', category: 'Food', item: 'Groceries', amount: 42.5 },
+    ]);
   });
 });

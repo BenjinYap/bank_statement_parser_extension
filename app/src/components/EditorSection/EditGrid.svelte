@@ -1,44 +1,15 @@
 <script lang="ts">
-  import type { RowGroup } from '../../models/RowGroup';
-  import type { ParsedRow } from '../../models/ParsedRow';
-  import { CATEGORIES } from '../../utils/categories';
-
-  interface EditRow {
-    category: string;
-    item: string;
-    amount: string;
-  }
+  import type { EditRow } from '../../models/EditRow';
+  import EditGridRow from './EditGridRow.svelte';
 
   interface Props {
-    selectedGroup: RowGroup;
-    onsave: (newRows: ParsedRow[]) => void;
+    editRows: EditRow[];
   }
 
   let props:Props = $props();
 
-  let editRows:EditRow[] = $state([]);
-
-  $effect(() => {
-    editRows = props.selectedGroup.current.map(r => ({
-      category: r.category,
-      item: r.item,
-      amount: r.amount.toString(),
-    }));
-  });
-
   function addRow() {
-    editRows.push({ category: '', item: '', amount: '' });
-  }
-
-  export function save() {
-    const date = props.selectedGroup.original.date;
-    const newRows:ParsedRow[] = editRows.map(r => ({
-      date,
-      category: r.category,
-      item: r.item,
-      amount: parseFloat(r.amount) || 0,
-    }));
-    props.onsave(newRows);
+    props.editRows.push({ category: '', item: '', amount: 0 });
   }
 </script>
 
@@ -52,34 +23,8 @@
       </tr>
     </thead>
     <tbody>
-      {#each editRows as row}
-        <tr>
-          <td class="">
-            <select
-              class=""
-              bind:value={row.category}
-            >
-              <option value="">-- Select --</option>
-              {#each CATEGORIES as category}
-                <option value={category}>{category}</option>
-              {/each}
-            </select>
-          </td>
-          <td class="">
-            <input
-              class=""
-              type="text"
-              bind:value={row.item}
-            />
-          </td>
-          <td class="">
-            <input
-              class="text-right"
-              type="text"
-              bind:value={row.amount}
-            />
-          </td>
-        </tr>
+      {#each props.editRows as row}
+        <EditGridRow row={row} />
       {/each}
     </tbody>
   </table>

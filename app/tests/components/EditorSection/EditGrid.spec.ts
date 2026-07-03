@@ -1,20 +1,17 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { render, fireEvent } from '@testing-library/svelte';
 import EditGrid from '../../../src/components/EditorSection/EditGrid.svelte';
-import type { RowGroup } from '../../../src/models/RowGroup';
+import type { EditRow } from '../../../src/models/EditRow';
 
-const mockGroup:RowGroup = {
-  original: { date: '2024-01-15', category: 'Food', item: 'Groceries', amount: 42.50 },
-  current: [
-    { date: '2024-01-15', category: 'Food', item: 'Groceries', amount: 42.50 },
-    { date: '2024-01-15', category: 'Transportation', item: 'Bus', amount: 3.20 },
-  ],
-};
+const mockRows:EditRow[] = [
+  { category: 'Food', item: 'Groceries', amount: 42.5 },
+  { category: 'Transportation', item: 'Bus', amount: 3.2 },
+];
 
 describe('EditGrid', () => {
-  it('renders item and amount inputs for all current rows', () => {
+  it('renders item and amount inputs for all rows', () => {
     const { getAllByRole } = render(EditGrid, {
-      props: { selectedGroup: mockGroup, onsave: vi.fn() },
+      props: { editRows: mockRows },
     });
     // 2 rows × 2 text inputs (item + amount); category is a <select>
     expect(getAllByRole('textbox')).toHaveLength(4);
@@ -22,7 +19,7 @@ describe('EditGrid', () => {
 
   it('renders category as a select with the correct initial value', () => {
     const { container } = render(EditGrid, {
-      props: { selectedGroup: mockGroup, onsave: vi.fn() },
+      props: { editRows: mockRows },
     });
     const selects = container.querySelectorAll('select') as NodeListOf<HTMLSelectElement>;
     expect(selects).toHaveLength(2);
@@ -30,24 +27,17 @@ describe('EditGrid', () => {
     expect(selects[1].value).toBe('Transportation');
   });
 
-  it('adds a new row when Add row is clicked', async () => {
-    const { getAllByRole, getByText } = render(EditGrid, {
-      props: { selectedGroup: mockGroup, onsave: vi.fn() },
+  it('pushes a new row onto editRows when Add row is clicked', async () => {
+    const editRows:EditRow[] = [
+      { category: 'Food', item: 'Groceries', amount: 42.5 },
+    ];
+    const { getByText } = render(EditGrid, {
+      props: { editRows },
     });
     await fireEvent.click(getByText('Add row'));
-    // 3 rows × 2 text inputs = 6
-    expect(getAllByRole('textbox')).toHaveLength(6);
-  });
-
-  it('save() calls onsave with parsed rows using the original date', () => {
-    const onsave = vi.fn();
-    const { component } = render(EditGrid, {
-      props: { selectedGroup: mockGroup, onsave },
-    });
-    (component as unknown as { save(): void }).save();
-    expect(onsave).toHaveBeenCalledWith([
-      { date: '2024-01-15', category: 'Food', item: 'Groceries', amount: 42.5 },
-      { date: '2024-01-15', category: 'Transportation', item: 'Bus', amount: 3.2 },
+    expect(editRows).toEqual([
+      { category: 'Food', item: 'Groceries', amount: 42.5 },
+      { category: '', item: '', amount: 0 },
     ]);
   });
 });

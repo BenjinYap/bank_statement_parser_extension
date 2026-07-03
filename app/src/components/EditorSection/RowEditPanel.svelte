@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { RowGroup } from '../../models/RowGroup';
   import type { ParsedRow } from '../../models/ParsedRow';
+  import type { EditRow } from '../../models/EditRow';
   import EditGrid from './EditGrid.svelte';
   import Section from "../common/Section.svelte";
   import Heading from "../common/Heading.svelte";
@@ -12,7 +13,26 @@
   }
 
   let props:Props = $props();
-  let editGrid:{ save: () => void } | undefined = $state(undefined);
+  let editRows:EditRow[] = $state([]);
+
+  $effect(() => {
+    editRows = props.selectedGroup.current.map(r => ({
+      category: r.category,
+      item: r.item,
+      amount: r.amount,
+    }));
+  });
+
+  function save() {
+    const date = props.selectedGroup.original.date;
+    const newRows:ParsedRow[] = editRows.map(r => ({
+      date,
+      category: r.category,
+      item: r.item,
+      amount: r.amount,
+    }));
+    props.onsave(newRows);
+  }
 </script>
 
 <Section
@@ -41,14 +61,10 @@
 
     <Heading level="2">Granular Transactions</Heading>
 
-    <EditGrid
-      bind:this={editGrid}
-      selectedGroup={props.selectedGroup}
-      onsave={props.onsave}
-    />
+    <EditGrid editRows={editRows} />
     <Button
       variant="primary"
-      onclick={() => editGrid?.save()}
+      onclick={save}
     >
       Save
     </Button>
