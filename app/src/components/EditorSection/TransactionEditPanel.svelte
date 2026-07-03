@@ -1,37 +1,37 @@
 <script lang="ts">
-  import type { RowGroup } from '../../models/RowGroup';
-  import type { ParsedRow } from '../../models/ParsedRow';
-  import type { EditRow } from '../../models/EditRow';
+  import type { TransactionGroup } from '../../models/TransactionGroup';
+  import type { ParsedTransaction } from '../../models/ParsedTransaction';
+  import type { EditTransaction } from '../../models/EditTransaction';
   import EditGrid from './EditGrid/EditGrid.svelte';
   import Section from "../common/Section.svelte";
   import Heading from "../common/Heading.svelte";
   import Button from "../common/Button.svelte";
 
   interface Props {
-    selectedGroup: RowGroup;
-    onsave: (newRows: ParsedRow[]) => void;
+    selectedGroup: TransactionGroup;
+    onsave: (newTransactions: ParsedTransaction[]) => void;
   }
 
   let props:Props = $props();
-  let editRows:EditRow[] = $state([]);
+  let editTransactions:EditTransaction[] = $state([]);
 
   $effect(() => {
-    editRows = props.selectedGroup.current.map(r => ({
-      category: r.category,
-      item: r.item,
-      amount: r.amount,
+    editTransactions = props.selectedGroup.current.map(t => ({
+      category: t.category,
+      item: t.item,
+      amount: t.amount,
     }));
   });
 
   function save() {
     const date = props.selectedGroup.original.date;
-    const newRows:ParsedRow[] = editRows.map(r => ({
+    const newTransactions:ParsedTransaction[] = editTransactions.map(t => ({
       date,
-      category: r.category,
-      item: r.item,
-      amount: r.amount,
+      category: t.category,
+      item: t.item,
+      amount: t.amount,
     }));
-    props.onsave(newRows);
+    props.onsave(newTransactions);
   }
 </script>
 
@@ -61,7 +61,7 @@
 
     <Heading level="2">Granular Transactions</Heading>
 
-    <EditGrid editRows={editRows} />
+    <EditGrid editTransactions={editTransactions} />
     <Button
       variant="primary"
       onclick={save}

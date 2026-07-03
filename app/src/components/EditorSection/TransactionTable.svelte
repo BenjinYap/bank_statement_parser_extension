@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { RowGroup } from '../../models/RowGroup';
+  import type { TransactionGroup } from '../../models/TransactionGroup';
   import Section from "../common/Section.svelte";
 
   interface Props {
-    rowGroups: RowGroup[];
-    selectedGroup: RowGroup|undefined;
-    onselect: (group: RowGroup) => void;
+    transactionGroups: TransactionGroup[];
+    selectedGroup: TransactionGroup|undefined;
+    onselect: (group: TransactionGroup) => void;
   }
 
   let props:Props = $props();
@@ -20,17 +20,17 @@
       <th class="px-2 pt-1 pb-1.5 font-normal text-right">Amount</th>
     </tr>
   </thead>
-  {#each props.rowGroups as group}
+  {#each props.transactionGroups as group}
     <tbody class="group">
-      {#each group.current as row, i}
+      {#each group.current as transaction, i}
         <tr
           class="cursor-pointer {group === props.selectedGroup ? 'bg-orange-950 text-orange-200' : 'group-hover:bg-surface-800'}"
           onclick={() => props.onselect(group)}
         >
-          <td class="px-2 py-1 border-y-1 border-surface-900">{i === 0 ? row.date : ''}</td>
-          <td class="px-2 py-1 border-y-1 border-surface-900">{row.category}</td>
-          <td class="px-2 py-1 border-y-1 border-surface-900">{row.item}{group.original.originalItem ? ` (${group.original.originalItem})` : ''}</td>
-          <td class="px-2 py-1 border-y-1 border-surface-900 text-right">${row.amount.toFixed(2)}</td>
+          <td class="px-2 py-1 border-y-1 border-surface-900">{i === 0 ? transaction.date : ''}</td>
+          <td class="px-2 py-1 border-y-1 border-surface-900">{transaction.category}</td>
+          <td class="px-2 py-1 border-y-1 border-surface-900">{transaction.item}{group.original.originalItem ? ` (${group.original.originalItem})` : ''}</td>
+          <td class="px-2 py-1 border-y-1 border-surface-900 text-right">${transaction.amount.toFixed(2)}</td>
         </tr>
       {/each}
     </tbody>

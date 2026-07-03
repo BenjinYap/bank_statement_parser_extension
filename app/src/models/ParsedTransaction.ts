@@ -1,4 +1,4 @@
-export interface ParsedRow {
+export interface ParsedTransaction {
   date:string;
   category:string;
   item:string;

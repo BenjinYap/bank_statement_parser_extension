@@ -1,5 +1,5 @@
 import { getFormattedDate } from './date';
-import type { ParsedRow } from '../models/ParsedRow';
+import type { ParsedTransaction } from '../models/ParsedTransaction';
 import { doReplacement, ITEM_REPLACEMENTS, CATEGORY_REPLACEMENTS, type ReplacementMap } from './replacements';
 
 const DATE_COL = '.mat-column-transactionDt';
@@ -7,7 +7,7 @@ const ITEM_COL = '.mat-column-transactionDescToDisplay';
 const AMOUNT_COL = '.mat-column-debitedAmount';
 const REQUIRED_COLS = [DATE_COL, ITEM_COL, AMOUNT_COL];
 
-export function applyReplacements(date:Date, itemRaw:string, amount:number, itemReplacements:ReplacementMap, categoryReplacements:ReplacementMap):Pick<ParsedRow, 'category'|'item'|'originalItem'> {
+export function applyReplacements(date:Date, itemRaw:string, amount:number, itemReplacements:ReplacementMap, categoryReplacements:ReplacementMap):Pick<ParsedTransaction, 'category'|'item'|'originalItem'> {
   const item = doReplacement(date, itemRaw, amount, itemReplacements) ?? itemRaw;
   const category = doReplacement(date, item, amount, categoryReplacements) ?? '';
   return {
@@ -17,8 +17,8 @@ export function applyReplacements(date:Date, itemRaw:string, amount:number, item
   };
 }
 
-export function parseDom(html:string, dateFrom:Date, dateTo:Date):ParsedRow[] {
-  const rows:ParsedRow[] = [];
+export function parseDom(html:string, dateFrom:Date, dateTo:Date):ParsedTransaction[] {
+  const transactions:ParsedTransaction[] = [];
   const root = document.createElement('div');
   root.innerHTML = html;
 
@@ -55,7 +55,7 @@ export function parseDom(html:string, dateFrom:Date, dateTo:Date):ParsedRow[] {
       }
 
       const amount = Number(amountMatch[1]);
-      rows.push({
+      transactions.push({
         date: getFormattedDate(date),
         amount,
         ...applyReplacements(date, itemRaw, amount, ITEM_REPLACEMENTS, CATEGORY_REPLACEMENTS),
@@ -63,5 +63,5 @@ export function parseDom(html:string, dateFrom:Date, dateTo:Date):ParsedRow[] {
     });
   });
 
-  return rows;
+  return transactions;
 }

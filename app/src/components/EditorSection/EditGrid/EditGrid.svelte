@@ -1,15 +1,15 @@
 <script lang="ts">
-  import type { EditRow } from '../../../models/EditRow';
-  import EditGridRow from './EditGridRow.svelte';
+  import type { EditTransaction } from '../../../models/EditTransaction';
+  import EditGridTransaction from './EditGridTransaction.svelte';
 
   interface Props {
-    editRows: EditRow[];
+    editTransactions: EditTransaction[];
   }
 
   let props:Props = $props();
 
-  function addRow() {
-    props.editRows.push({ category: '', item: '', amount: 0 });
+  function addTransaction() {
+    props.editTransactions.push({ category: '', item: '', amount: 0 });
   }
 </script>
 
@@ -23,17 +23,17 @@
       </tr>
     </thead>
     <tbody>
-      {#each props.editRows as row}
-        <EditGridRow row={row} />
+      {#each props.editTransactions as transaction}
+        <EditGridTransaction transaction={transaction} />
       {/each}
     </tbody>
   </table>
   <div class="mt-1 flex gap-2">
     <button
       class="border border-neutral-600 text-neutral-300 text-xs rounded px-3 py-1.5 hover:bg-neutral-800"
-      onclick={addRow}
+      onclick={addTransaction}
     >
-      Add row
+      Add transaction
     </button>
   </div>
 </div>

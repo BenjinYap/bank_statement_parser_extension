@@ -1,23 +1,23 @@
 <script lang="ts">
-  import type { RowGroup } from '../../models/RowGroup';
-  import type { ParsedRow } from '../../models/ParsedRow';
-  import RowTable from './RowTable.svelte';
-  import RowEditPanel from './RowEditPanel.svelte';
-  import NoRowSelected from './NoRowSelected.svelte';
+  import type { TransactionGroup } from '../../models/TransactionGroup';
+  import type { ParsedTransaction } from '../../models/ParsedTransaction';
+  import TransactionTable from './TransactionTable.svelte';
+  import TransactionEditPanel from './TransactionEditPanel.svelte';
+  import NoTransactionSelected from './NoTransactionSelected.svelte';
   import Section from '../common/Section.svelte';
   import Button from "../common/Button.svelte";
 
   type Props = {
-    rowGroups: RowGroup[];
-    initialSelectedGroup?: RowGroup;
+    transactionGroups: TransactionGroup[];
+    initialSelectedGroup?: TransactionGroup;
   };
 
   let props:Props = $props();
 
-  let selectedGroup:RowGroup|undefined = $state(props.initialSelectedGroup);
+  let selectedGroup:TransactionGroup|undefined = $state(props.initialSelectedGroup);
 
-  function handleSave(group:RowGroup, newRows:ParsedRow[]) {
-    group.current = newRows;
+  function handleSave(group:TransactionGroup, newTransactions:ParsedTransaction[]) {
+    group.current = newTransactions;
     selectedGroup = undefined;
   }
 </script>
@@ -29,8 +29,8 @@
     </div>
 
     <div class="col-start-1">
-      <RowTable
-        rowGroups={props.rowGroups}
+      <TransactionTable
+        transactionGroups={props.transactionGroups}
         {selectedGroup}
         onselect={(group) => selectedGroup = group}
       />
@@ -42,9 +42,9 @@
           Select a transaction to edit.
         </Section>
       {:else}
-        <RowEditPanel
+        <TransactionEditPanel
           {selectedGroup}
-          onsave={(newRows) => handleSave(selectedGroup, newRows)}
+          onsave={(newTransactions) => handleSave(selectedGroup, newTransactions)}
         />
       {/if}
     </div>

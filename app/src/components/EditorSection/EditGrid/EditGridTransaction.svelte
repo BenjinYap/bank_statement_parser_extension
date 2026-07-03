@@ -1,21 +1,21 @@
 <script lang="ts">
-  import type { EditRow } from '../../../models/EditRow';
+  import type { EditTransaction } from '../../../models/EditTransaction';
   import { CATEGORIES } from '../../../utils/categories';
 
   interface Props {
-    row: EditRow;
+    transaction: EditTransaction;
   }
 
   let props:Props = $props();
-  let amountText:string = $state(props.row.amount.toString());
+  let amountText:string = $state(props.transaction.amount.toString());
 
   $effect(() => {
-    amountText = props.row.amount.toString();
+    amountText = props.transaction.amount.toString();
   });
 
   function commitAmount() {
-    props.row.amount = parseFloat(amountText) || 0;
-    amountText = props.row.amount.toString();
+    props.transaction.amount = parseFloat(amountText) || 0;
+    amountText = props.transaction.amount.toString();
   }
 </script>
 
@@ -23,7 +23,7 @@
   <td class="">
     <select
       class=""
-      bind:value={props.row.category}
+      bind:value={props.transaction.category}
     >
       <option value="">-- Select --</option>
       {#each CATEGORIES as category}
@@ -35,7 +35,7 @@
     <input
       class=""
       type="text"
-      bind:value={props.row.item}
+      bind:value={props.transaction.item}
     />
   </td>
   <td class="">

@@ -1,14 +1,14 @@
 <script lang="ts">
   import { mock } from './mock';
   import { parseDom } from './utils/parser';
-  import type { RowGroup } from './models/RowGroup';
-  import { createRowGroup } from './models/RowGroup';
+  import type { TransactionGroup } from './models/TransactionGroup';
+  import { createTransactionGroup } from './models/TransactionGroup';
   import EditorSection from './components/EditorSection/EditorSection.svelte';
 
   const DEV_DATE_FROM = new Date('Sep 10, 2024');
 
-  let rowGroups:RowGroup[]|undefined = $state(undefined);
-  let initialSelectedGroup:RowGroup|undefined = $state(undefined);
+  let transactionGroups:TransactionGroup[]|undefined = $state(undefined);
+  let initialSelectedGroup:TransactionGroup|undefined = $state(undefined);
 
   ;(async () => {
     const dev_mode = !chrome.runtime;
@@ -37,9 +37,9 @@
 
     const parsed = parseDom(html, dateFrom, dateTo);
     const toUse = dev_mode ? parsed.slice(0, 15) : parsed;
-    rowGroups = toUse.map(createRowGroup);
+    transactionGroups = toUse.map(createTransactionGroup);
     if (dev_mode) {
-      initialSelectedGroup = rowGroups[0];
+      initialSelectedGroup = transactionGroups[0];
     }
   })();
 </script>
@@ -50,11 +50,11 @@
 </svelte:head>
 
 <div class="max-w-6xl mx-auto w-full py-4">
-  {#if rowGroups === undefined}
+  {#if transactionGroups === undefined}
     <div class="text-sm text-neutral-400">Loading...</div>
-  {:else if rowGroups.length === 0}
+  {:else if transactionGroups.length === 0}
     <div class="text-sm text-neutral-400">No transactions found.</div>
   {:else}
-    <EditorSection rowGroups={rowGroups} {initialSelectedGroup} />
+    <EditorSection transactionGroups={transactionGroups} {initialSelectedGroup} />
   {/if}
 </div>
