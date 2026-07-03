@@ -28,4 +28,24 @@ describe('TransactionEditPanel', () => {
       { date: '2024-01-15', category: 'Food', item: 'Groceries', amount: 42.5 },
     ]);
   });
+
+  it('pressing Ctrl+S calls onsave with the parsed transactions', async () => {
+    const onsave = vi.fn();
+    render(TransactionEditPanel, {
+      props: { selectedGroup: mockGroup, onsave },
+    });
+    await fireEvent.keyDown(window, { key: 's', ctrlKey: true });
+    expect(onsave).toHaveBeenCalledWith([
+      { date: '2024-01-15', category: 'Food', item: 'Groceries', amount: 42.5 },
+    ]);
+  });
+
+  it('pressing Ctrl+Plus adds a new blank row to the grid', async () => {
+    const { getAllByRole } = render(TransactionEditPanel, {
+      props: { selectedGroup: mockGroup, onsave: vi.fn() },
+    });
+    expect(getAllByRole('combobox')).toHaveLength(1);
+    await fireEvent.keyDown(window, { key: '+', ctrlKey: true });
+    expect(getAllByRole('combobox')).toHaveLength(2);
+  });
 });
