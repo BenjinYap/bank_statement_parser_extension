@@ -29,7 +29,12 @@
         >
           <td class="px-2 py-1 border-y-1 border-surface-900">{i === 0 ? transaction.date : ''}</td>
           <td class="px-2 py-1 border-y-1 border-surface-900">{transaction.category}</td>
-          <td class="px-2 py-1 border-y-1 border-surface-900">{transaction.item}{group.original.originalItem ? ` (${group.original.originalItem})` : ''}</td>
+          <td class="px-2 py-1 border-y-1 border-surface-900">
+            {transaction.item}
+            {#if group.original.originalItem}
+              <span class="text-xs text-neutral-500">({group.original.originalItem})</span>
+            {/if}
+          </td>
           <td class="px-2 py-1 border-y-1 border-surface-900 text-right">${transaction.amount.toFixed(2)}</td>
         </tr>
       {/each}

@@ -5,6 +5,13 @@ import type { TransactionGroup } from '../../../src/models/TransactionGroup';
 
 const baseTransaction = { date: '2024-01-15', category: 'Food', amount: 12.50 };
 
+function matchesCellText(expected:string) {
+  return (_:string, element:Element|null) => {
+    return element?.tagName.toLowerCase() === 'td'
+      && element.textContent?.replace(/\s+/g, ' ').trim() === expected;
+  };
+}
+
 const groupWithReplacement:TransactionGroup = {
   original: { ...baseTransaction, item: 'Eating out', originalItem: 'NOODLEBOX WATERLOO ON' },
   current: [{ ...baseTransaction, item: 'Eating out' }],
@@ -21,7 +28,7 @@ describe('TransactionTable', () => {
       props: { transactionGroups: [groupWithReplacement], selectedGroup: undefined, onselect: vi.fn() },
     });
 
-    expect(getByText('Eating out (NOODLEBOX WATERLOO ON)')).toBeInTheDocument();
+    expect(getByText(matchesCellText('Eating out (NOODLEBOX WATERLOO ON)'))).toBeInTheDocument();
   });
 
   it('shows just the item name when originalItem is not set', () => {
@@ -46,8 +53,8 @@ describe('TransactionTable', () => {
       props: { transactionGroups: [multiTransactionGroup], selectedGroup: undefined, onselect: vi.fn() },
     });
 
-    expect(getAllByText('Eating out (NOODLEBOX WATERLOO ON)')).toHaveLength(1);
-    expect(getAllByText('Snacks (NOODLEBOX WATERLOO ON)')).toHaveLength(1);
+    expect(getAllByText(matchesCellText('Eating out (NOODLEBOX WATERLOO ON)'))).toHaveLength(1);
+    expect(getAllByText(matchesCellText('Snacks (NOODLEBOX WATERLOO ON)'))).toHaveLength(1);
   });
 
   it('calls onselect with the correct group when a transaction is clicked', async () => {
