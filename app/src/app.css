@@ -33,6 +33,6 @@
   }
 
   select, input {
-    @apply w-full border-1 border-surface-600 bg-surface-800 px-1.5 py-1.5 outline-0 focus:border-primary-600;
+    @apply w-full border-1 border-surface-600 bg-surface-950 px-1.5 py-1.5 outline-0 focus:border-primary-600;
   }
 }

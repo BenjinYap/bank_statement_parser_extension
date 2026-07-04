@@ -12,10 +12,43 @@
     props.editTransactions.reduce((sum, transaction) => sum + transaction.amount, 0)
   );
 
+  let previousEditTransactions = props.editTransactions;
+  let previousLength = props.editTransactions.length;
+  let focusIndex:number = $state(0);
+
+  $effect(() => {
+    const current = props.editTransactions;
+    const length = current.length;
+
+    if (current !== previousEditTransactions) {
+      focusIndex = 0;
+    } else if (length > previousLength) {
+      focusIndex = length - 1;
+    }
+
+    previousEditTransactions = current;
+    previousLength = length;
+  });
+
   function addTransaction() {
-    props.editTransactions.push({ category: '', item: '', amount: 0 });
+    const previousTransaction = props.editTransactions.at(-1);
+    const category = previousTransaction?.category ?? '';
+    props.editTransactions.push({ category, item: '', amount: 0 });
+  }
+
+  function handleKeydown(event:KeyboardEvent) {
+    if (!event.ctrlKey) {
+      return;
+    }
+
+    if (event.key === '+' || event.key === '=') {
+      event.preventDefault();
+      addTransaction();
+    }
   }
 </script>
+
+<svelte:window onkeydown={handleKeydown} />
 
 <div class="flex flex-col gap-2">
   <table class="border-3 border-surface-900">
@@ -27,8 +60,11 @@
       </tr>
     </thead>
     <tbody>
-      {#each props.editTransactions as transaction}
-        <EditGridTransaction transaction={transaction} />
+      {#each props.editTransactions as transaction, index (transaction)}
+        <EditGridTransaction
+          transaction={transaction}
+          autofocus={index === focusIndex}
+        />
       {/each}
       <tr>
         <td colspan="2" class="px-2 pt-1 pb-1.5 text-right">Total</td>

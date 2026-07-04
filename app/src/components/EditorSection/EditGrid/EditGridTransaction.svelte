@@ -4,13 +4,21 @@
 
   interface Props {
     transaction: EditTransaction;
+    autofocus?: boolean;
   }
 
   let props:Props = $props();
   let amountText:string = $state(props.transaction.amount.toString());
+  let categorySelect:HTMLSelectElement|undefined = $state();
 
   $effect(() => {
     amountText = props.transaction.amount.toString();
+  });
+
+  $effect(() => {
+    if (props.autofocus && categorySelect) {
+      categorySelect.focus();
+    }
   });
 
   function commitAmount() {
@@ -23,6 +31,7 @@
   <td class="">
     <select
       class=""
+      bind:this={categorySelect}
       bind:value={props.transaction.category}
     >
       <option value="">-- Select --</option>

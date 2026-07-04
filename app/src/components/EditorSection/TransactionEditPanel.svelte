@@ -34,10 +34,6 @@
     props.onsave(newTransactions);
   }
 
-  function addTransaction() {
-    editTransactions.push({ category: '', item: '', amount: 0 });
-  }
-
   function handleKeydown(event:KeyboardEvent) {
     if (!event.ctrlKey) {
       return;
@@ -46,9 +42,6 @@
     if (event.key === 's') {
       event.preventDefault();
       save();
-    } else if (event.key === '+' || event.key === '=') {
-      event.preventDefault();
-      addTransaction();
     }
   }
 </script>
