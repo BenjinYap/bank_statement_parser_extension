@@ -22,7 +22,7 @@ describe('EditGridTransaction', () => {
     expect(transaction.amount).toBe(42.5);
   });
 
-  it('parses the typed amount into a number on blur', async () => {
+  it('parses the typed amount and adds tax on blur', async () => {
     const transaction:EditTransaction = { category: 'Food', item: 'Groceries', amount: 42.5 };
     const { container } = render(EditGridTransaction, { props: { transaction } });
     const amountInput = container.querySelector('input.text-right') as HTMLInputElement;
@@ -30,11 +30,11 @@ describe('EditGridTransaction', () => {
     await fireEvent.input(amountInput, { target: { value: '99.75' } });
     await fireEvent.blur(amountInput);
 
-    expect(transaction.amount).toBe(99.75);
-    expect(amountInput.value).toBe('99.75');
+    expect(transaction.amount).toBe(112.72);
+    expect(amountInput.value).toBe('112.72');
   });
 
-  it('parses the typed amount into a number when Enter is pressed', async () => {
+  it('parses the typed amount and adds tax when Enter is pressed', async () => {
     const transaction:EditTransaction = { category: 'Food', item: 'Groceries', amount: 42.5 };
     const { container } = render(EditGridTransaction, { props: { transaction } });
     const amountInput = container.querySelector('input.text-right') as HTMLInputElement;
@@ -42,17 +42,41 @@ describe('EditGridTransaction', () => {
     await fireEvent.input(amountInput, { target: { value: '99.75' } });
     await fireEvent.keyDown(amountInput, { key: 'Enter' });
 
+    expect(transaction.amount).toBe(112.72);
+    expect(amountInput.value).toBe('112.72');
+  });
+
+  it('commits the raw amount without tax when Shift + Enter is pressed', async () => {
+    const transaction:EditTransaction = { category: 'Food', item: 'Groceries', amount: 42.5 };
+    const { container } = render(EditGridTransaction, { props: { transaction } });
+    const amountInput = container.querySelector('input.text-right') as HTMLInputElement;
+
+    await fireEvent.input(amountInput, { target: { value: '99.75' } });
+    await fireEvent.keyDown(amountInput, { key: 'Enter', shiftKey: true });
+
     expect(transaction.amount).toBe(99.75);
     expect(amountInput.value).toBe('99.75');
   });
 
-  it('evaluates a formula when the amount starts with an equal sign', async () => {
+  it('evaluates a formula and then adds tax', async () => {
     const transaction:EditTransaction = { category: 'Food', item: 'Groceries', amount: 42.5 };
     const { container } = render(EditGridTransaction, { props: { transaction } });
     const amountInput = container.querySelector('input.text-right') as HTMLInputElement;
 
     await fireEvent.input(amountInput, { target: { value: '=12.5 + 3 * 2' } });
     await fireEvent.blur(amountInput);
+
+    expect(transaction.amount).toBe(20.91);
+    expect(amountInput.value).toBe('20.91');
+  });
+
+  it('evaluates a formula without tax when Shift + Enter is pressed', async () => {
+    const transaction:EditTransaction = { category: 'Food', item: 'Groceries', amount: 42.5 };
+    const { container } = render(EditGridTransaction, { props: { transaction } });
+    const amountInput = container.querySelector('input.text-right') as HTMLInputElement;
+
+    await fireEvent.input(amountInput, { target: { value: '=12.5 + 3 * 2' } });
+    await fireEvent.keyDown(amountInput, { key: 'Enter', shiftKey: true });
 
     expect(transaction.amount).toBe(18.5);
     expect(amountInput.value).toBe('18.5');

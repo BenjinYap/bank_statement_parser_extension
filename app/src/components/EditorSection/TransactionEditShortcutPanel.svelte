@@ -17,6 +17,8 @@
   const KEY_CTRL:Key = { label: 'Ctrl' };
   const KEY_S:Key = { label: 'S' };
   const KEY_PLUS:Key = { label: '+' };
+  const KEY_SHIFT:Key = { label: 'Shift' };
+  const KEY_ENTER:Key = { label: 'Enter' };
 
   const SHORTCUTS:Shortcut[] = [
     {
@@ -24,9 +26,13 @@
       actionName: 'Add new row',
     },
     {
+      keys: [KEY_SHIFT, KEY_ENTER],
+      actionName: 'Commit amount without tax',
+    },
+    {
       keys: [KEY_CTRL, KEY_S],
       actionName: 'Save transaction',
-    }
+    },
   ];
 </script>
 
