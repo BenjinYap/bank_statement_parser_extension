@@ -6,11 +6,13 @@ import type { TransactionGroup } from '../../../src/models/TransactionGroup';
 const mockGroup:TransactionGroup = {
   original: { date: '2024-01-15', category: 'Food', item: 'Groceries', amount: 42.50 },
   current: [{ date: '2024-01-15', category: 'Food', item: 'Groceries', amount: 42.50 }],
+  edited: false,
 };
 
 const otherMockGroup:TransactionGroup = {
   original: { date: '2024-02-20', category: 'Travel', item: 'Flight', amount: 199.99 },
   current: [{ date: '2024-02-20', category: 'Travel', item: 'Flight', amount: 199.99 }],
+  edited: false,
 };
 
 describe('TransactionEditPanel', () => {

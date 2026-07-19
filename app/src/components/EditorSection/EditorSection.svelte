@@ -53,6 +53,7 @@
 
   function handleSave(group:TransactionGroup, newTransactions:ParsedTransaction[]) {
     group.current = newTransactions;
+    group.edited = true;
     selectedGroup = undefined;
   }
 

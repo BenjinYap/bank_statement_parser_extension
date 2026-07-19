@@ -20,4 +20,9 @@ describe('createTransactionGroup', () => {
     expect(group.current[0]).toEqual(transaction);
     expect(group.current[0]).not.toBe(transaction);
   });
+
+  it('starts unedited', () => {
+    const group = createTransactionGroup(transaction);
+    expect(group.edited).toBe(false);
+  });
 });

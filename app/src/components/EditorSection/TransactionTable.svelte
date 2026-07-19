@@ -36,7 +36,7 @@
           class="cursor-pointer {group === props.selectedGroup ? 'bg-orange-950 text-orange-200' : 'group-hover:bg-surface-800'}"
           onclick={(event) => handleRowClick(group, event)}
         >
-          <td class="px-2 py-1 border-y-1 border-surface-900">{i === 0 ? transaction.date : ''}</td>
+          <td class="px-2 py-1 border-y-1 border-surface-900 {group.edited ? 'border-l-3 border-l-amber-500' : ''}">{i === 0 ? transaction.date : ''}</td>
           <td class="px-2 py-1 border-y-1 border-surface-900">{transaction.category}</td>
           <td class="px-2 py-1 border-y-1 border-surface-900">
             {transaction.item}

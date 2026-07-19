@@ -15,11 +15,13 @@ function matchesCellText(expected:string) {
 const groupWithReplacement:TransactionGroup = {
   original: { ...baseTransaction, item: 'Eating out', originalItem: 'NOODLEBOX WATERLOO ON' },
   current: [{ ...baseTransaction, item: 'Eating out' }],
+  edited: false,
 };
 
 const groupWithoutReplacement:TransactionGroup = {
   original: { ...baseTransaction, item: 'SOMETHING UNKNOWN' },
   current: [{ ...baseTransaction, item: 'SOMETHING UNKNOWN' }],
+  edited: false,
 };
 
 describe('TransactionTable', () => {
@@ -47,6 +49,7 @@ describe('TransactionTable', () => {
         { ...baseTransaction, item: 'Eating out' },
         { ...baseTransaction, item: 'Snacks' },
       ],
+      edited: false,
     };
 
     const { getAllByText } = render(TransactionTable, {
@@ -73,6 +76,7 @@ describe('TransactionTable', () => {
         { ...baseTransaction, item: 'Eating out' },
         { ...baseTransaction, item: 'Snacks' },
       ],
+      edited: false,
     };
     const { getAllByText } = render(TransactionTable, {
       props: { transactionGroups: [multiTransactionGroup], selectedGroup: undefined, onselect: vi.fn() },
