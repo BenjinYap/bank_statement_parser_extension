@@ -46,7 +46,7 @@
       />
     </div>
 
-    <div>
+    <div class="relative">
       {#if selectedGroup === undefined}
         <Section>
           Select a transaction to edit.

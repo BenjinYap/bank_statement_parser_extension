@@ -6,6 +6,7 @@
   import Section from "../common/Section.svelte";
   import Heading from "../common/Heading.svelte";
   import Button from "../common/Button.svelte";
+  import TransactionEditShortcutPanel from "./TransactionEditShortcutPanel.svelte";
 
   interface Props {
     selectedGroup: TransactionGroup;
@@ -50,8 +51,8 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <Section
-  className="sticky"
-  style="margin-top: {props.marginTop ?? 0}px; top: 16px;"
+  className="sticky top-2"
+  style="margin-top: {props.marginTop ?? 0}px;"
   title="Edit Transaction"
 >
   <div class="flex flex-col gap-2">
@@ -85,3 +86,7 @@
     </Button>
   </div>
 </Section>
+
+<TransactionEditShortcutPanel
+  top={props.marginTop}
+/>
