@@ -36,7 +36,7 @@
     dateTo.setHours(-1, 0, 0, 0);
 
     const parsed = parseDom(html, dateFrom, dateTo);
-    const toUse = dev_mode ? parsed.slice(0, 15) : parsed;
+    const toUse = dev_mode ? parsed.slice(0, 150) : parsed;
     transactionGroups = toUse.map(createTransactionGroup);
     if (dev_mode) {
       initialSelectedGroup = transactionGroups[0];

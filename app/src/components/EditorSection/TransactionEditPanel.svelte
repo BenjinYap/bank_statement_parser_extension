@@ -49,7 +49,7 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <Section
-  className=""
+  className="sticky top-4"
   title="Edit Transaction"
 >
   <div class="flex flex-col gap-2">
