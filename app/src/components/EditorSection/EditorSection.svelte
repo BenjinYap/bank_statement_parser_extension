@@ -17,6 +17,40 @@
   let selectedGroup:TransactionGroup|undefined = $state(props.initialSelectedGroup);
   let selectedGroupTop:number = $state(0);
 
+  let tableContainerEl:HTMLDivElement|undefined = $state();
+  let panelEl:HTMLDivElement|undefined = $state();
+  let tableHeight:number = $state(0);
+  let panelHeight:number = $state(0);
+
+  // The maximum value of marginTop so the EditPanel never goes past the bottom of the page
+  let clampedMarginTop:number = $derived.by(() => {
+    const maxTop = tableHeight - panelHeight;
+    if (maxTop < 0) {
+      return 0;
+    }
+    return Math.min(selectedGroupTop, maxTop);
+  });
+
+  $effect(() => {
+    if (tableContainerEl === undefined || panelEl === undefined) {
+      return;
+    }
+
+    // Everytime the EditPanel changes, start recording size changes.
+    // The observer also triggers once immediately. The observer is needed because
+    // the EditPanel may change height from adding more rows.
+    const table = tableContainerEl;
+    const panel = panelEl;
+    const observer = new ResizeObserver(() => {
+      tableHeight = table.offsetHeight;
+      panelHeight = panel.offsetHeight;
+    });
+    observer.observe(table);
+    observer.observe(panel);
+
+    return () => observer.disconnect();
+  });
+
   function handleSave(group:TransactionGroup, newTransactions:ParsedTransaction[]) {
     group.current = newTransactions;
     selectedGroup = undefined;
@@ -38,7 +72,10 @@
       <Button variant="primary">Hi</Button>
     </div>
 
-    <div class="col-start-1">
+    <div
+      class="col-start-1"
+      bind:this={tableContainerEl}
+    >
       <TransactionTable
         transactionGroups={props.transactionGroups}
         {selectedGroup}
@@ -52,11 +89,13 @@
           Select a transaction to edit.
         </Section>
       {:else}
-        <TransactionEditPanel
-          {selectedGroup}
-          marginTop={selectedGroupTop}
-          onsave={(newTransactions) => handleSave(selectedGroup, newTransactions)}
-        />
+        <div bind:this={panelEl}>
+          <TransactionEditPanel
+            {selectedGroup}
+            marginTop={clampedMarginTop}
+            onsave={(newTransactions) => handleSave(selectedGroup, newTransactions)}
+          />
+        </div>
       {/if}
     </div>
 
