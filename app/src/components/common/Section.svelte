@@ -16,7 +16,7 @@
   style={props.style ?? ''}
 >
   {#if props.title}
-    <div class="text-xl px-2 pb-1.5 bg-neutral-900">{props.title}</div>
+    <div class="text-xl px-2 pb-1.5 bg-neutral-900 text-nowrap">{props.title}</div>
   {/if}
   <div class="p-2">
     {@render props.children()}
