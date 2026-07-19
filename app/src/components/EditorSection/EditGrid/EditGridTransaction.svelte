@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { EditTransaction } from '../../../models/EditTransaction';
   import { CATEGORIES } from '../../../utils/categories';
-  import { evaluate } from 'mathjs';
+  import { calculate } from '../../../utils/calculator';
 
   interface Props {
     transaction: EditTransaction;
@@ -22,27 +22,8 @@
     }
   });
 
-  // Only allow digits, decimals, whitespace, brackets, and the +, -, * operators.
-  const ARITHMETIC_ONLY:RegExp = /^[\d\s.+\-*()]+$/;
-
-  function parseAmount(text:string):number {
-    if (text.startsWith('=')) {
-      const formula:string = text.slice(1);
-      if (!ARITHMETIC_ONLY.test(formula)) {
-        return 0;
-      }
-      try {
-        const result:unknown = evaluate(formula);
-        return typeof result === 'number' && isFinite(result) ? result : 0;
-      } catch {
-        return 0;
-      }
-    }
-    return parseFloat(text) || 0;
-  }
-
   function commitAmount() {
-    props.transaction.amount = parseAmount(amountText);
+    props.transaction.amount = calculate(amountText);
     amountText = props.transaction.amount.toString();
   }
 
