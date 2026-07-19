@@ -52,4 +52,24 @@ describe('EditorSection', () => {
     expect(getByText('Edit Transaction')).toBeInTheDocument();
     expect(queryByText('Select a transaction to edit.')).not.toBeInTheDocument();
   });
+
+  it('copies all transaction data as headerless CSV when Copy CSV is clicked', async () => {
+    const writeText = vi.fn();
+    Object.assign(navigator, { clipboard: { writeText } });
+
+    const secondGroup:TransactionGroup = {
+      original: { date: '2024-02-01', category: 'Rent', item: 'Apartment', amount: 1000 },
+      current: [{ date: '2024-02-01', category: 'Rent', item: 'Apartment', amount: 1000 }],
+    };
+
+    const { getByText } = render(EditorSection, {
+      props: { transactionGroups: [mockGroup, secondGroup] },
+    });
+
+    await fireEvent.click(getByText('Copy CSV'));
+
+    expect(writeText).toHaveBeenCalledWith(
+      '2024-01-15,Food,Groceries,12.5\n2024-02-01,Rent,Apartment,1000'
+    );
+  });
 });

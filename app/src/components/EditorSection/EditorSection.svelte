@@ -20,6 +20,15 @@
     group.current = newTransactions;
     selectedGroup = undefined;
   }
+
+  function handleCopyCsv() {
+    let rows = props.transactionGroups.flatMap((group) =>
+      group.current.map((transaction) =>
+        [transaction.date, transaction.category, transaction.item, transaction.amount].join(',')
+      )
+    );
+    navigator.clipboard.writeText(rows.join('\n'));
+  }
 </script>
 
 <Section title="Editor">
@@ -50,7 +59,10 @@
     </div>
 
     <div class="">
-      <Button variant="primary">Hi</Button>
+      <Button
+        variant="primary"
+        onclick={handleCopyCsv}
+      >Copy CSV</Button>
     </div>
   </div>
 </Section>
