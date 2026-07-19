@@ -1,6 +1,31 @@
 import { describe, expect, it } from 'vitest';
-import { applyReplacements } from '../../src/utils/parser';
+import { applyReplacements, parseDom } from '../../src/utils/parser';
 import type { ReplacementMap } from '../../src/utils/replacements';
+
+function buildTableHtml(rows:{ date:string, item:string, amount:string }[]):string {
+  const rowsHtml = rows.map((row) => `
+    <tr>
+      <td class="mat-column-transactionDt">${row.date}</td>
+      <td class="mat-column-transactionDescToDisplay">${row.item}</td>
+      <td class="mat-column-debitedAmount">${row.amount}</td>
+    </tr>
+  `).join('');
+
+  return `
+    <table class="mat-table" aria-label="Transactions">
+      <thead>
+        <tr>
+          <th class="mat-column-transactionDt"></th>
+          <th class="mat-column-transactionDescToDisplay"></th>
+          <th class="mat-column-debitedAmount"></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rowsHtml}
+      </tbody>
+    </table>
+  `;
+}
 
 const DATE = new Date('2024-01-15');
 
@@ -56,5 +81,19 @@ describe('applyReplacements', () => {
     const result = applyReplacements(DATE, 'TIM HORTONS #1234', 3.00, ITEM_MAP, CATEGORY_MAP);
     expect(result.item).toBe('Drinks to go');
     expect(result.category).toBe('Food');
+  });
+});
+
+describe('parseDom', () => {
+  it('reverses the row order so the result is chronological ascending', () => {
+    const html = buildTableHtml([
+      { date: '2024-01-15', item: 'THIRD', amount: '3.00' },
+      { date: '2024-01-14', item: 'SECOND', amount: '2.00' },
+      { date: '2024-01-13', item: 'FIRST', amount: '1.00' },
+    ]);
+
+    const result = parseDom(html, new Date('2024-01-01'), new Date('2024-01-31'));
+
+    expect(result.map((transaction) => transaction.item)).toEqual(['FIRST', 'SECOND', 'THIRD']);
   });
 });
