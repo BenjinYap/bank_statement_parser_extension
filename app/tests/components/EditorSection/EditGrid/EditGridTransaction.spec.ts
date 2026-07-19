@@ -34,6 +34,18 @@ describe('EditGridTransaction', () => {
     expect(amountInput.value).toBe('99.75');
   });
 
+  it('parses the typed amount into a number when Enter is pressed', async () => {
+    const transaction:EditTransaction = { category: 'Food', item: 'Groceries', amount: 42.5 };
+    const { container } = render(EditGridTransaction, { props: { transaction } });
+    const amountInput = container.querySelector('input.text-right') as HTMLInputElement;
+
+    await fireEvent.input(amountInput, { target: { value: '99.75' } });
+    await fireEvent.keyDown(amountInput, { key: 'Enter' });
+
+    expect(transaction.amount).toBe(99.75);
+    expect(amountInput.value).toBe('99.75');
+  });
+
   it('falls back to 0 when the typed amount is not a valid number', async () => {
     const transaction:EditTransaction = { category: 'Food', item: 'Groceries', amount: 42.5 };
     const { container } = render(EditGridTransaction, { props: { transaction } });

@@ -25,6 +25,12 @@
     props.transaction.amount = parseFloat(amountText) || 0;
     amountText = props.transaction.amount.toString();
   }
+
+  function onAmountKeydown(event:KeyboardEvent) {
+    if (event.key === 'Enter') {
+      commitAmount();
+    }
+  }
 </script>
 
 <tr>
@@ -53,6 +59,7 @@
       type="text"
       bind:value={amountText}
       onblur={commitAmount}
+      onkeydown={onAmountKeydown}
     />
   </td>
 </tr>
