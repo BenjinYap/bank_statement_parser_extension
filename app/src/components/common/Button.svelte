@@ -26,6 +26,6 @@
   );
 </script>
 
-<button class="{VARIANT_CLASSES[props.variant]} {props.className ?? ''}" {...restProps}>
+<button class="cursor-pointer {VARIANT_CLASSES[props.variant]} {props.className ?? ''}" {...restProps}>
   {@render props.children()}
 </button>

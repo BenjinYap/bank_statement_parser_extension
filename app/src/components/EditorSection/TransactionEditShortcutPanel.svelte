@@ -17,6 +17,7 @@
   const KEY_CTRL:Key = { label: 'Ctrl' };
   const KEY_S:Key = { label: 'S' };
   const KEY_PLUS:Key = { label: '+' };
+
   const SHORTCUTS:Shortcut[] = [
     {
       keys: [KEY_CTRL, KEY_PLUS],
@@ -34,7 +35,7 @@
   style="top: {props.top ?? 0}px;"
   title="Keyboard Shortcuts"
 >
-  <div class="grid grid-rows-auto grid-cols-2 gap-2 items-center">
+  <div class="grid grid-rows-auto grid-cols-[auto_auto] gap-2 items-center">
     {#each SHORTCUTS as shortcut}
       <div class="flex gap-2">
         {#each shortcut.keys as key}
