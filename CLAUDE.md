@@ -2,9 +2,12 @@
 
 * Always favor using Svelte 5 runes.
 * Keep Svelte components small. 100 lines is a good rule of thumb. Prefer building many components to compose together.
+
+## IMPORTANT
 * If you add any new files, always add them to Git.
 * Always play it safe and ask questions.
-* NEVER FORGET ABOUT TESTS.
+* Always think about adding tests.
+* Always run tests.
 
 ## Code Style
 * Do not omit semicolons.
