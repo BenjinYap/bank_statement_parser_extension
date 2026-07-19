@@ -15,6 +15,7 @@
   let props:Props = $props();
 
   let selectedGroup:TransactionGroup|undefined = $state(props.initialSelectedGroup);
+  let selectedGroupTop:number = $state(0);
 
   function handleSave(group:TransactionGroup, newTransactions:ParsedTransaction[]) {
     group.current = newTransactions;
@@ -41,7 +42,7 @@
       <TransactionTable
         transactionGroups={props.transactionGroups}
         {selectedGroup}
-        onselect={(group) => selectedGroup = group}
+        onselect={(group, topOffset) => { selectedGroup = group; selectedGroupTop = topOffset; }}
       />
     </div>
 
@@ -53,6 +54,7 @@
       {:else}
         <TransactionEditPanel
           {selectedGroup}
+          marginTop={selectedGroupTop}
           onsave={(newTransactions) => handleSave(selectedGroup, newTransactions)}
         />
       {/if}

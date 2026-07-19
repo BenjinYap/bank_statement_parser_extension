@@ -9,6 +9,7 @@
 
   interface Props {
     selectedGroup: TransactionGroup;
+    marginTop?: number;
     onsave: (newTransactions: ParsedTransaction[]) => void;
   }
 
@@ -49,7 +50,8 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <Section
-  className="sticky top-4"
+  className="sticky"
+  style="margin-top: {props.marginTop ?? 0}px; top: 16px;"
   title="Edit Transaction"
 >
   <div class="flex flex-col gap-2">

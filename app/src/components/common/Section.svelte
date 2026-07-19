@@ -5,12 +5,16 @@
     children:Snippet;
     title:string;
     className?:string;
+    style?:string;
   }
 
   let props:Props = $props();
 </script>
 
-<section class="rounded-md border-6 border-neutral-900 {props.className ?? ''}">
+<section
+  class="rounded-md border-6 border-neutral-900 {props.className ?? ''}"
+  style={props.style ?? ''}
+>
   {#if props.title}
     <div class="text-xl pl-2 pb-1.5 bg-neutral-900">{props.title}</div>
   {/if}

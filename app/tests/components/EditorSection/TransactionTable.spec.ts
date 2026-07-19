@@ -63,7 +63,7 @@ describe('TransactionTable', () => {
       props: { transactionGroups: [groupWithoutReplacement], selectedGroup: undefined, onselect },
     });
     await fireEvent.click(getByText('SOMETHING UNKNOWN'));
-    expect(onselect).toHaveBeenCalledWith(groupWithoutReplacement);
+    expect(onselect).toHaveBeenCalledWith(groupWithoutReplacement, expect.any(Number));
   });
 
   it('shows the date only on the first transaction of a multi-transaction group', () => {
