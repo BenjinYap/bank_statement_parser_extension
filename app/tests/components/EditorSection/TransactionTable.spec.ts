@@ -69,7 +69,7 @@ describe('TransactionTable', () => {
     expect(onselect).toHaveBeenCalledWith(groupWithoutReplacement, expect.any(Number));
   });
 
-  it('shows the date only on the first transaction of a multi-transaction group', () => {
+  it('shows the date on every transaction of a multi-transaction group', () => {
     const multiTransactionGroup:TransactionGroup = {
       original: { ...baseTransaction, item: 'Eating out' },
       current: [
@@ -81,7 +81,7 @@ describe('TransactionTable', () => {
     const { getAllByText } = render(TransactionTable, {
       props: { transactionGroups: [multiTransactionGroup], selectedGroup: undefined, onselect: vi.fn() },
     });
-    expect(getAllByText('2024-01-15')).toHaveLength(1);
+    expect(getAllByText('2024-01-15')).toHaveLength(2);
   });
 
   it('formats the amount as $XX.XX', () => {
