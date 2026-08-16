@@ -46,7 +46,8 @@
 <tr>
   <td class=""></td>
   <td class=""></td>
-  <td class="">
+  <td class="relative">
+    <span class="absolute text-xs bottom-1/1 bg-primary-600 font-medium px-1">Subtract</span>
     <input
       class="text-right"
       type="text"
