@@ -24,11 +24,11 @@
   const SHORTCUTS:Shortcut[] = [
     {
       keys: [KEY_CTRL, KEY_PLUS],
-      actionName: 'Add new row',
+      actionName: 'Add new transaction',
     },
     {
       keys: [KEY_CTRL, KEY_MINUS],
-      actionName: 'Split first row',
+      actionName: 'Subtract from first transaction',
     },
     {
       keys: [KEY_SHIFT, KEY_ENTER],

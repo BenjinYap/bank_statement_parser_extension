@@ -149,7 +149,7 @@ describe('EditGrid', () => {
     ]);
   });
 
-  it('focuses the new split row\'s category dropdown after committing', async () => {
+  it('focuses the new subtract row\'s category dropdown after committing', async () => {
     const editTransactions:EditTransaction[] = reactiveArray([
       { category: 'Food', item: 'Groceries', amount: 42.5 },
     ]);

@@ -16,8 +16,8 @@
   });
 
   // Resolves the typed amount the same way a normal amount input does and hands
-  // it to the parent to perform the split. Guarded so the follow-up blur that
-  // fires as this row unmounts does not also trigger a cancel.
+  // it to the parent to perform the subtraction. Guarded so the follow-up blur
+  // that fires as this row unmounts does not also trigger a cancel.
   function commit(applyTax:boolean) {
     committed = true;
     props.oncommit(resolveAmount(amountText, applyTax));

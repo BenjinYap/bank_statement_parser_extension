@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { EditTransaction } from '../../../models/EditTransaction';
   import EditGridTransaction from './EditGridTransaction.svelte';
-  import EditGridSplitRow from './EditGridSplitRow.svelte';
+  import EditGridSubtractRow from './EditGridSubtractRow.svelte';
 
   interface Props {
     editTransactions: EditTransaction[];
@@ -15,8 +15,8 @@
 
   let previousEditTransactions = props.editTransactions;
   let focusIndex:number = $state(0);
-  // Whether the interim "split" row is showing under the first transaction.
-  let splitting:boolean = $state(false);
+  // Whether the interim "subtract" row is showing under the first transaction.
+  let subtracting:boolean = $state(false);
 
   $effect(() => {
     // Reset focus to the first row whenever a different group is loaded (the
@@ -25,7 +25,7 @@
     const current = props.editTransactions;
     if (current !== previousEditTransactions) {
       focusIndex = 0;
-      splitting = false;
+      subtracting = false;
       previousEditTransactions = current;
     }
   });
@@ -40,18 +40,18 @@
   // Subtracts the committed amount from the first transaction (in integer-cent
   // arithmetic to avoid float drift) and inserts it as a new, more specific row
   // directly underneath, inheriting the first row's category, and focuses it.
-  // (The split row calls preventDefault on the committing Enter so the newly
+  // (The subtract row calls preventDefault on the committing Enter so the newly
   // focused category dropdown does not pop open.)
-  function commitSplit(amount:number) {
+  function commitSubtract(amount:number) {
     const first = props.editTransactions[0];
     first.amount = (Math.round(first.amount * 100) - Math.round(amount * 100)) / 100;
     props.editTransactions.splice(1, 0, { category: first.category, item: '', amount });
-    splitting = false;
+    subtracting = false;
     focusIndex = 1;
   }
 
-  function cancelSplit() {
-    splitting = false;
+  function cancelSubtract() {
+    subtracting = false;
   }
 
   function handleKeydown(event:KeyboardEvent) {
@@ -65,7 +65,7 @@
     } else if (event.key === '-') {
       event.preventDefault();
       if (props.editTransactions.length > 0) {
-        splitting = true;
+        subtracting = true;
       }
     }
   }
@@ -88,10 +88,10 @@
           transaction={transaction}
           autofocus={index === focusIndex}
         />
-        {#if splitting && index === 0}
-          <EditGridSplitRow
-            oncommit={commitSplit}
-            oncancel={cancelSplit}
+        {#if subtracting && index === 0}
+          <EditGridSubtractRow
+            oncommit={commitSubtract}
+            oncancel={cancelSubtract}
           />
         {/if}
       {/each}
