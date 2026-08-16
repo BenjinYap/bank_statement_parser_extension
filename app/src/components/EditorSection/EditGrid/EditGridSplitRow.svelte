@@ -25,6 +25,9 @@
 
   function onAmountKeydown(event:KeyboardEvent) {
     if (event.key === 'Enter') {
+      // Prevent the default action so it does not reach the category dropdown of
+      // the row we are about to insert and focus, which would pop it open.
+      event.preventDefault();
       // Shift + Enter commits the raw amount without adding tax.
       commit(!event.shiftKey);
     } else if (event.key === 'Escape') {

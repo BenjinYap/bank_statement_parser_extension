@@ -39,7 +39,9 @@
 
   // Subtracts the committed amount from the first transaction (in integer-cent
   // arithmetic to avoid float drift) and inserts it as a new, more specific row
-  // directly underneath, inheriting the first row's category.
+  // directly underneath, inheriting the first row's category, and focuses it.
+  // (The split row calls preventDefault on the committing Enter so the newly
+  // focused category dropdown does not pop open.)
   function commitSplit(amount:number) {
     const first = props.editTransactions[0];
     first.amount = (Math.round(first.amount * 100) - Math.round(amount * 100)) / 100;

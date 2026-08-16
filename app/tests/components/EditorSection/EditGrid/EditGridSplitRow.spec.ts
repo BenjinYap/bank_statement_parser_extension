@@ -23,6 +23,19 @@ describe('EditGridSplitRow', () => {
     expect(oncommit).toHaveBeenCalledWith(11.3);
   });
 
+  it('prevents the default action of the committing Enter (so the next row\'s dropdown stays closed)', async () => {
+    const { container } = render(EditGridSplitRow, {
+      props: { oncommit: vi.fn(), oncancel: vi.fn() },
+    });
+    const amountInput = container.querySelector('input.text-right') as HTMLInputElement;
+
+    await fireEvent.input(amountInput, { target: { value: '10' } });
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    amountInput.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBe(true);
+  });
+
   it('commits the raw amount without tax on Shift + Enter', async () => {
     const oncommit = vi.fn();
     const { container } = render(EditGridSplitRow, {

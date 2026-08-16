@@ -168,6 +168,22 @@ describe('EditGrid', () => {
     ]);
   });
 
+  it('focuses the new split row\'s category dropdown after committing', async () => {
+    const editTransactions:EditTransaction[] = reactiveArray([
+      { category: 'Food', item: 'Groceries', amount: 42.5 },
+    ]);
+    const { container, getAllByRole } = render(EditGrid, {
+      props: { editTransactions },
+    });
+    await fireEvent.keyDown(window, { key: '-', ctrlKey: true });
+    const interimInput = container.querySelectorAll('input.text-right')[1] as HTMLInputElement;
+
+    await fireEvent.input(interimInput, { target: { value: '10' } });
+    await fireEvent.keyDown(interimInput, { key: 'Enter', shiftKey: true });
+
+    expect(document.activeElement).toBe(getAllByRole('combobox')[1]);
+  });
+
   it('adds tax to the committed amount on Enter and subtracts the taxed amount', async () => {
     const editTransactions:EditTransaction[] = reactiveArray([
       { category: 'Food', item: 'Groceries', amount: 42.5 },
