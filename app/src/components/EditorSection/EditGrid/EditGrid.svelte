@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { EditTransaction } from '../../../models/EditTransaction';
   import EditGridTransaction from './EditGridTransaction.svelte';
+  import EditGridSplitRow from './EditGridSplitRow.svelte';
 
   interface Props {
     editTransactions: EditTransaction[];
@@ -13,27 +14,42 @@
   );
 
   let previousEditTransactions = props.editTransactions;
-  let previousLength = props.editTransactions.length;
   let focusIndex:number = $state(0);
+  // Whether the interim "split" row is showing under the first transaction.
+  let splitting:boolean = $state(false);
 
   $effect(() => {
+    // Reset focus to the first row whenever a different group is loaded (the
+    // parent hands us a brand-new array reference). Focus for rows added during
+    // editing is set directly by the mutating functions below.
     const current = props.editTransactions;
-    const length = current.length;
-
     if (current !== previousEditTransactions) {
       focusIndex = 0;
-    } else if (length > previousLength) {
-      focusIndex = length - 1;
+      splitting = false;
+      previousEditTransactions = current;
     }
-
-    previousEditTransactions = current;
-    previousLength = length;
   });
 
   function addTransaction() {
     const previousTransaction = props.editTransactions.at(-1);
     const category = previousTransaction?.category ?? '';
     props.editTransactions.push({ category, item: '', amount: 0 });
+    focusIndex = props.editTransactions.length - 1;
+  }
+
+  // Subtracts the committed amount from the first transaction (in integer-cent
+  // arithmetic to avoid float drift) and inserts it as a new, more specific row
+  // directly underneath, inheriting the first row's category.
+  function commitSplit(amount:number) {
+    const first = props.editTransactions[0];
+    first.amount = (Math.round(first.amount * 100) - Math.round(amount * 100)) / 100;
+    props.editTransactions.splice(1, 0, { category: first.category, item: '', amount });
+    splitting = false;
+    focusIndex = 1;
+  }
+
+  function cancelSplit() {
+    splitting = false;
   }
 
   function handleKeydown(event:KeyboardEvent) {
@@ -44,6 +60,11 @@
     if (event.key === '+' || event.key === '=') {
       event.preventDefault();
       addTransaction();
+    } else if (event.key === '-') {
+      event.preventDefault();
+      if (props.editTransactions.length > 0) {
+        splitting = true;
+      }
     }
   }
 </script>
@@ -65,6 +86,12 @@
           transaction={transaction}
           autofocus={index === focusIndex}
         />
+        {#if splitting && index === 0}
+          <EditGridSplitRow
+            oncommit={commitSplit}
+            oncancel={cancelSplit}
+          />
+        {/if}
       {/each}
       <tr>
         <td colspan="2" class="px-2 pt-1 pb-1.5 text-right">Total</td>

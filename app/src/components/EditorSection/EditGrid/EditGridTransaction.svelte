@@ -1,15 +1,12 @@
 <script lang="ts">
   import type { EditTransaction } from '../../../models/EditTransaction';
   import { CATEGORIES } from '../../../utils/categories';
-  import { calculate } from '../../../utils/calculator';
+  import { resolveAmount } from '../../../utils/amount';
 
   interface Props {
     transaction: EditTransaction;
     autofocus?: boolean;
   }
-
-  // Sales tax percentage applied to the resolved amount (13% => 1.13x).
-  const TAX_PERCENT:number = 13;
 
   let props:Props = $props();
   let amountText:string = $state(props.transaction.amount.toString());
@@ -29,16 +26,7 @@
   // Resolves the typed amount (evaluating any formula first) and, unless tax is
   // skipped, multiplies it by the tax rate and rounds to the nearest cent.
   function commitAmount(applyTax:boolean = true) {
-    let amount:number = calculate(amountText);
-    if (applyTax) {
-      // Apply tax in integer-cent arithmetic. Multiplying by 1.13 directly is
-      // inexact (1.13 has no exact float), which rounds exact half-cents like
-      // 42.5 -> 48.03 down a penny; using (100 + TAX_PERCENT) keeps it exact.
-      const cents:number = Math.round(amount * 100);
-      const taxedCents:number = Math.round((cents * (100 + TAX_PERCENT)) / 100);
-      amount = taxedCents / 100;
-    }
-    props.transaction.amount = amount;
+    props.transaction.amount = resolveAmount(amountText, applyTax);
     amountText = props.transaction.amount.toString();
   }
 

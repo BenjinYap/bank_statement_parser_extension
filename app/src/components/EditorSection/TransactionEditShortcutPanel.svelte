@@ -17,6 +17,7 @@
   const KEY_CTRL:Key = { label: 'Ctrl' };
   const KEY_S:Key = { label: 'S' };
   const KEY_PLUS:Key = { label: '+' };
+  const KEY_MINUS:Key = { label: '-' };
   const KEY_SHIFT:Key = { label: 'Shift' };
   const KEY_ENTER:Key = { label: 'Enter' };
 
@@ -24,6 +25,10 @@
     {
       keys: [KEY_CTRL, KEY_PLUS],
       actionName: 'Add new row',
+    },
+    {
+      keys: [KEY_CTRL, KEY_MINUS],
+      actionName: 'Split first row',
     },
     {
       keys: [KEY_SHIFT, KEY_ENTER],
