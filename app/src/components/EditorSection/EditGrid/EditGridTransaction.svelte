@@ -14,6 +14,7 @@
   let props:Props = $props();
   let amountText:string = $state(props.transaction.amount.toString());
   let categorySelect:HTMLSelectElement|undefined = $state();
+  let amountInput:HTMLInputElement|undefined = $state();
 
   $effect(() => {
     amountText = props.transaction.amount.toString();
@@ -41,10 +42,20 @@
     amountText = props.transaction.amount.toString();
   }
 
+  // Discards the typed amount and restores the last committed value.
+  function revertAmount() {
+    amountText = props.transaction.amount.toString();
+  }
+
   function onAmountKeydown(event:KeyboardEvent) {
     if (event.key === 'Enter') {
       // Shift + Enter commits the raw amount without adding tax.
       commitAmount(!event.shiftKey);
+    } else if (event.key === 'Escape') {
+      // Escape reverts to the original value but keeps the input focused.
+      event.preventDefault();
+      revertAmount();
+      amountInput?.focus();
     }
   }
 </script>
@@ -73,8 +84,9 @@
     <input
       class="text-right"
       type="text"
+      bind:this={amountInput}
       bind:value={amountText}
-      onblur={() => commitAmount()}
+      onblur={revertAmount}
       onkeydown={onAmountKeydown}
     />
   </td>
