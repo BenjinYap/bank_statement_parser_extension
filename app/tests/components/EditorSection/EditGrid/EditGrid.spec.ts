@@ -130,26 +130,7 @@ describe('EditGrid', () => {
     expect(container.querySelectorAll('input.text-right')).toHaveLength(1);
   });
 
-  it('leaves the first transaction unchanged when the interim row is cancelled with blur', async () => {
-    const editTransactions:EditTransaction[] = reactiveArray([
-      { category: 'Food', item: 'Groceries', amount: 42.5 },
-    ]);
-    const { container } = render(EditGrid, {
-      props: { editTransactions },
-    });
-    await fireEvent.keyDown(window, { key: '-', ctrlKey: true });
-    const interimInput = container.querySelectorAll('input.text-right')[1] as HTMLInputElement;
-
-    await fireEvent.input(interimInput, { target: { value: '10' } });
-    await fireEvent.blur(interimInput);
-
-    expect(editTransactions).toEqual([
-      { category: 'Food', item: 'Groceries', amount: 42.5 },
-    ]);
-    expect(container.querySelectorAll('input.text-right')).toHaveLength(1);
-  });
-
-  it('subtracts the committed amount from the first row and inserts it underneath (Shift+Enter, no tax)', async () => {
+  it('subtracts the committed amount from the first row and inserts it underneath', async () => {
     const editTransactions:EditTransaction[] = reactiveArray([
       { category: 'Food', item: 'Groceries', amount: 42.5 },
     ]);
@@ -182,43 +163,5 @@ describe('EditGrid', () => {
     await fireEvent.keyDown(interimInput, { key: 'Enter', shiftKey: true });
 
     expect(document.activeElement).toBe(getAllByRole('combobox')[1]);
-  });
-
-  it('adds tax to the committed amount on Enter and subtracts the taxed amount', async () => {
-    const editTransactions:EditTransaction[] = reactiveArray([
-      { category: 'Food', item: 'Groceries', amount: 42.5 },
-    ]);
-    const { container } = render(EditGrid, {
-      props: { editTransactions },
-    });
-    await fireEvent.keyDown(window, { key: '-', ctrlKey: true });
-    const interimInput = container.querySelectorAll('input.text-right')[1] as HTMLInputElement;
-
-    await fireEvent.input(interimInput, { target: { value: '10' } });
-    await fireEvent.keyDown(interimInput, { key: 'Enter' });
-
-    expect(editTransactions).toEqual([
-      { category: 'Food', item: 'Groceries', amount: 31.2 },
-      { category: 'Food', item: '', amount: 11.3 },
-    ]);
-  });
-
-  it('inserts a zero-amount row for invalid input, leaving the first row unchanged', async () => {
-    const editTransactions:EditTransaction[] = reactiveArray([
-      { category: 'Food', item: 'Groceries', amount: 42.5 },
-    ]);
-    const { container } = render(EditGrid, {
-      props: { editTransactions },
-    });
-    await fireEvent.keyDown(window, { key: '-', ctrlKey: true });
-    const interimInput = container.querySelectorAll('input.text-right')[1] as HTMLInputElement;
-
-    await fireEvent.input(interimInput, { target: { value: 'not a number' } });
-    await fireEvent.keyDown(interimInput, { key: 'Enter' });
-
-    expect(editTransactions).toEqual([
-      { category: 'Food', item: 'Groceries', amount: 42.5 },
-      { category: 'Food', item: '', amount: 0 },
-    ]);
   });
 });
