@@ -23,6 +23,7 @@
             dateFrom = new Date(req.date_from);
             dateFrom.setHours(0, 0, 0, 0);
             html = req.html;
+            console.log(html);
             resolve();
           }
         });

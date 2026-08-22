@@ -21,8 +21,7 @@ export function parseDom(html:string, dateFrom:Date, dateTo:Date):ParsedTransact
   const transactions:ParsedTransaction[] = [];
   const root = document.createElement('div');
   root.innerHTML = html;
-
-  root.querySelectorAll('.mat-table').forEach((table) => {
+  root.querySelectorAll('.mat-table, .mat-mdc-table').forEach((table) => {
     const headerCols = table.querySelector('thead')?.querySelectorAll(REQUIRED_COLS.join(','));
     if ((headerCols?.length ?? 0) < REQUIRED_COLS.length) {
       return;
