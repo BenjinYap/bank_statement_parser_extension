@@ -85,11 +85,23 @@ describe('applyReplacements', () => {
 });
 
 describe('parseDom', () => {
-  it('reverses the row order so the result is chronological ascending', () => {
+  it('sorts the rows by date ascending', () => {
     const html = buildTableHtml([
       { date: '2024-01-15', item: 'THIRD', amount: '3.00' },
+      { date: '2024-01-13', item: 'FIRST', amount: '1.00' },
+      { date: '2024-01-14', item: 'SECOND', amount: '2.00' },
+    ]);
+
+    const result = parseDom(html, new Date('2024-01-01'), new Date('2024-01-31'));
+
+    expect(result.map((transaction) => transaction.item)).toEqual(['FIRST', 'SECOND', 'THIRD']);
+  });
+
+  it('keeps the html order for rows sharing the same date', () => {
+    const html = buildTableHtml([
       { date: '2024-01-14', item: 'SECOND', amount: '2.00' },
       { date: '2024-01-13', item: 'FIRST', amount: '1.00' },
+      { date: '2024-01-14', item: 'THIRD', amount: '3.00' },
     ]);
 
     const result = parseDom(html, new Date('2024-01-01'), new Date('2024-01-31'));

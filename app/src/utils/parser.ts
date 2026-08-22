@@ -62,10 +62,5 @@ export function parseDom(html:string, dateFrom:Date, dateTo:Date):ParsedTransact
     });
   });
 
-  const reversedTransactions:ParsedTransaction[] = [];
-  for (let i = transactions.length - 1; i >= 0; i--) {
-    reversedTransactions.push(transactions[i]);
-  }
-
-  return reversedTransactions;
+  return transactions.sort((a, b) => a.date.localeCompare(b.date));
 }
