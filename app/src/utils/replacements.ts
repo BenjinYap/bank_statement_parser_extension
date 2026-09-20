@@ -18,20 +18,33 @@ export const CATEGORY_REPLACEMENTS:ReplacementMap = {
     'amazon web services',
     'phone',
     'internet',
+    'balance protection tax',
+    'balance protection insurance',
   ],
   'Subscriptions': [
     'spotify',
     'jetbrains',
     'netflix',
+    'anthropic',
+    'amazon prime',
+    'crunchyroll',
   ],
   'Haniya': [
     'Adventures',
   ],
   'Transportation': [
     'fuel',
+    'parking',
   ],
   'Video Games': [
     'steamgames',
+    'steam purchase',
+  ],
+  'Health': [
+    'skincare',
+  ],
+  'Eunice': [
+    'food',
   ],
 };
 
@@ -43,6 +56,7 @@ export const ITEM_REPLACEMENTS:ReplacementMap = {
     'WOK BOX',
     'lazeez',
     'kibo market union',
+    ['cherry blossom', (date, item, amount) => amount < 30],
   ],
   'Eating out Duo': [
     'mcdonald',
@@ -53,7 +67,10 @@ export const ITEM_REPLACEMENTS:ReplacementMap = {
     'east side marios',
     'dominos pizza',
   ],
-  'Delivery': ['skipthedishes'],
+  'Delivery': [
+    'skipthedishes',
+    'ubereats',
+  ],
   'Snacks': [
     'fluffy glaze',
   ],
@@ -67,6 +84,9 @@ export const ITEM_REPLACEMENTS:ReplacementMap = {
     'kung fu tea',
     ['esso circle', (date, item, amount) => amount < 10],
   ],
+  'Drinks for home': [
+    ['dollarama', (date, item, amount) => amount == 6.22],
+  ],
   'Coffee shop': [
     'java beans',
     'centurion coffee',
@@ -79,6 +99,9 @@ export const ITEM_REPLACEMENTS:ReplacementMap = {
   'Spotify': ['Spotify'],
   'Netflix': ['netflix'],
   'JetBrains': ['jetbrains'],
+  'Anthropic': ['anthropic'],
+  'Amazon Prime': ['prime member'],
+  'Crunchyroll': ['crunchyroll'],
   'Adventures': [
     'the round table',
     'activate cambridge',
@@ -90,6 +113,19 @@ export const ITEM_REPLACEMENTS:ReplacementMap = {
     'mobil@',
     'canadian tire gas bar',
     'petro-canada',
+  ],
+  'Parking': [
+    'honk parking',
+  ],
+  'Skincare': [
+    'sephora',
+  ],
+  'Food': [
+    'sp royal canin',
+  ],
+  'Toys': [
+    ['pet valu', (date, item, amount) => amount < 10],
+    'global pet foods',
   ],
 };
 
