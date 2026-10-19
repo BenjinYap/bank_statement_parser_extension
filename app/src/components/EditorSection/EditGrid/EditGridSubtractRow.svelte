@@ -9,35 +9,21 @@
   let props:Props = $props();
   let amountText:string = $state('');
   let amountInput:HTMLInputElement|undefined = $state();
-  let committed:boolean = $state(false);
 
   $effect(() => {
     amountInput?.focus();
   });
-
-  // Resolves the typed amount the same way a normal amount input does and hands
-  // it to the parent to perform the subtraction. Guarded so the follow-up blur
-  // that fires as this row unmounts does not also trigger a cancel.
-  function commit(applyTax:boolean) {
-    committed = true;
-    props.oncommit(resolveAmount(amountText, applyTax));
-  }
 
   function onAmountKeydown(event:KeyboardEvent) {
     if (event.key === 'Enter') {
       // Prevent the default action so it does not reach the category dropdown of
       // the row we are about to insert and focus, which would pop it open.
       event.preventDefault();
-      // Shift + Enter commits the raw amount without adding tax.
-      commit(!event.shiftKey);
+      // Resolves the typed amount the same way a normal amount input does and hands it to the parent
+      // to perform the subtraction. Shift + Enter commits the raw amount without adding tax.
+      props.oncommit(resolveAmount(amountText, !event.shiftKey));
     } else if (event.key === 'Escape') {
       event.preventDefault();
-      props.oncancel();
-    }
-  }
-
-  function onAmountBlur() {
-    if (!committed) {
       props.oncancel();
     }
   }
@@ -53,7 +39,6 @@
       type="text"
       bind:this={amountInput}
       bind:value={amountText}
-      onblur={onAmountBlur}
       onkeydown={onAmountKeydown}
     />
   </td>

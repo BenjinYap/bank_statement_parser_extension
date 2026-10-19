@@ -63,19 +63,4 @@ describe('EditGridSubtractRow', () => {
     expect(oncancel).toHaveBeenCalled();
     expect(oncommit).not.toHaveBeenCalled();
   });
-
-  it('cancels on blur without committing', async () => {
-    const oncommit = vi.fn();
-    const oncancel = vi.fn();
-    const { container } = render(EditGridSubtractRow, {
-      props: { oncommit, oncancel },
-    });
-    const amountInput = container.querySelector('input.text-right') as HTMLInputElement;
-
-    await fireEvent.input(amountInput, { target: { value: '10' } });
-    await fireEvent.blur(amountInput);
-
-    expect(oncancel).toHaveBeenCalled();
-    expect(oncommit).not.toHaveBeenCalled();
-  });
 });
