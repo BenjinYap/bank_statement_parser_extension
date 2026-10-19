@@ -1,60 +1,46 @@
-<script>
-  import IntroSection from "./components/sections/IntroSection.svelte";
-  import { mock } from './mock.mjs';
-  import MetaSection from "./components/sections/MetaSection.svelte";
-  import { parseDom } from "./utils/parser.mjs";
-  import ResultsSection from "./components/sections/ResultsSection.svelte";
-  import { ParsedRow } from "./models/ParsedRow.mjs";
-  import { getFormattedDate } from "./utils/date.mjs";
-  import { CATEGORY_REPLACEMENTS, doReplacement } from "./utils/replacements.mjs";
-  import { SettingsSvelte } from "./models/Settings.svelte.js";
-  import SettingsSection from "./components/sections/SettingsSection.svelte";
+<script lang="ts">
+  import { mock } from './mock';
+  import { parseDom } from './utils/parser';
+  import type { TransactionGroup } from './models/TransactionGroup';
+  import { createTransactionGroup } from './models/TransactionGroup';
+  import EditorSection from './components/EditorSection/EditorSection.svelte';
 
-  let date_include_left;
-  let date_include_right = new Date();
-  date_include_right.setHours(-1, 0, 0, 0);
+  const DEV_DATE_FROM = new Date('Sep 10, 2024');
 
-  let table_stats;
-  let all_success_rows = $state(undefined);
-  let settings = new SettingsSvelte();
+  let transactionGroups:TransactionGroup[]|undefined = $state(undefined);
+  let initialSelectedGroup:TransactionGroup|undefined = $state(undefined);
 
-  (async () => {
-    let dom;
-    
-    // await settings.save();
-    // await settings.load();
-    
+  ;(async () => {
     const dev_mode = !chrome.runtime;
 
-    await new Promise((resolve) => {
-      // running in real extension mode
-      // noinspection JSUnresolvedReference,JSDeprecatedSymbols
+    let html:string = '';
+    let dateFrom:Date = DEV_DATE_FROM;
+
+    await new Promise<void>((resolve) => {
       if (!dev_mode) {
-        // noinspection JSUnresolvedReference,JSDeprecatedSymbols
         chrome.runtime.onMessage.addListener((req) => {
           if (req.action === 'tab_opened') {
-            date_include_left = new Date(req.date_from);
-            date_include_left.setHours(0, 0, 0, 0);
-            dom = req.html;
+            dateFrom = new Date(req.date_from);
+            dateFrom.setHours(0, 0, 0, 0);
+            html = req.html;
+            console.log(html);
             resolve();
           }
         });
-      } else {  // local dev mode
-        date_include_left = new Date('Sep 10, 2024');
-        dom = mock;
-        setTimeout(() => resolve(), 100);
-        // resolve();
+      } else {
+        html = mock;
+        setTimeout(resolve, 100);
       }
     });
 
-    table_stats = parseDom(dom, date_include_left, date_include_right);
-    // combine all rows into a flat array
-    all_success_rows = table_stats.flatMap(table => table.success_rows);
-    // sort by ascending date
-    all_success_rows.sort((a, b) => new Date(a.date) > new Date(b.date) ? 1 : -1);
-    
+    const dateTo = new Date();
+    dateTo.setHours(-1, 0, 0, 0);
+
+    const parsed = parseDom(html, dateFrom, dateTo);
+    const toUse = dev_mode ? parsed.slice(0, 150) : parsed;
+    transactionGroups = toUse.map(createTransactionGroup);
     if (dev_mode) {
-      all_success_rows = all_success_rows.slice(0, 5);
+      initialSelectedGroup = transactionGroups[0];
     }
   })();
 </script>
@@ -64,21 +50,12 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </svelte:head>
 
-<div class="flex flex-col items-stretch gap-2 py-2 max-w-[1000px] w-full">  
-  <IntroSection
-    {date_include_left}
-    {date_include_right}
-  />
-  
-<!--  <MetaSection-->
-<!--    {table_stats}-->
-<!--  />-->
-  
-<!--  <SettingsSection-->
-<!--    {settings}-->
-<!--  />-->
-  
-  <ResultsSection
-    rows={all_success_rows}
-  />
+<div class="max-w-6xl mx-auto w-full py-4">
+  {#if transactionGroups === undefined}
+    <div class="text-sm text-neutral-400">Loading...</div>
+  {:else if transactionGroups.length === 0}
+    <div class="text-sm text-neutral-400">No transactions found.</div>
+  {:else}
+    <EditorSection transactionGroups={transactionGroups} {initialSelectedGroup} />
+  {/if}
 </div>

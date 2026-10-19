@@ -1,1 +1,0 @@
-<div class="h-[1px] bg-accent-800"></div>
