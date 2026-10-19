@@ -10,7 +10,6 @@
 
   interface Props {
     selectedGroup: TransactionGroup;
-    marginTop?: number;
     onsave: (newTransactions: ParsedTransaction[]) => void;
   }
 
@@ -50,43 +49,39 @@
 
 <svelte:window onkeydown={handleKeydown} />
 
-<Section
-  className="sticky top-2"
-  style="margin-top: {props.marginTop ?? 0}px;"
-  title="Edit Transaction"
->
-  <div class="flex flex-col gap-2">
-    <Heading level="2">Original Transaction</Heading>
+<div class="sticky top-2">
+  <Section title="Edit Transaction">
+    <div class="flex flex-col gap-2">
+      <Heading level="2">Original Transaction</Heading>
 
-    <table class="border-collapse rounded-md border-3 border-surface-900">
-      <thead>
-        <tr class="bg-surface-900">
-          <th class="px-2 pt-1 pb-1.5 font-normal text-left w-40">Category</th>
-          <th class="px-2 pt-1 pb-1.5 font-normal text-left">Item</th>
-          <th class="px-2 pt-1 pb-1.5 font-normal text-right">Amount</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="px-2 py-1 border-y-1 border-surface-900">{props.selectedGroup.original.category}</td>
-          <td class="px-2 py-1 border-y-1 border-surface-900">{props.selectedGroup.original.item}</td>
-          <td class="px-2 py-1 border-y-1 border-surface-900 text-right">${props.selectedGroup.original.amount.toFixed(2)}</td>
-        </tr>
-      </tbody>
-    </table>
+      <table class="border-collapse rounded-md border-3 border-surface-900">
+        <thead>
+          <tr class="bg-surface-900">
+            <th class="px-2 pt-1 pb-1.5 font-normal text-left w-40">Category</th>
+            <th class="px-2 pt-1 pb-1.5 font-normal text-left">Item</th>
+            <th class="px-2 pt-1 pb-1.5 font-normal text-right">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="px-2 py-1 border-y-1 border-surface-900">{props.selectedGroup.original.category}</td>
+            <td class="px-2 py-1 border-y-1 border-surface-900">{props.selectedGroup.original.item}</td>
+            <td class="px-2 py-1 border-y-1 border-surface-900 text-right">${props.selectedGroup.original.amount.toFixed(2)}</td>
+          </tr>
+        </tbody>
+      </table>
 
-    <Heading level="2">Granular Transactions</Heading>
+      <Heading level="2">Granular Transactions</Heading>
 
-    <EditGrid editTransactions={editTransactions} />
-    <Button
-      variant="primary"
-      onclick={save}
-    >
-      Save
-    </Button>
-  </div>
-</Section>
+      <EditGrid editTransactions={editTransactions} />
+      <Button
+        variant="primary"
+        onclick={save}
+      >
+        Save
+      </Button>
+    </div>
+  </Section>
 
-<TransactionEditShortcutPanel
-  top={props.marginTop}
-/>
+  <TransactionEditShortcutPanel />
+</div>

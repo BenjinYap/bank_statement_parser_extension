@@ -66,7 +66,7 @@ describe('TransactionTable', () => {
       props: { transactionGroups: [groupWithoutReplacement], selectedGroup: undefined, onselect },
     });
     await fireEvent.click(getByText('SOMETHING UNKNOWN'));
-    expect(onselect).toHaveBeenCalledWith(groupWithoutReplacement, expect.any(Number));
+    expect(onselect).toHaveBeenCalledWith(groupWithoutReplacement);
   });
 
   it('shows the date on every transaction of a multi-transaction group', () => {

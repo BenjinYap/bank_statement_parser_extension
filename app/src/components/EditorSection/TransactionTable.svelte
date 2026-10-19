@@ -4,11 +4,10 @@
   interface Props {
     transactionGroups: TransactionGroup[];
     selectedGroup: TransactionGroup|undefined;
-    onselect: (group: TransactionGroup, topOffset: number) => void;
+    onselect: (group: TransactionGroup) => void;
   }
 
   let props:Props = $props();
-  let tableEl:HTMLTableElement|undefined = $state();
 
   function getLeftBorderClass(group:TransactionGroup):string {
     if (group.edited) {
@@ -21,18 +20,9 @@
     }
     return '';
   }
-
-  function handleRowClick(group:TransactionGroup, event:MouseEvent) {
-    const rowEl = event.currentTarget as HTMLElement;
-    const topOffset = rowEl.getBoundingClientRect().top - tableEl!.getBoundingClientRect().top;
-    props.onselect(group, topOffset);
-  }
 </script>
 
-<table
-  bind:this={tableEl}
-  class="border-collapse rounded-md border-3 border-surface-900"
->
+<table class="border-collapse rounded-md border-3 border-surface-900">
   <thead>
     <tr class="bg-surface-900">
       <th class="px-2 pt-1 pb-1.5 font-normal text-left w-26">Date</th>
@@ -46,7 +36,7 @@
       {#each group.current as transaction, i}
         <tr
           class="cursor-pointer {group === props.selectedGroup ? 'bg-orange-950 text-orange-200' : 'group-hover:bg-surface-800'}"
-          onclick={(event) => handleRowClick(group, event)}
+          onclick={() => props.onselect(group)}
         >
           <td class="px-2 py-1 border-y-1 border-surface-900 {getLeftBorderClass(group)}">{transaction.date}</td>
           <td class="px-2 py-1 border-y-1 border-surface-900">{transaction.category}</td>

@@ -1,12 +1,6 @@
 <script lang="ts">
   import Section from "../common/Section.svelte";
 
-  interface Props {
-    top?: number;
-  }
-
-  let props:Props = $props();
-
   type Key = {
     label:string;
   };
@@ -42,8 +36,7 @@
 </script>
 
 <Section
-  className="absolute left-[calc(100%+var(--spacing)*4+6px)]"
-  style="top: {props.top ?? 0}px;"
+  className="absolute top-0 left-[calc(100%+var(--spacing)*4+6px)]"
   title="Keyboard Shortcuts"
 >
   <div class="grid grid-rows-auto grid-cols-[auto_auto] gap-2 items-center">
