@@ -28,14 +28,14 @@ describe('EditGrid', () => {
     expect(selects[1].value).toBe('Transportation');
   });
 
-  it('pushes a new transaction onto editTransactions when Add transaction is clicked', async () => {
+  it('pushes a new transaction onto editTransactions when Ctrl+Plus is pressed', async () => {
     const editTransactions:EditTransaction[] = [
       { category: 'Food', item: 'Groceries', amount: 42.5 },
     ];
-    const { getByText } = render(EditGrid, {
+    render(EditGrid, {
       props: { editTransactions },
     });
-    await fireEvent.click(getByText('Add transaction'));
+    await fireEvent.keyDown(window, { key: '+', ctrlKey: true });
     expect(editTransactions).toEqual([
       { category: 'Food', item: 'Groceries', amount: 42.5 },
       { category: 'Food', item: '', amount: 0 },
@@ -55,10 +55,10 @@ describe('EditGrid', () => {
     const editTransactions:EditTransaction[] = reactiveArray([
       { category: 'Food', item: 'Groceries', amount: 42.5 },
     ]);
-    const { getByText, getAllByRole } = render(EditGrid, {
+    const { getAllByRole } = render(EditGrid, {
       props: { editTransactions },
     });
-    await fireEvent.click(getByText('Add transaction'));
+    await fireEvent.keyDown(window, { key: '+', ctrlKey: true });
     expect(getAllByRole('combobox')[1]).toHaveFocus();
   });
 
@@ -66,24 +66,12 @@ describe('EditGrid', () => {
     const editTransactions:EditTransaction[] = reactiveArray([
       { category: 'Food', item: 'Groceries', amount: 42.5 },
     ]);
-    const { getByText, getAllByRole } = render(EditGrid, {
-      props: { editTransactions },
-    });
-    await fireEvent.click(getByText('Add transaction'));
-    const selects = getAllByRole('combobox') as HTMLSelectElement[];
-    expect(selects[1].value).toBe('Food');
-  });
-
-  it('pressing Ctrl+Plus adds a new blank row to the grid', async () => {
-    const editTransactions:EditTransaction[] = reactiveArray([
-      { category: 'Food', item: 'Groceries', amount: 42.5 },
-    ]);
     const { getAllByRole } = render(EditGrid, {
       props: { editTransactions },
     });
-    expect(getAllByRole('combobox')).toHaveLength(1);
     await fireEvent.keyDown(window, { key: '+', ctrlKey: true });
-    expect(getAllByRole('combobox')).toHaveLength(2);
+    const selects = getAllByRole('combobox') as HTMLSelectElement[];
+    expect(selects[1].value).toBe('Food');
   });
 
   it('pressing Ctrl+Minus shows an amount-only interim row without a new dropdown', async () => {
