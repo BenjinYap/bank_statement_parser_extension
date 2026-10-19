@@ -11,8 +11,13 @@
   let amountInput:HTMLInputElement|undefined = $state();
 
   $effect(() => {
-    amountInput?.focus();
+    focus();
   });
+
+  // Lets the parent focus the amount input again while this row is already showing.
+  export function focus() {
+    amountInput?.focus();
+  }
 
   function onAmountKeydown(event:KeyboardEvent) {
     if (event.key === 'Enter') {

@@ -102,6 +102,23 @@ describe('EditGrid', () => {
     expect(getAllByRole('combobox')).toHaveLength(1);
   });
 
+  it('focuses the subtract row input when Ctrl+Minus is pressed while already subtracting', async () => {
+    const editTransactions:EditTransaction[] = reactiveArray([
+      { category: 'Food', item: 'Groceries', amount: 42.5 },
+    ]);
+    const { container, getAllByRole } = render(EditGrid, {
+      props: { editTransactions },
+    });
+    await fireEvent.keyDown(window, { key: '-', ctrlKey: true });
+    const interimInput = container.querySelectorAll('input.text-right')[1] as HTMLInputElement;
+    // The interim input autofocuses on mount, so move focus away first.
+    getAllByRole('combobox')[0].focus();
+
+    await fireEvent.keyDown(window, { key: '-', ctrlKey: true });
+
+    expect(interimInput).toHaveFocus();
+  });
+
   it('does not open the interim row when there are no transactions', async () => {
     const editTransactions:EditTransaction[] = reactiveArray([]);
     const { container } = render(EditGrid, {

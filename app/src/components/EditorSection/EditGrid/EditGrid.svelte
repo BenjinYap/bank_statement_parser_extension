@@ -17,6 +17,8 @@
   let focusIndex:number = $state(0);
   // Whether the interim "subtract" row is showing under the first transaction.
   let subtracting:boolean = $state(false);
+  // Used to focus the subtract row input when the subtract shortcut is pressed again.
+  let subtractRow:EditGridSubtractRow|undefined = $state();
 
   $effect(() => {
     // Reset focus to the first row whenever a different group is loaded (the
@@ -64,7 +66,9 @@
       addTransaction();
     } else if (event.key === '-') {
       event.preventDefault();
-      if (props.editTransactions.length > 0) {
+      if (subtracting) {
+        subtractRow?.focus();
+      } else if (props.editTransactions.length > 0) {
         subtracting = true;
       }
     }
@@ -90,6 +94,7 @@
         />
         {#if subtracting && index === 0}
           <EditGridSubtractRow
+            bind:this={subtractRow}
             oncommit={commitSubtract}
             oncancel={cancelSubtract}
           />
