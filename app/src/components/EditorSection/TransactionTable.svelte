@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { TransactionGroup } from '../../models/TransactionGroup';
+  import TransactionActionsMenu from './TransactionActionsMenu.svelte';
 
   interface Props {
     transactionGroups: TransactionGroup[];
@@ -29,6 +30,7 @@
       <th class="px-2 pt-1 pb-1.5 font-normal text-left">Category</th>
       <th class="px-2 pt-1 pb-1.5 font-normal text-left">Item</th>
       <th class="px-2 pt-1 pb-1.5 font-normal text-right">Amount</th>
+      <th class="px-2 pt-1 pb-1.5 font-normal text-right"></th>
     </tr>
   </thead>
   {#each props.transactionGroups as group}
@@ -47,6 +49,15 @@
             {/if}
           </td>
           <td class="px-2 py-1 border-y-1 border-surface-900 text-right">${transaction.amount.toFixed(2)}</td>
+          <td class="px-2 py-1 border-y-1 border-surface-900 text-right">
+            <div class="relative">
+              <span class="material-symbols-outlined bg-purple-700">
+                more_horiz
+              </span>
+<!--              <TransactionActionsMenu/>-->
+            </div>
+
+          </td>
         </tr>
       {/each}
     </tbody>
