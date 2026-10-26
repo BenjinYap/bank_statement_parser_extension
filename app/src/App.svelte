@@ -4,6 +4,7 @@
   import type { TransactionGroup } from './models/TransactionGroup';
   import { createTransactionGroup } from './models/TransactionGroup';
   import EditorSection from './components/EditorSection/EditorSection.svelte';
+  import ReplacementsSection from './components/ReplacementsSection/ReplacementsSection.svelte';
 
   const DEV_DATE_FROM = new Date('Sep 10, 2024');
 
@@ -50,7 +51,9 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </svelte:head>
 
-<div class="max-w-6xl mx-auto w-full py-4">
+<div class="max-w-6xl mx-auto w-full py-4 flex flex-col gap-2">
+  <ReplacementsSection/>
+
   {#if transactionGroups === undefined}
     <div class="text-sm text-neutral-400">Loading...</div>
   {:else if transactionGroups.length === 0}
