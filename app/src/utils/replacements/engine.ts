@@ -1,10 +1,8 @@
 export type Operator = '<'|'<='|'=='|'!='|'>='|'>'|'between';
 // The between operator uses 2 values. All other operators use 1 value.
 export type Comparison = { operator:Operator; values:number[] };
-// A filter is true when all of its comparisons are true.
-export type AmountFilter = { comparisons:Comparison[] };
-// A rule matches when the pattern matches and one filter is true. A rule with no filters matches on the pattern alone.
-export type Rule = { pattern:string; filters:AmountFilter[]; replacement:string };
+// A rule matches when the pattern matches and all comparisons are true. A rule with no comparisons matches on the pattern alone.
+export type Rule = { pattern:string; comparisons:Comparison[]; replacement:string };
 
 function notImplemented():never {
   throw new Error('Not implemented');
