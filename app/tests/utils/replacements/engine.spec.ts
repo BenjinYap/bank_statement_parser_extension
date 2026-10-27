@@ -120,6 +120,15 @@ describe('doReplacement', () => {
     expect(doReplacement('Coffee', 15, rules)).toBe('Drinks');
   });
 
+  it('returns null when the comparison passes but the pattern does not match', () => {
+    const rules:Rule[] = [{
+      pattern: 'Coffee',
+      comparisons: [{ operator: '>', values: [10] }],
+      replacement: 'Drinks',
+    }];
+    expect(doReplacement('Grocery', 15, rules)).toBe(null);
+  });
+
   it('returns the second replacement when only the second rule matches', () => {
     const rules:Rule[] = [
       { pattern: 'Coffee', comparisons: [], replacement: 'Drinks' },
