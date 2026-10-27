@@ -4,10 +4,6 @@ export type Comparison = { operator:Operator; values:number[] };
 // A rule matches when the pattern matches and all comparisons are true. A rule with no comparisons matches on the pattern alone.
 export type Rule = { pattern:string; comparisons:Comparison[]; replacement:string };
 
-function notImplemented():never {
-  throw new Error('Not implemented');
-}
-
 export const OPERATORS:Record<Operator, (amount:number, values:number[]) => boolean> = {
   '<': (amount, values) => amount < values[0],
   '<=': (amount, values) => amount <= values[0],
@@ -24,10 +20,22 @@ export const OPERATORS:Record<Operator, (amount:number, values:number[]) => bool
 };
 
 function matchesRule(item:string, amount:number, rule:Rule):boolean {
-  return notImplemented();
+  if (!item.toLowerCase().includes(rule.pattern.toLowerCase())) {
+    return false;
+  }
+
+  return rule.comparisons.every(comparison => {
+    return OPERATORS[comparison.operator](amount, comparison.values);
+  });
 }
 
 // Returns the replacement of the first rule that matches, or null when no rule matches.
 export function doReplacement(item:string, amount:number, rules:Rule[]):string|null {
-  return notImplemented();
+  for (const rule of rules) {
+    if (matchesRule(item, amount, rule)) {
+      return rule.replacement;
+    }
+  }
+
+  return null;
 }

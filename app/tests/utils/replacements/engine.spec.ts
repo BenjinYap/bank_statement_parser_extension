@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { OPERATORS } from '../../../src/utils/replacements/engine';
+import { OPERATORS, doReplacement, type Rule } from '../../../src/utils/replacements/engine';
 
 describe('OPERATORS', () => {
   describe('<', () => {
@@ -74,5 +74,83 @@ describe('OPERATORS', () => {
     it('throws an error when there are fewer than 2 values', () => {
       expect(() => OPERATORS['between'](7, [5])).toThrow();
     });
+  });
+});
+
+describe('doReplacement', () => {
+  it('returns null when there are no rules', () => {
+    expect(doReplacement('Coffee', 5, [])).toBe(null);
+  });
+
+  it('returns null when the pattern does not match the item', () => {
+    const rules:Rule[] = [{ pattern: 'Coffee', comparisons: [], replacement: 'Drinks' }];
+    expect(doReplacement('Grocery', 5, rules)).toBe(null);
+  });
+
+  it('returns the replacement when the pattern matches and there are no comparisons', () => {
+    const rules:Rule[] = [{ pattern: 'Coffee', comparisons: [], replacement: 'Drinks' }];
+    expect(doReplacement('Coffee', 5, rules)).toBe('Drinks');
+  });
+
+  it('returns the replacement when the pattern and the item have different letter case', () => {
+    const rules:Rule[] = [{ pattern: 'coffee', comparisons: [], replacement: 'Drinks' }];
+    expect(doReplacement('COFFEE', 5, rules)).toBe('Drinks');
+  });
+
+  it('returns the replacement when the item contains the pattern', () => {
+    const rules:Rule[] = [{ pattern: 'Coffee', comparisons: [], replacement: 'Drinks' }];
+    expect(doReplacement('Blue Coffee Shop #12', 5, rules)).toBe('Drinks');
+  });
+
+  it('returns null when the pattern matches but the comparison fails', () => {
+    const rules:Rule[] = [{
+      pattern: 'Coffee',
+      comparisons: [{ operator: '>', values: [10] }],
+      replacement: 'Drinks',
+    }];
+    expect(doReplacement('Coffee', 5, rules)).toBe(null);
+  });
+
+  it('returns the replacement when the pattern matches and the comparison passes', () => {
+    const rules:Rule[] = [{
+      pattern: 'Coffee',
+      comparisons: [{ operator: '>', values: [10] }],
+      replacement: 'Drinks',
+    }];
+    expect(doReplacement('Coffee', 15, rules)).toBe('Drinks');
+  });
+
+  it('returns the second replacement when only the second rule matches', () => {
+    const rules:Rule[] = [
+      { pattern: 'Coffee', comparisons: [], replacement: 'Drinks' },
+      { pattern: 'Grocery', comparisons: [], replacement: 'Food' },
+    ];
+    expect(doReplacement('Grocery', 5, rules)).toBe('Food');
+  });
+
+  it('returns the first replacement when both rules match', () => {
+    const rules:Rule[] = [
+      { pattern: 'Coffee', comparisons: [], replacement: 'Drinks' },
+      { pattern: 'Coffee', comparisons: [], replacement: 'Cafe' },
+    ];
+    expect(doReplacement('Coffee', 5, rules)).toBe('Drinks');
+  });
+
+  it('returns null when only 1 of 2 comparisons passes', () => {
+    const rules:Rule[] = [{
+      pattern: 'Coffee',
+      comparisons: [{ operator: '>', values: [10] }, { operator: '<', values: [20] }],
+      replacement: 'Drinks',
+    }];
+    expect(doReplacement('Coffee', 25, rules)).toBe(null);
+  });
+
+  it('returns the replacement when 2 of 2 comparisons pass', () => {
+    const rules:Rule[] = [{
+      pattern: 'Coffee',
+      comparisons: [{ operator: '>', values: [10] }, { operator: '<', values: [20] }],
+      replacement: 'Drinks',
+    }];
+    expect(doReplacement('Coffee', 15, rules)).toBe('Drinks');
   });
 });
