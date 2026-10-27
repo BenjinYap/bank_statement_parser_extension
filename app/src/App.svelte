@@ -1,6 +1,7 @@
 <script lang="ts">
   import { mock } from './mock';
   import { parseDom } from './utils/parser';
+  import { ITEM_RULES, CATEGORY_RULES } from './utils/replacements/rules';
   import type { TransactionGroup } from './models/TransactionGroup';
   import { createTransactionGroup } from './models/TransactionGroup';
   import EditorSection from './components/EditorSection/EditorSection.svelte';
@@ -37,7 +38,7 @@
     const dateTo = new Date();
     dateTo.setHours(-1, 0, 0, 0);
 
-    const parsed = parseDom(html, dateFrom, dateTo);
+    const parsed = parseDom(html, dateFrom, dateTo, ITEM_RULES, CATEGORY_RULES);
     const toUse = dev_mode ? parsed.slice(0, 150) : parsed;
     transactionGroups = toUse.map(createTransactionGroup);
     if (dev_mode) {
