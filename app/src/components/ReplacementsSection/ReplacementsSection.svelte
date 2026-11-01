@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { Rule } from '../../utils/replacements/engine';
   import Section from '../common/Section.svelte';
+  import CategoriesSection from './CategoriesSection.svelte';
+  import ItemsSection from './ItemsSection.svelte';
 
   type Props = {
     itemRules:Rule[];
@@ -12,5 +14,14 @@
 </script>
 
 <Section title="Replacements">
-awd
+  <div class="flex flex-row gap-2">
+    <div class="flex-auto">
+      <CategoriesSection
+      />
+    </div>
+    <div class="flex-auto">
+      <ItemsSection
+      />
+    </div>
+  </div>
 </Section>
