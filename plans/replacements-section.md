@@ -24,8 +24,23 @@ type Rule = { pattern:string; comparisons:Comparison[]; replacement:string };  /
 ## State in `App.svelte`
 
 - Two `$state` lists start from deep copies of the constants.
-- Keep the HTML and the dates. An `applyReplacements` handler runs `parseDom` again and rebuilds the transaction
-  groups. There is no confirm.
+- Keep the HTML and the dates. `buildTransactionGroups` runs only on the first load.
+- An `applyRules` handler goes to `ReplacementsSection` as `onApplyRules`. There is no confirm.
+
+## Apply in `App.svelte`
+
+- `applyRules` applies the rules to each transaction group where `edited` is false. It does not change edited groups.
+- The handler does not run `parseDom` again. It changes each group object directly:
+  - The raw item is `group.original.originalItem ?? group.original.item`.
+  - Call `applyReplacements(rawItem, group.original.amount, itemRules, categoryRules)`.
+  - Set `group.original` to a new object with the same `date` and `amount` and the new `category` and `item`.
+    Do not merge into the old object, because `applyReplacements` omits `originalItem` when no item rule matches.
+  - Set `group.current` to one copy of the new `group.original`.
+- Deleted groups stay deleted, because they are not in the array.
+- Applying clears the selected group:
+  - `selectedGroup` is state in `EditorSection`. After the loop, set `initialSelectedGroup` to `undefined` and set
+    `transactionGroups` to a new array with the same groups. The `{#key}` block then rebuilds `EditorSection`.
+  - Changes in the edit grid that are not saved are lost.
 
 ## Components in `components/ReplacementsSection/`
 
