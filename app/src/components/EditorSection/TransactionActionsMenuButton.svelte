@@ -1,7 +1,7 @@
 <script lang="ts">
   interface Props {
     name: string;
-    onclick: () => void;
+    onclick: (event:MouseEvent) => void;
   }
 
   let props:Props = $props();

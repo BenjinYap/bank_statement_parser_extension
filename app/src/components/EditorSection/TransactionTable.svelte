@@ -3,6 +3,8 @@
   import TransactionActionsMenu from './TransactionActionsMenu.svelte';
   import TransactionActionsMenuButton from './TransactionActionsMenuButton.svelte';
 
+  type Transaction = TransactionGroup['current'][number];
+
   interface Props {
     transactionGroups: TransactionGroup[];
     selectedGroup: TransactionGroup|undefined;
@@ -10,7 +12,15 @@
   }
 
   let props:Props = $props();
-  let menuClicked:boolean = $state(false);
+  // $state.raw keeps the original reference. A $state proxy does not compare equal to a plain object.
+  let openMenuTransaction:Transaction|undefined = $state.raw(undefined);
+
+  function toggleMenu(event:MouseEvent, group:TransactionGroup, transaction:Transaction) {
+    // The row click handler closes the menu, so the click must not reach the row.
+    event.stopPropagation();
+    openMenuTransaction = openMenuTransaction === transaction ? undefined : transaction;
+    props.onselect(group);
+  }
 
   function getLeftBorderClass(group:TransactionGroup):string {
     if (group.edited) {
@@ -40,7 +50,10 @@
       {#each group.current as transaction, i}
         <tr
           class="cursor-pointer {group === props.selectedGroup ? 'bg-orange-950 text-orange-200' : 'group-hover:bg-surface-800'}"
-          onclick={() => props.onselect(group)}
+          onclick={() => {
+            openMenuTransaction = undefined;
+            props.onselect(group);
+          }}
         >
           <td class="px-2 py-1 border-y-1 border-surface-900 {getLeftBorderClass(group)}">{transaction.date}</td>
           <td class="px-2 py-1 border-y-1 border-surface-900">{transaction.category}</td>
@@ -55,10 +68,10 @@
             <div class="relative leading-0 invisible group-hover:visible">
               <TransactionActionsMenuButton
                 name="more_horiz"
-                onclick={() => menuClicked = true}
+                onclick={(event) => toggleMenu(event, group, transaction)}
               />
               <TransactionActionsMenu
-                open={group === props.selectedGroup && menuClicked}
+                open={transaction === openMenuTransaction}
               />
             </div>
 
