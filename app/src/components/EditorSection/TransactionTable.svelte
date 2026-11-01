@@ -9,6 +9,7 @@
     transactionGroups: TransactionGroup[];
     selectedGroup: TransactionGroup|undefined;
     onselect: (group: TransactionGroup) => void;
+    ondelete: (group:TransactionGroup) => void;
   }
 
   let props:Props = $props();
@@ -72,6 +73,7 @@
               />
               <TransactionActionsMenu
                 open={transaction === openMenuTransaction}
+                ondelete={() => props.ondelete(group)}
               />
             </div>
 

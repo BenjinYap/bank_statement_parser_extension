@@ -31,6 +31,18 @@
     }
   }
 
+  function deleteTransactionGroup(group:TransactionGroup) {
+    if (transactionGroups === undefined) {
+      return;
+    }
+    const index:number = transactionGroups.indexOf(group);
+    if (index === -1) {
+      return;
+    }
+    // splice keeps the same array, so the {#key} block does not rebuild EditorSection.
+    transactionGroups.splice(index, 1);
+  }
+
   ;(async () => {
     await new Promise<void>((resolve) => {
       if (!isDevMode) {
@@ -77,6 +89,7 @@
       <EditorSection
         transactionGroups={transactionGroups}
         {initialSelectedGroup}
+        ondelete={deleteTransactionGroup}
       />
     {/key}
   {/if}

@@ -10,6 +10,7 @@
   type Props = {
     transactionGroups: TransactionGroup[];
     initialSelectedGroup?: TransactionGroup;
+    ondelete: (group:TransactionGroup) => void;
   };
 
   let props:Props = $props();
@@ -20,6 +21,12 @@
     group.current = newTransactions;
     group.edited = true;
     selectedGroup = undefined;
+  }
+
+  function handleDelete(group:TransactionGroup) {
+    // The actions menu opens only on the selected group, so the selection is always the deleted group.
+    selectedGroup = undefined;
+    props.ondelete(group);
   }
 
   function handleCopyCsv() {
@@ -43,6 +50,7 @@
         transactionGroups={props.transactionGroups}
         {selectedGroup}
         onselect={(group) => { selectedGroup = group; }}
+        ondelete={handleDelete}
       />
     </div>
 
