@@ -16,7 +16,10 @@
 <Section title="Replacements">
   <div class="flex flex-row gap-2">
     <div class="flex-1">
-      <CategoriesSection rules={props.categoryRules} />
+      <CategoriesSection
+        rules={props.categoryRules}
+        onApplyRules={props.onApplyRules}
+      />
     </div>
     <div class="flex-1">
       <ItemsSection

@@ -6,6 +6,7 @@
 
   type Props = {
     rules:Rule[];
+    onApplyRules:() => void;
   };
 
   let props:Props = $props();
@@ -66,4 +67,11 @@
       </tr>
     </tbody>
   </table>
+
+  <Button
+    variant="primary"
+    onclick={props.onApplyRules}
+  >
+    Re-apply replacements
+  </Button>
 </div>

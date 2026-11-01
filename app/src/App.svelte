@@ -1,6 +1,6 @@
 <script lang="ts">
   import { mock } from './mock';
-  import { parseDom } from './utils/parser';
+  import { applyReplacements, parseDom } from './utils/parser';
   import { ITEM_RULES, CATEGORY_RULES } from './utils/replacements/rules';
   import type { Rule } from './utils/replacements/engine';
   import type { TransactionGroup } from './models/TransactionGroup';
@@ -29,6 +29,30 @@
     if (isDevMode) {
       initialSelectedGroup = transactionGroups[0];
     }
+  }
+
+  function applyRules() {
+    if (transactionGroups === undefined) {
+      return;
+    }
+
+    for (const group of transactionGroups) {
+      if (group.edited) {
+        continue;
+      }
+      const rawItem:string = group.original.originalItem ?? group.original.item;
+      const original:ParsedTransaction = {
+        date: group.original.date,
+        amount: group.original.amount,
+        ...applyReplacements(rawItem, group.original.amount, itemRules, categoryRules),
+      };
+      group.original = original;
+      group.current = [{ ...original }];
+    }
+
+    // A new array makes the {#key} block rebuild EditorSection, which clears the selected group.
+    initialSelectedGroup = undefined;
+    transactionGroups = [...transactionGroups];
   }
 
   function deleteTransactionGroup(group:TransactionGroup) {
@@ -77,7 +101,7 @@
   <ReplacementsSection
     itemRules={itemRules}
     categoryRules={categoryRules}
-    onApplyRules={buildTransactionGroups}
+    onApplyRules={applyRules}
   />
 
   {#if transactionGroups === undefined}
