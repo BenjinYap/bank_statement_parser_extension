@@ -12,9 +12,6 @@
   <TransactionActionsMenuButton
     name="delete"
   />
-  <TransactionActionsMenuButton
-    name="delete"
-  />
 </div>
 
 <style>
