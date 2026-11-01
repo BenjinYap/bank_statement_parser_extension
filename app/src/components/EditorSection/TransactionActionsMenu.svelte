@@ -1,23 +1,22 @@
-<script>
+<script lang="ts">
+  import TransactionActionsMenuButton from './TransactionActionsMenuButton.svelte';
+
+  interface Props {
+    open: boolean;
+  }
+
+  let props: Props = $props();
 </script>
 
-<div class="flex absolute z-1 bg-gray-800 text-nowrap opacity-80">
-  <span
-    class="material-symbols-outlined"
-  >
-    delete
-  </span>
-  <span
-    class="material-symbols-outlined"
-  >
-    delete
-  </span>
+<div class="flex absolute top-0 left-0 z-1 bg-gray-800 text-nowrap {props.open ? '' : 'hidden'}">
+  <TransactionActionsMenuButton
+    name="delete"
+  />
+  <TransactionActionsMenuButton
+    name="delete"
+  />
 </div>
 
 <style>
-  @reference '../../app.css';
 
-  .material-symbols-outlined {
-    @apply p-2;
-  }
 </style>

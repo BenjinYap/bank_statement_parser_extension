@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { TransactionGroup } from '../../models/TransactionGroup';
   import TransactionActionsMenu from './TransactionActionsMenu.svelte';
+  import TransactionActionsMenuButton from './TransactionActionsMenuButton.svelte';
 
   interface Props {
     transactionGroups: TransactionGroup[];
@@ -9,6 +10,7 @@
   }
 
   let props:Props = $props();
+  let menuClicked:boolean = $state(false);
 
   function getLeftBorderClass(group:TransactionGroup):string {
     if (group.edited) {
@@ -50,11 +52,14 @@
           </td>
           <td class="px-2 py-1 border-y-1 border-surface-900 text-right">${transaction.amount.toFixed(2)}</td>
           <td class="px-2 py-1 border-y-1 border-surface-900 text-right">
-            <div class="relative">
-              <span class="material-symbols-outlined bg-purple-700">
-                more_horiz
-              </span>
-<!--              <TransactionActionsMenu/>-->
+            <div class="relative leading-0 invisible group-hover:visible">
+              <TransactionActionsMenuButton
+                name="more_horiz"
+                onclick={() => menuClicked = true}
+              />
+              <TransactionActionsMenu
+                open={group === props.selectedGroup && menuClicked}
+              />
             </div>
 
           </td>
@@ -63,3 +68,7 @@
     </tbody>
   {/each}
 </table>
+
+<style>
+
+</style>
