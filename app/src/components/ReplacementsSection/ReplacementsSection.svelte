@@ -15,11 +15,11 @@
 
 <Section title="Replacements">
   <div class="flex flex-row gap-2">
-    <div class="flex-auto">
+    <div class="flex-1">
       <CategoriesSection
       />
     </div>
-    <div class="flex-auto">
+    <div class="flex-1">
       <ItemsSection
       />
     </div>
