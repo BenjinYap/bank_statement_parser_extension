@@ -55,7 +55,7 @@
     </td>
   </tr>
 {/each}
-<tr class="border-b-3 border-surface-900">
+<tr>
   {#if props.itemPattern.comparisons.length === 0}
     {@render leadingCells()}
   {/if}

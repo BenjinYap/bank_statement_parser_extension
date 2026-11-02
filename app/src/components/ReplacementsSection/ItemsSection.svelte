@@ -39,15 +39,16 @@
           <th class="px-2 pt-1 pb-1.5 font-normal text-left w-[40%]">Comparisons</th>
         </tr>
       </thead>
-      {#each props.itemReplacements as itemReplacement, index}
-        <ItemReplacementRows
-          bind:this={replacementRows[index]}
-          itemReplacement={itemReplacement}
-        />
-      {/each}
       <tbody>
+        {#each props.itemReplacements as itemReplacement, index}
+          <ItemReplacementRows
+            bind:this={replacementRows[index]}
+            itemReplacement={itemReplacement}
+          />
+        {/each}
+
         <tr>
-          <td colspan="3">
+          <td colspan="3" class="border-t-3 border-surface-900">
             <Button
               variant="primary"
               className="rounded-t-none w-full"

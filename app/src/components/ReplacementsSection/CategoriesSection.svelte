@@ -58,10 +58,7 @@
           </tr>
         {/each}
         <tr>
-          <td
-            colspan="2"
-            class="border-t-3 border-surface-900"
-          >
+          <td colspan="2">
             <Button
               variant="primary"
               className="rounded-t-none w-full"

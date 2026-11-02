@@ -36,7 +36,7 @@
 
 {#snippet replacementCell()}
   <td
-    class="align-top border-r-3 border-surface-900"
+    class="align-top"
     rowspan={rowCount}
   >
     <input
@@ -48,23 +48,21 @@
   </td>
 {/snippet}
 
-<tbody class="border-b-3 border-surface-900">
-  {#each props.itemReplacement.patterns as itemPattern, index}
-    <ItemPatternRows
-      bind:this={patternRows[index]}
-      itemPattern={itemPattern}
-      replacementCell={index === 0 ? replacementCell : undefined}
-    />
-  {/each}
-  <tr>
-    <td colspan="2">
-      <Button
-        variant="unfilled"
-        className="w-full"
-        onclick={addPattern}
-      >
-        Add pattern
-      </Button>
-    </td>
-  </tr>
-</tbody>
+{#each props.itemReplacement.patterns as itemPattern, index}
+  <ItemPatternRows
+    bind:this={patternRows[index]}
+    itemPattern={itemPattern}
+    replacementCell={index === 0 ? replacementCell : undefined}
+  />
+{/each}
+<tr>
+  <td colspan="2">
+    <Button
+      variant="unfilled"
+      className="w-full"
+      onclick={addPattern}
+    >
+      Add pattern
+    </Button>
+  </td>
+</tr>

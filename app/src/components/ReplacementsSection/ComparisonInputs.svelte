@@ -15,7 +15,7 @@
   }
 </script>
 
-<div class="flex gap-2">
+<div class="flex">
   <select
     class="w-24 shrink-0"
     bind:value={props.comparison.operator}
