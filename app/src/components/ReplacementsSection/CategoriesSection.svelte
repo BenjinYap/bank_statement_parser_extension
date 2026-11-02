@@ -10,7 +10,7 @@
   };
 
   let props:Props = $props();
-
+  let expanded:boolean = $state(false);
   let replacementInputs:HTMLInputElement[] = $state([]);
 
   async function addRule() {
@@ -22,56 +22,63 @@
 </script>
 
 <div class="flex flex-col gap-2">
-  <Heading level="2">Categories</Heading>
+  <Heading
+    level="2"
+    onExpandToggle={(ex) => expanded = ex}
+  >
+    Categories
+  </Heading>
 
-  <table class="border-3 border-surface-900">
-    <thead>
-      <tr class="bg-surface-900">
-        <th class="px-2 pt-1 pb-1.5 font-normal text-left w-[50%]">Replacement</th>
-        <th class="px-2 pt-1 pb-1.5 font-normal text-left w-[50%]">Pattern</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each props.rules as rule, index}
+  {#if expanded}
+    <table class="border-3 border-surface-900">
+      <thead>
+        <tr class="bg-surface-900">
+          <th class="px-2 pt-1 pb-1.5 font-normal text-left w-[50%]">Replacement</th>
+          <th class="px-2 pt-1 pb-1.5 font-normal text-left w-[50%]">Pattern</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each props.rules as rule, index}
+          <tr>
+            <td>
+              <input
+                type="text"
+                class="w-full"
+                bind:this={replacementInputs[index]}
+                bind:value={rule.replacement}
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                class="w-full"
+                bind:value={rule.pattern}
+              />
+            </td>
+          </tr>
+        {/each}
         <tr>
-          <td>
-            <input
-              type="text"
-              class="w-full"
-              bind:this={replacementInputs[index]}
-              bind:value={rule.replacement}
-            />
-          </td>
-          <td>
-            <input
-              type="text"
-              class="w-full"
-              bind:value={rule.pattern}
-            />
+          <td
+            colspan="2"
+            class="border-t-3 border-surface-900"
+          >
+            <Button
+              variant="primary"
+              className="rounded-t-none w-full"
+              onclick={addRule}
+            >
+              Add
+            </Button>
           </td>
         </tr>
-      {/each}
-      <tr>
-        <td
-          colspan="2"
-          class="border-t-3 border-surface-900"
-        >
-          <Button
-            variant="primary"
-            className="rounded-t-none w-full"
-            onclick={addRule}
-          >
-            Add
-          </Button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
 
-  <Button
-    variant="primary"
-    onclick={props.onApplyRules}
-  >
-    Re-apply replacements
-  </Button>
+    <Button
+      variant="primary"
+      onclick={props.onApplyRules}
+    >
+      Re-apply replacements
+    </Button>
+  {/if}
 </div>

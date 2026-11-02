@@ -8,7 +8,7 @@
 </script>
 
 <span
-  class="material-symbols-outlined text-xl! leading-[1] hover:bg-primary-500 active:bg-primary-700"
+  class="material-symbols-outlined rounded-xs text-xl! leading-[1] hover:bg-primary-500 active:bg-primary-700 cursor-pointer"
   onclick={props.onclick}
 >
   {props.name}
