@@ -24,7 +24,7 @@
 <div class="flex flex-col gap-2">
   <Heading
     level="2"
-    onExpandToggle={(ex) => expanded = ex}
+    bind:expanded
   >
     Categories
   </Heading>

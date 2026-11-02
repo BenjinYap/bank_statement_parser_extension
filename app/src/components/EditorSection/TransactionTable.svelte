@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { TransactionGroup } from '../../models/TransactionGroup';
   import TransactionActionsMenu from './TransactionActionsMenu.svelte';
-  import TransactionActionsMenuButton from './TransactionActionsMenuButton.svelte';
+  import IconButton from '../common/IconButton.svelte';
 
   type Transaction = TransactionGroup['current'][number];
 
@@ -67,7 +67,7 @@
           <td class="px-2 py-1 border-y-1 border-surface-900 text-right">${transaction.amount.toFixed(2)}</td>
           <td class="px-2 py-1 border-y-1 border-surface-900 text-right">
             <div class="relative leading-0 invisible group-hover:visible">
-              <TransactionActionsMenuButton
+              <IconButton
                 name="more_horiz"
                 onclick={(event) => toggleMenu(event, group, transaction)}
               />

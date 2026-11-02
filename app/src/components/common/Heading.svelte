@@ -1,15 +1,15 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import TransactionActionsMenuButton from '../EditorSection/TransactionActionsMenuButton.svelte';
+  import IconButton from './IconButton.svelte';
 
   interface Props {
     level:number;
     children:Snippet;
-    onExpandToggle?:(expanded:boolean) => void;
+    expanded?:boolean;
   }
 
-  let props:Props = $props();
-  let expanded = $state(false);
+  // The heading shows the toggle only when the parent binds `expanded`.
+  let { expanded = $bindable(), ...props }:Props = $props();
   const level = $derived(Number(props.level));
 
   const LEVEL_CLASSES:Record<number, string> = {
@@ -21,19 +21,18 @@
 </script>
 
 {#snippet allChildren(children)}
-  <div class="inline-block border-l-3 border-b-3 border-primary-600 px-2 pb-1">
+  <span class="inline-block border-l-3 border-b-3 border-primary-600 px-2 pb-1">
     {@render children()}
-  </div>
-  {#if props.onExpandToggle}
-    <div class="mt-1">
-      <TransactionActionsMenuButton
+  </span>
+  {#if expanded !== undefined}
+    <span class="mt-1">
+      <IconButton
         name={expanded ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}
         onclick={() => {
           expanded = !expanded;
-          props.onExpandToggle(expanded);
         }}
       />
-    </div>
+    </span>
   {/if}
 {/snippet}
 
