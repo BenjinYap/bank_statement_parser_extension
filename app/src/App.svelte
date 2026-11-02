@@ -2,6 +2,7 @@
   import { mock } from './mock';
   import { applyReplacements, parseDom } from './utils/parser';
   import { ITEM_RULES, CATEGORY_RULES } from './utils/replacements/rules';
+  import { toItemReplacements, toRules, type ItemReplacement } from './utils/replacements/items';
   import type { Rule } from './utils/replacements/engine';
   import type { TransactionGroup } from './models/TransactionGroup';
   import type { ParsedTransaction } from './models/ParsedTransaction';
@@ -12,7 +13,8 @@
   const DEV_DATE_FROM = new Date('Sep 10, 2024');
   const isDevMode = !chrome.runtime;
 
-  let itemRules:Rule[] = $state(structuredClone(ITEM_RULES));
+  let itemReplacements:ItemReplacement[] = $state(toItemReplacements(structuredClone(ITEM_RULES)));
+  const itemRules:Rule[] = $derived(toRules(itemReplacements));
   let categoryRules:Rule[] = $state(structuredClone(CATEGORY_RULES));
   let transactionGroups:TransactionGroup[]|undefined = $state(undefined);
   let initialSelectedGroup:TransactionGroup|undefined = $state(undefined);
@@ -99,7 +101,7 @@
 
 <div class="max-w-6xl mx-auto w-full py-4 flex flex-col gap-2">
   <ReplacementsSection
-    itemRules={itemRules}
+    itemReplacements={itemReplacements}
     categoryRules={categoryRules}
     onApplyRules={applyRules}
   />

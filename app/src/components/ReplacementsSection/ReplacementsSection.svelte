@@ -1,11 +1,12 @@
 <script lang="ts">
   import type { Rule } from '../../utils/replacements/engine';
+  import type { ItemReplacement } from '../../utils/replacements/items';
   import Section from '../common/Section.svelte';
   import CategoriesSection from './CategoriesSection.svelte';
   import ItemsSection from './ItemsSection.svelte';
 
   type Props = {
-    itemRules:Rule[];
+    itemReplacements:ItemReplacement[];
     categoryRules:Rule[];
     onApplyRules:() => void;
   };
@@ -23,6 +24,8 @@
     </div>
     <div class="flex-1">
       <ItemsSection
+        itemReplacements={props.itemReplacements}
+        onApplyRules={props.onApplyRules}
       />
     </div>
   </div>
