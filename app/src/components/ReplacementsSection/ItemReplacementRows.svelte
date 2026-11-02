@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tick } from 'svelte';
-  import type { ItemReplacement } from '../../utils/replacements/items';
+  import { getRowCount, type ItemReplacement } from '../../utils/replacements/items';
   import Button from '../common/Button.svelte';
   import ItemPatternRows from './ItemPatternRows.svelte';
 
@@ -16,8 +16,7 @@
     // The add pattern row.
     let total:number = 1;
     for (const itemPattern of props.itemReplacement.patterns) {
-      // The comparison rows and the add comparison row.
-      total += itemPattern.comparisons.length + 1;
+      total += getRowCount(itemPattern);
     }
     return total;
   });
@@ -56,7 +55,7 @@
   />
 {/each}
 <tr>
-  <td colspan="2">
+  <td colspan="3">
     <Button
       variant="primary"
       className="w-full rounded-none"

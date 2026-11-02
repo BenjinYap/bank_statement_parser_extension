@@ -10,6 +10,11 @@ function hasAllValues(comparison:Comparison):boolean {
   return values.length === requiredCount && values.every(Number.isFinite);
 }
 
+// A pattern with no comparisons still has one table row.
+export function getRowCount(itemPattern:ItemPattern):number {
+  return Math.max(itemPattern.comparisons.length, 1);
+}
+
 // Rules with the same replacement go into one group, at the position of the first of those rules.
 export function toItemReplacements(rules:Rule[]):ItemReplacement[] {
   const patternsByReplacement:Map<string, ItemPattern[]> = new Map();

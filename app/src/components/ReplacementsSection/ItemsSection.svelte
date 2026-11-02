@@ -37,6 +37,7 @@
           <th class="px-2 pt-1 pb-1.5 font-normal text-left w-[30%]">Replacement</th>
           <th class="px-2 pt-1 pb-1.5 font-normal text-left w-[30%]">Pattern</th>
           <th class="px-2 pt-1 pb-1.5 font-normal text-left w-[40%]">Amount filter</th>
+          <th class="px-2 pt-1 pb-1.5 font-normal w-16"></th>
         </tr>
       </thead>
       <tbody>
@@ -48,7 +49,7 @@
         {/each}
 
         <tr>
-          <td colspan="3">
+          <td colspan="4">
             <Button
               variant="primary"
               className="rounded-t-none w-full"
