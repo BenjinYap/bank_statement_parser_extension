@@ -48,7 +48,7 @@
         {/each}
 
         <tr>
-          <td colspan="3" class="border-t-3 border-surface-900">
+          <td colspan="3">
             <Button
               variant="primary"
               className="rounded-t-none w-full"
