@@ -36,7 +36,7 @@
         <tr class="bg-surface-900">
           <th class="px-2 pt-1 pb-1.5 font-normal text-left w-[30%]">Replacement</th>
           <th class="px-2 pt-1 pb-1.5 font-normal text-left w-[30%]">Pattern</th>
-          <th class="px-2 pt-1 pb-1.5 font-normal text-left w-[40%]">Comparisons</th>
+          <th class="px-2 pt-1 pb-1.5 font-normal text-left w-[40%]">Amount filter</th>
         </tr>
       </thead>
       <tbody>
@@ -54,7 +54,7 @@
               className="rounded-t-none w-full"
               onclick={addReplacement}
             >
-              Add replacement
+              +
             </Button>
           </td>
         </tr>
@@ -65,7 +65,7 @@
       variant="primary"
       onclick={props.onApplyRules}
     >
-      Apply replacements
+      Apply
     </Button>
   {/if}
 </div>

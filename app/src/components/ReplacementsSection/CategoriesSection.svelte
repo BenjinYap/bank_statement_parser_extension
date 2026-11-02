@@ -64,7 +64,7 @@
               className="rounded-t-none w-full"
               onclick={addRule}
             >
-              Add
+              +
             </Button>
           </td>
         </tr>
@@ -75,7 +75,7 @@
       variant="primary"
       onclick={props.onApplyRules}
     >
-      Re-apply replacements
+      Apply
     </Button>
   {/if}
 </div>

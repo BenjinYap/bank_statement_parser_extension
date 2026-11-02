@@ -58,8 +58,8 @@
 <tr>
   <td colspan="2">
     <Button
-      variant="unfilled"
-      className="w-full"
+      variant="primary"
+      className="w-full rounded-none"
       onclick={addPattern}
     >
       Add pattern
