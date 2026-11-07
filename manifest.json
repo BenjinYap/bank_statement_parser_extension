@@ -19,6 +19,7 @@
   ],
   "host_permissions": [
     "https://*.s3.amazonaws.com/*",
-    "https://*.s3.*.amazonaws.com/*"
+    "https://*.s3.*.amazonaws.com/*",
+    "http://localhost:5173/*"
   ]
 }

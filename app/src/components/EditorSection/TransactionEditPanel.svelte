@@ -7,6 +7,7 @@
   import Heading from "../common/Heading.svelte";
   import Button from "../common/Button.svelte";
   import TransactionEditShortcutPanel from "./TransactionEditShortcutPanel.svelte";
+  import ReceiptWindow from "./ReceiptWindow/ReceiptWindow.svelte";
 
   interface Props {
     selectedGroup: TransactionGroup;
@@ -15,6 +16,7 @@
 
   let props:Props = $props();
   let editTransactions:EditTransaction[] = $state([]);
+  let receiptWindowOpen:boolean = $state(false);
 
   $effect(() => {
     editTransactions = props.selectedGroup.current.map(t => ({
@@ -74,6 +76,16 @@
       <Heading level={2}>Granular Transactions</Heading>
 
       <EditGrid editTransactions={editTransactions} />
+
+      <Button
+        variant="primary"
+        onclick={() => {
+          receiptWindowOpen = true;
+        }}
+      >
+        Scan Receipt
+      </Button>
+
       <Button
         variant="primary"
         onclick={save}
@@ -84,4 +96,12 @@
   </Section>
 
   <TransactionEditShortcutPanel />
+
+  {#if receiptWindowOpen}
+    <ReceiptWindow
+      onclose={() => {
+        receiptWindowOpen = false;
+      }}
+    />
+  {/if}
 </div>
