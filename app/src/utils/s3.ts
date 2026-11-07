@@ -1,24 +1,10 @@
 import { S3Client, GetObjectCommand, PutObjectCommand, type GetObjectCommandOutput } from '@aws-sdk/client-s3';
-import type { Credentials } from '../models/Credentials';
-import { loadCredentials } from './credentials';
+import { AWS_REGION, loadAwsCredentials } from './aws';
 
 const S3_BUCKET = 'bank-statement-parser-extension';
-const S3_REGION = 'us-east-2';
 
-// Make a new client for each call, so that the client always uses the most recently saved credentials.
 async function createClient():Promise<S3Client> {
-  const credentials:Credentials|undefined = await loadCredentials();
-  if (credentials === undefined) {
-    throw new Error('No AWS credentials are saved. Save them in the credentials window.');
-  }
-
-  return new S3Client({
-    region: S3_REGION,
-    credentials: {
-      accessKeyId: credentials.aws.accessKey,
-      secretAccessKey: credentials.aws.secretKey,
-    },
-  });
+  return new S3Client({ region: AWS_REGION, credentials: await loadAwsCredentials() });
 }
 
 export async function putObject(key:string, body:string) {
