@@ -16,5 +16,9 @@
   },
   "permissions": [
     "storage"
+  ],
+  "host_permissions": [
+    "https://*.s3.amazonaws.com/*",
+    "https://*.s3.*.amazonaws.com/*"
   ]
 }
