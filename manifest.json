@@ -20,6 +20,7 @@
   "host_permissions": [
     "https://*.s3.amazonaws.com/*",
     "https://*.s3.*.amazonaws.com/*",
-    "http://localhost:5173/*"
+    "http://localhost:5173/*",
+    "https://textract.us-east-2.amazonaws.com/*"
   ]
 }

@@ -1,6 +1,7 @@
 <script lang="ts">
   import Section from '../../common/Section.svelte';
   import Button from '../../common/Button.svelte';
+  import { analyzeExpense } from '../../../utils/textract';
 
   interface Props {
     onclose: () => void;
@@ -15,6 +16,16 @@
 
   let photoUrl:string|undefined = $state();
   let error:string|undefined = $state();
+
+  async function analyzePhoto(photo:Blob) {
+    try {
+      // TODO: Replace this log with the box overlay when the box mapping step exists.
+      console.log('Textract AnalyzeExpense response', await analyzeExpense(photo));
+    } catch (caught) {
+      console.error(caught);
+      error = `Textract failed: ${(caught as Error).message}`;
+    }
+  }
 
   // Asks the dev server for a photo each second until a photo arrives or the window closes.
   $effect(() => {
@@ -37,6 +48,8 @@
 
           objectUrl = URL.createObjectURL(blob);
           photoUrl = objectUrl;
+          // Not awaited. analyzePhoto shows its own errors.
+          analyzePhoto(blob);
           return;
         }
 
@@ -78,15 +91,16 @@
     <div class="flex flex-col gap-2 items-center">
       {#if photoUrl === undefined}
         <p>Waiting for a photo from the phone...</p>
-        {#if error !== undefined}
-          <p class="text-red-400">{error}</p>
-        {/if}
       {:else}
         <img
           src={photoUrl}
           alt="Receipt"
           class="max-h-[80vh] max-w-full object-contain"
         />
+      {/if}
+
+      {#if error !== undefined}
+        <p class="text-red-400">{error}</p>
       {/if}
 
       <Button
