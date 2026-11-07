@@ -1,14 +1,17 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import IconButton from './IconButton.svelte';
 
   interface Props {
     children:Snippet;
     title:string;
     className?:string;
     style?:string;
+    expanded?:boolean;
   }
 
-  let props:Props = $props();
+  // The section shows the toggle only when the parent binds `expanded`.
+  let { expanded = $bindable(), ...props }:Props = $props();
 </script>
 
 <section
@@ -16,9 +19,21 @@
   style={props.style ?? ''}
 >
   {#if props.title}
-    <div class="text-xl px-2 pb-1.5 bg-neutral-900 text-nowrap">{props.title}</div>
+    <div class="flex items-center gap-2 text-xl px-2 pb-1.5 bg-neutral-900 text-nowrap">
+      {props.title}
+      {#if expanded !== undefined}
+        <IconButton
+          name={expanded ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}
+          onclick={() => {
+            expanded = !expanded;
+          }}
+        />
+      {/if}
+    </div>
   {/if}
-  <div class="p-2">
-    {@render props?.children()}
-  </div>
+  {#if expanded !== false}
+    <div class="p-2">
+      {@render props?.children()}
+    </div>
+  {/if}
 </section>

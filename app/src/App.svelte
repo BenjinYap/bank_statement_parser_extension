@@ -9,6 +9,7 @@
   import { createTransactionGroup } from './models/TransactionGroup';
   import EditorSection from './components/EditorSection/EditorSection.svelte';
   import ReplacementsSection from './components/ReplacementsSection/ReplacementsSection.svelte';
+  import CredentialsWindow from './components/CredentialsWindow/CredentialsWindow.svelte';
 
   const DEV_DATE_FROM = new Date('Sep 10, 2024');
   const isDevMode = !chrome.runtime;
@@ -100,6 +101,10 @@
 </svelte:head>
 
 <div class="max-w-6xl mx-auto w-full py-4 flex flex-col gap-2">
+  <CredentialsWindow
+
+  />
+
   <ReplacementsSection
     itemReplacements={itemReplacements}
     categoryRules={categoryRules}

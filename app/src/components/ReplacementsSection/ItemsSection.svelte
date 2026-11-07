@@ -11,7 +11,7 @@
   };
 
   let props:Props = $props();
-  let expanded:boolean = $state(true);
+  let expanded:boolean = $state(false);
   let replacementRows:ItemReplacementRows[] = $state([]);
 
   async function addReplacement() {
