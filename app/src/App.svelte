@@ -1,8 +1,8 @@
 <script lang="ts">
   import { mock } from './mock';
   import { applyReplacements, parseDom } from './utils/parser';
-  import { ITEM_RULES, CATEGORY_RULES } from './utils/replacements/rules';
   import { toItemReplacements, toRules, type ItemReplacement } from './utils/replacements/items';
+  import { loadReplacements, saveReplacements, type Replacements } from './utils/replacements/storage';
   import type { Rule } from './utils/replacements/engine';
   import type { TransactionGroup } from './models/TransactionGroup';
   import type { ParsedTransaction } from './models/ParsedTransaction';
@@ -14,9 +14,10 @@
   const DEV_DATE_FROM = new Date('Sep 10, 2024');
   const isDevMode = !chrome.runtime;
 
-  let itemReplacements:ItemReplacement[] = $state(toItemReplacements(structuredClone(ITEM_RULES)));
+  // The rules are empty until they load from S3. The load finishes before buildTransactionGroups runs.
+  let itemReplacements:ItemReplacement[] = $state([]);
   const itemRules:Rule[] = $derived(toRules(itemReplacements));
-  let categoryRules:Rule[] = $state(structuredClone(CATEGORY_RULES));
+  let categoryRules:Rule[] = $state([]);
   let transactionGroups:TransactionGroup[]|undefined = $state(undefined);
   let initialSelectedGroup:TransactionGroup|undefined = $state(undefined);
 
@@ -34,7 +35,7 @@
     }
   }
 
-  function applyRules() {
+  async function applyRules() {
     if (transactionGroups === undefined) {
       return;
     }
@@ -56,6 +57,8 @@
     // A new array makes the {#key} block rebuild EditorSection, which clears the selected group.
     initialSelectedGroup = undefined;
     transactionGroups = [...transactionGroups];
+
+    await saveReplacements({ itemRules, categoryRules });
   }
 
   function deleteTransactionGroup(group:TransactionGroup) {
@@ -90,6 +93,11 @@
 
     dateTo = new Date();
     dateTo.setHours(-1, 0, 0, 0);
+
+    // Load after the message listener is registered, so that the app does not miss the tab_opened message.
+    const replacements:Replacements = await loadReplacements();
+    itemReplacements = toItemReplacements(replacements.itemRules);
+    categoryRules = replacements.categoryRules;
 
     buildTransactionGroups();
   })();
