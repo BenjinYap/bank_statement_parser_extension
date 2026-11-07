@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+  <title>Receipt Upload</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 24px;
+      box-sizing: border-box;
+      background: #18181b;
+      color: #f4f4f5;
+      font-family: system-ui, sans-serif;
+    }
+
+    label {
+      width: 100%;
+      max-width: 400px;
+      padding: 48px 24px;
+      box-sizing: border-box;
+      border-radius: 24px;
+      background: #2563eb;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    label.busy {
+      background: #52525b;
+      pointer-events: none;
+    }
+
+    input {
+      display: none;
+    }
+
+    #status {
+      min-height: 24px;
+      font-size: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <label id="button">
+    Take receipt photo
+    <input
+      id="input"
+      type="file"
+      accept="image/*"
+      capture="environment"
+    >
+  </label>
+  <div id="status"></div>
+
+  <script>
+    // Textract accepts at most 5 MB, so shrink the photo before upload.
+    const MAX_SIDE = 2500;
+    const JPEG_QUALITY = 0.85;
+
+    const button = document.getElementById('button');
+    const photoInput = document.getElementById('input');
+    const statusElement = document.getElementById('status');
+
+    function setStatus(text, busy) {
+      statusElement.textContent = text;
+      button.classList.toggle('busy', busy);
+    }
+
+    async function shrink(file) {
+      const bitmap = await createImageBitmap(file);
+      const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(bitmap.width * scale);
+      canvas.height = Math.round(bitmap.height * scale);
+      canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      bitmap.close();
+
+      return new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (blob === null) {
+            reject(new Error('The photo could not be converted to JPEG.'));
+            return;
+          }
+
+          resolve(blob);
+        }, 'image/jpeg', JPEG_QUALITY);
+      });
+    }
+
+    async function upload(file) {
+      setStatus('Uploading...', true);
+      try {
+        const blob = await shrink(file);
+        const response = await fetch('/receipt/photo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'image/jpeg' },
+          body: blob,
+        });
+        if (!response.ok) {
+          setStatus(`Upload failed: ${await response.text()}`, false);
+          return;
+        }
+
+        setStatus('Uploaded. Check the extension.', false);
+      } catch (error) {
+        setStatus(`Upload failed: ${error.message}`, false);
+      }
+    }
+
+    photoInput.addEventListener('change', () => {
+      const file = photoInput.files[0];
+      photoInput.value = '';
+      if (file === undefined) {
+        return;
+      }
+
+      upload(file);
+    });
+  </script>
+</body>
+</html>
