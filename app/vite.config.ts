@@ -1,14 +1,18 @@
 import { defineConfig } from 'vitest/config'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import tailwindcss from '@tailwindcss/vite'
+import { loadEnv } from 'vite'
+import { fileURLToPath } from 'node:url'
 import { receiptServer } from './vite/receiptServer'
 
+const CONFIG_DIRECTORY = fileURLToPath(new URL('.', import.meta.url))
+
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     svelte(),
     tailwindcss(),
-    receiptServer(),
+    receiptServer(loadEnv(mode, CONFIG_DIRECTORY, 'NGROK_').NGROK_DOMAIN),
   ],
   base: '',
   resolve: {
@@ -39,4 +43,4 @@ export default defineConfig({
     include: ['tests/**/*.spec.ts'],
     setupFiles: ['./tests/setup.ts'],
   },
-})
+}))

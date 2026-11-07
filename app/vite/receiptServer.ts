@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import type { AddressInfo } from 'node:net';
 import type { Connect, Plugin, ViteDevServer } from 'vite';
+import { startNgrok } from './ngrok';
 
 const PAGE_PATH = '/receipt';
 const PHOTO_PATH = '/receipt/photo';
@@ -36,7 +38,8 @@ function readBody(request:IncomingMessage):Promise<Buffer|undefined> {
 
 // Adds the phone upload page and the photo endpoints to the dev server.
 // The server holds one photo in memory and deletes it when the extension fetches it.
-export function receiptServer():Plugin {
+// If ngrokDomain is set, the plugin also starts an ngrok tunnel to the dev server, so that the phone can open the page.
+export function receiptServer(ngrokDomain:string|undefined):Plugin {
   let photo:Buffer|undefined;
 
   async function storePhoto(request:IncomingMessage, response:ServerResponse) {
@@ -98,6 +101,28 @@ export function receiptServer():Plugin {
     configureServer(server:ViteDevServer) {
       server.middlewares.use((request, response, next) => {
         handleRequest(request, response, next).catch(next);
+      });
+
+      // Vitest also starts a Vite server. The tests do not need the tunnel.
+      if (process.env.VITEST) {
+        return;
+      }
+
+      if (!ngrokDomain) {
+        server.config.logger.warn('NGROK_DOMAIN is not set in app/.env.local, so ngrok does not start.');
+        return;
+      }
+
+      // In middleware mode, Vite has no HTTP server, so there is no port for the tunnel.
+      const httpServer:ViteDevServer['httpServer'] = server.httpServer;
+      if (httpServer === null) {
+        return;
+      }
+
+      // Vite can use a different port when 5173 is busy, so read the port after the server starts listening.
+      httpServer.once('listening', () => {
+        const address:AddressInfo = httpServer.address() as AddressInfo;
+        startNgrok(ngrokDomain, address.port, server.config.logger);
       });
     },
   };
