@@ -11,7 +11,7 @@
 
   // The window is write only. It never shows the saved credentials.
   let credentials:Credentials = $state(createEmptyCredentials());
-  let expanded:boolean = $state(true);
+  let expanded:boolean = $state(false);
 
   async function handleSave() {
     // chrome.storage cannot clone a $state proxy, so save a plain copy.
