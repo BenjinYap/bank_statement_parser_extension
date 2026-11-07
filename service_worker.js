@@ -1,3 +1,7 @@
+// block content scripts from reading the saved credentials
+// noinspection JSUnresolvedReference,JSIgnoredPromiseFromCall
+chrome.storage.local.setAccessLevel({ accessLevel: 'TRUSTED_CONTEXTS' });
+
 let new_tab_id;
 let send_response;
 
