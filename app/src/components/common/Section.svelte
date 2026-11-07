@@ -4,7 +4,7 @@
 
   interface Props {
     children:Snippet;
-    title:string;
+    title?:string;
     className?:string;
     style?:string;
     expanded?:boolean;

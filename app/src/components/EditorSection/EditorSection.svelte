@@ -3,7 +3,6 @@
   import type { ParsedTransaction } from '../../models/ParsedTransaction';
   import TransactionTable from './TransactionTable.svelte';
   import TransactionEditPanel from './TransactionEditPanel.svelte';
-  import NoTransactionSelected from './NoTransactionSelected.svelte';
   import Section from '../common/Section.svelte';
   import Button from "../common/Button.svelte";
 
@@ -17,9 +16,15 @@
 
   let selectedGroup:TransactionGroup|undefined = $state(props.initialSelectedGroup);
 
-  function handleSave(group:TransactionGroup, newTransactions:ParsedTransaction[]) {
-    group.current = newTransactions;
-    group.edited = true;
+  function handleSave(newTransactions:ParsedTransaction[]) {
+    // This check only narrows the type. The edit panel shows only when a group is selected, so the selection is
+    // always the saved group.
+    if (selectedGroup === undefined) {
+      return;
+    }
+
+    selectedGroup.current = newTransactions;
+    selectedGroup.edited = true;
     selectedGroup = undefined;
   }
 
@@ -62,7 +67,7 @@
       {:else}
         <TransactionEditPanel
           {selectedGroup}
-          onsave={(newTransactions) => handleSave(selectedGroup, newTransactions)}
+          onsave={handleSave}
         />
       {/if}
     </div>

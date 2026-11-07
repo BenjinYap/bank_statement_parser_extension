@@ -27,7 +27,7 @@ const groupWithoutReplacement:TransactionGroup = {
 describe('TransactionTable', () => {
   it('shows replaced item with original in parentheses when originalItem is set', () => {
     const { getByText } = render(TransactionTable, {
-      props: { transactionGroups: [groupWithReplacement], selectedGroup: undefined, onselect: vi.fn() },
+      props: { transactionGroups: [groupWithReplacement], selectedGroup: undefined, onselect: vi.fn(), ondelete: vi.fn() },
     });
 
     expect(getByText(matchesCellText('Eating out (NOODLEBOX WATERLOO ON)'))).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('TransactionTable', () => {
 
   it('shows just the item name when originalItem is not set', () => {
     const { getByText, queryByText } = render(TransactionTable, {
-      props: { transactionGroups: [groupWithoutReplacement], selectedGroup: undefined, onselect: vi.fn() },
+      props: { transactionGroups: [groupWithoutReplacement], selectedGroup: undefined, onselect: vi.fn(), ondelete: vi.fn() },
     });
 
     expect(getByText('SOMETHING UNKNOWN')).toBeInTheDocument();
@@ -53,7 +53,7 @@ describe('TransactionTable', () => {
     };
 
     const { getAllByText } = render(TransactionTable, {
-      props: { transactionGroups: [multiTransactionGroup], selectedGroup: undefined, onselect: vi.fn() },
+      props: { transactionGroups: [multiTransactionGroup], selectedGroup: undefined, onselect: vi.fn(), ondelete: vi.fn() },
     });
 
     expect(getAllByText(matchesCellText('Eating out (NOODLEBOX WATERLOO ON)'))).toHaveLength(1);
@@ -63,7 +63,7 @@ describe('TransactionTable', () => {
   it('calls onselect with the correct group when a transaction is clicked', async () => {
     const onselect = vi.fn();
     const { getByText } = render(TransactionTable, {
-      props: { transactionGroups: [groupWithoutReplacement], selectedGroup: undefined, onselect },
+      props: { transactionGroups: [groupWithoutReplacement], selectedGroup: undefined, onselect, ondelete: vi.fn() },
     });
     await fireEvent.click(getByText('SOMETHING UNKNOWN'));
     expect(onselect).toHaveBeenCalledWith(groupWithoutReplacement);
@@ -79,14 +79,14 @@ describe('TransactionTable', () => {
       edited: false,
     };
     const { getAllByText } = render(TransactionTable, {
-      props: { transactionGroups: [multiTransactionGroup], selectedGroup: undefined, onselect: vi.fn() },
+      props: { transactionGroups: [multiTransactionGroup], selectedGroup: undefined, onselect: vi.fn(), ondelete: vi.fn() },
     });
     expect(getAllByText('2024-01-15')).toHaveLength(2);
   });
 
   it('formats the amount as $XX.XX', () => {
     const { getByText } = render(TransactionTable, {
-      props: { transactionGroups: [groupWithoutReplacement], selectedGroup: undefined, onselect: vi.fn() },
+      props: { transactionGroups: [groupWithoutReplacement], selectedGroup: undefined, onselect: vi.fn(), ondelete: vi.fn() },
     });
     expect(getByText('$12.50')).toBeInTheDocument();
   });

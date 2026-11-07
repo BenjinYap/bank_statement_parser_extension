@@ -2,6 +2,12 @@ import { describe, expect, it, vi } from 'vitest'
 import { render, waitFor, fireEvent } from '@testing-library/svelte'
 import App from '../src/App.svelte'
 
+// The app loads the replacement rules from S3 at startup. The tests have no AWS credentials, so use empty rules.
+vi.mock('../src/utils/replacements/storage', () => ({
+  loadReplacements: vi.fn(async () => ({ itemRules: [], categoryRules: [] })),
+  saveReplacements: vi.fn(),
+}))
+
 describe('App', () => {
   async function waitForTransactions() {
     await waitFor(() => {

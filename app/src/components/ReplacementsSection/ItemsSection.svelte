@@ -24,7 +24,7 @@
 
 <div class="flex flex-col gap-2">
   <Heading
-    level="2"
+    level={2}
     bind:expanded
   >
     Items

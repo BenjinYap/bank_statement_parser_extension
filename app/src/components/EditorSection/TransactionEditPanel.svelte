@@ -52,7 +52,7 @@
 <div class="sticky top-2">
   <Section title="Edit Transaction">
     <div class="flex flex-col gap-2">
-      <Heading level="2">Original Transaction</Heading>
+      <Heading level={2}>Original Transaction</Heading>
 
       <table class="border-collapse rounded-md border-3 border-surface-900">
         <thead>
@@ -71,7 +71,7 @@
         </tbody>
       </table>
 
-      <Heading level="2">Granular Transactions</Heading>
+      <Heading level={2}>Granular Transactions</Heading>
 
       <EditGrid editTransactions={editTransactions} />
       <Button

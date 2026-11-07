@@ -20,7 +20,7 @@
   const finalClasses = $derived(`${HEADING_CLASSES} ${LEVEL_CLASSES[level]}`);
 </script>
 
-{#snippet allChildren(children)}
+{#snippet allChildren(children:Snippet)}
   <span class="inline-block border-l-3 border-b-3 border-primary-600 px-2 pb-1">
     {@render children()}
   </span>
