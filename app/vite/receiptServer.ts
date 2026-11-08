@@ -1,4 +1,3 @@
-import { readFileSync } from 'node:fs';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import type { Connect, Plugin, ViteDevServer } from 'vite';
@@ -7,7 +6,8 @@ import { startNgrok } from './ngrok';
 const PAGE_PATH = '/receipt';
 const PHOTO_PATH = '/receipt/photo';
 const STATUS_PATH = '/receipt/status';
-const PAGE_FILE = new URL('./receiptPage.html', import.meta.url);
+// The dev server serves the Svelte phone page from this file in the app root. The extension build does not include it.
+const PAGE_FILE_PATH = '/receipt.html';
 // The phone page shrinks each photo to far below this limit before upload.
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 // The receipt window polls each second. If no poll arrived in this time, the window is closed.
@@ -108,9 +108,10 @@ export function receiptServer(ngrokDomain:string|undefined):Plugin {
 
   async function handleRequest(request:IncomingMessage, response:ServerResponse, next:Connect.NextFunction) {
     const path:string = (request.url ?? '').split('?')[0];
+    // Vite serves and transforms the Svelte page, so only change the path and pass the request on.
     if (request.method === 'GET' && path === PAGE_PATH) {
-      response.setHeader('Content-Type', 'text/html; charset=utf-8');
-      response.end(readFileSync(PAGE_FILE));
+      request.url = PAGE_FILE_PATH;
+      next();
       return;
     }
 
