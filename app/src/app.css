@@ -35,4 +35,9 @@
   select, input {
     @apply w-full border-1 border-surface-600 bg-surface-950 px-1.5 py-1.5 outline-0 focus:border-primary-600;
   }
+
+  code {
+    @apply rounded-xs px-1 py-0.5 bg-surface-800 inline-block align-middle text-neutral-300;
+    font-size: 0.8em;
+  }
 }

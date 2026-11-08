@@ -1,5 +1,6 @@
 <script lang="ts">
   import QRCode from 'qrcode';
+  import Alert from '../../common/Alert.svelte';
 
   // vite.config.ts copies NGROK_DOMAIN from app/.env.local into the build.
   const NGROK_DOMAIN:string = import.meta.env.VITE_NGROK_DOMAIN;
@@ -17,7 +18,7 @@
 </script>
 
 {#if NGROK_DOMAIN === ''}
-  <p class="text-red-400">Set NGROK_DOMAIN in app/.env.local, then run `npm run build` to show the QR code.</p>
+  <Alert variant="error"><code>NGROK_DOMAIN</code> must be set in <code>app/.env.local</code>.</Alert>
 {:else}
   {#if qrCodeUrl !== undefined}
     <img
