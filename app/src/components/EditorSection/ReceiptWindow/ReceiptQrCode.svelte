@@ -6,27 +6,18 @@
   const PAGE_URL:string = `https://${NGROK_DOMAIN}/receipt`;
 
   let qrCodeUrl:string|undefined = $state();
-  let error:string|undefined = $state();
 
-  $effect(() => {
-    if (NGROK_DOMAIN === '') {
-      return;
-    }
-
+  // The script runs one time when the component is made, so this makes the QR code one time.
+  if (NGROK_DOMAIN !== '') {
     QRCode.toDataURL(PAGE_URL, { margin: 2, width: 256 })
       .then((dataUrl:string) => {
         qrCodeUrl = dataUrl;
-      })
-      .catch((caught:Error) => {
-        error = `The QR code could not be made: ${caught.message}`;
       });
-  });
+  }
 </script>
 
 {#if NGROK_DOMAIN === ''}
   <p class="text-red-400">Set NGROK_DOMAIN in app/.env.local, then run `npm run build` to show the QR code.</p>
-{:else if error !== undefined}
-  <p class="text-red-400">{error}</p>
 {:else}
   {#if qrCodeUrl !== undefined}
     <img
