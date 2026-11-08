@@ -35,5 +35,4 @@
       class="w-64 h-64"
     />
   {/if}
-  <p class="text-sm">{PAGE_URL}</p>
 {/if}
