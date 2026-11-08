@@ -1,6 +1,7 @@
 <script lang="ts">
   import Section from '../../common/Section.svelte';
   import Button from '../../common/Button.svelte';
+  import ReceiptQrCode from './ReceiptQrCode.svelte';
   import { analyzeExpense } from '../../../utils/textract';
 
   interface Props {
@@ -90,7 +91,8 @@
   >
     <div class="flex flex-col gap-2 items-center">
       {#if photoUrl === undefined}
-        <p>Waiting for a photo from the phone...</p>
+        <p>Scan the QR code with the phone, then take a photo of the receipt.</p>
+        <ReceiptQrCode />
       {:else}
         <img
           src={photoUrl}
