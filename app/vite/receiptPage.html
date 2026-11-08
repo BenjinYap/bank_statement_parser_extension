@@ -52,8 +52,11 @@
   </style>
 </head>
 <body>
-  <label id="button">
-    Take receipt photo
+  <label
+    id="button"
+    class="busy"
+  >
+    <span id="buttonText"></span>
     <input
       id="input"
       type="file"
@@ -67,14 +70,40 @@
     // Textract accepts at most 5 MB, so shrink the photo before upload.
     const MAX_SIDE = 2500;
     const JPEG_QUALITY = 0.85;
+    const STATUS_POLL_INTERVAL_MS = 1000;
 
     const button = document.getElementById('button');
+    const buttonText = document.getElementById('buttonText');
     const photoInput = document.getElementById('input');
     const statusElement = document.getElementById('status');
 
-    function setStatus(text, busy) {
-      statusElement.textContent = text;
-      button.classList.toggle('busy', busy);
+    // True while the receipt window in the extension polls the dev server for a photo.
+    let windowReady = false;
+    let uploading = false;
+
+    function updateButton() {
+      button.classList.toggle('busy', !windowReady || uploading);
+      if (uploading) {
+        buttonText.textContent = 'Uploading...';
+      } else if (windowReady) {
+        buttonText.textContent = 'Take receipt photo';
+      } else {
+        buttonText.textContent = 'Open Scan Receipt in the extension';
+      }
+    }
+
+    // Asks the dev server each second whether the receipt window is open.
+    async function pollStatus() {
+      try {
+        const response = await fetch('/receipt/status', { cache: 'no-store' });
+        const body = await response.json();
+        windowReady = body.ready === true;
+      } catch {
+        windowReady = false;
+      }
+
+      updateButton();
+      setTimeout(pollStatus, STATUS_POLL_INTERVAL_MS);
     }
 
     async function shrink(file) {
@@ -99,7 +128,9 @@
     }
 
     async function upload(file) {
-      setStatus('Uploading...', true);
+      uploading = true;
+      updateButton();
+      statusElement.textContent = '';
       try {
         const blob = await shrink(file);
         const response = await fetch('/receipt/photo', {
@@ -108,13 +139,16 @@
           body: blob,
         });
         if (!response.ok) {
-          setStatus(`Upload failed: ${await response.text()}`, false);
+          statusElement.textContent = `Upload failed: ${await response.text()}`;
           return;
         }
 
-        setStatus('Uploaded. Check the extension.', false);
+        statusElement.textContent = 'Uploaded. Check the extension.';
       } catch (error) {
-        setStatus(`Upload failed: ${error.message}`, false);
+        statusElement.textContent = `Upload failed: ${error.message}`;
+      } finally {
+        uploading = false;
+        updateButton();
       }
     }
 
@@ -127,6 +161,9 @@
 
       upload(file);
     });
+
+    updateButton();
+    pollStatus();
   </script>
 </body>
 </html>

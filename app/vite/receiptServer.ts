@@ -6,9 +6,12 @@ import { startNgrok } from './ngrok';
 
 const PAGE_PATH = '/receipt';
 const PHOTO_PATH = '/receipt/photo';
+const STATUS_PATH = '/receipt/status';
 const PAGE_FILE = new URL('./receiptPage.html', import.meta.url);
 // The phone page shrinks each photo to far below this limit before upload.
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
+// The receipt window polls each second. If no poll arrived in this time, the window is closed.
+const POLL_TIMEOUT_MS = 3000;
 
 // Reads the request body. Returns undefined if the body is larger than MAX_PHOTO_BYTES.
 // A body that is too large is still read to the end, so the client gets the error response.
@@ -38,11 +41,25 @@ function readBody(request:IncomingMessage):Promise<Buffer|undefined> {
 
 // Adds the phone upload page and the photo endpoints to the dev server.
 // The server holds one photo in memory and deletes it when the extension fetches it.
+// The server accepts a photo only while the receipt window polls for one.
 // If ngrokDomain is set, the plugin also starts an ngrok tunnel to the dev server, so that the phone can open the page.
 export function receiptServer(ngrokDomain:string|undefined):Plugin {
   let photo:Buffer|undefined;
+  let lastPollTime:number = 0;
+
+  function isWindowPolling():boolean {
+    return Date.now() - lastPollTime < POLL_TIMEOUT_MS;
+  }
 
   async function storePhoto(request:IncomingMessage, response:ServerResponse) {
+    if (!isWindowPolling()) {
+      // Discard the unread body, so that the phone gets the error response.
+      request.resume();
+      response.statusCode = 409;
+      response.end('The receipt window is not open. Open Scan Receipt in the extension first.');
+      return;
+    }
+
     const contentType:string = request.headers['content-type'] ?? '';
     if (!contentType.startsWith('image/')) {
       response.statusCode = 415;
@@ -63,6 +80,12 @@ export function receiptServer(ngrokDomain:string|undefined):Plugin {
   }
 
   function sendPhoto(response:ServerResponse) {
+    // A photo from before a gap in the polls belongs to a receipt window that is now closed.
+    if (!isWindowPolling()) {
+      photo = undefined;
+    }
+
+    lastPollTime = Date.now();
     response.setHeader('Cache-Control', 'no-store');
     if (photo === undefined) {
       response.statusCode = 204;
@@ -73,6 +96,14 @@ export function receiptServer(ngrokDomain:string|undefined):Plugin {
     response.setHeader('Content-Type', 'image/jpeg');
     response.end(photo);
     photo = undefined;
+    // The window stops polling after it gets a photo, so block more uploads now. The next poll allows uploads again.
+    lastPollTime = 0;
+  }
+
+  function sendStatus(response:ServerResponse) {
+    response.setHeader('Cache-Control', 'no-store');
+    response.setHeader('Content-Type', 'application/json');
+    response.end(JSON.stringify({ ready: isWindowPolling() }));
   }
 
   async function handleRequest(request:IncomingMessage, response:ServerResponse, next:Connect.NextFunction) {
@@ -90,6 +121,11 @@ export function receiptServer(ngrokDomain:string|undefined):Plugin {
 
     if (request.method === 'GET' && path === PHOTO_PATH) {
       sendPhoto(response);
+      return;
+    }
+
+    if (request.method === 'GET' && path === STATUS_PATH) {
+      sendStatus(response);
       return;
     }
 
