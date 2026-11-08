@@ -2,6 +2,8 @@
   import ReceiptQrCode from './ReceiptQrCode.svelte';
   import ReceiptPhoto from './ReceiptPhoto.svelte';
   import { analyzeExpense, type LineItemResult } from '../../../utils/textract';
+  import Section from '../../common/Section.svelte';
+  import Heading from '../../common/Heading.svelte';
 
   // The receipt server plugin in app/vite/receiptServer.ts serves this endpoint during `npm run dev`.
   // 5173 is the default Vite port.
@@ -101,7 +103,13 @@
   });
 </script>
 
-<div class="flex flex-col gap-2 items-center">
+<div class="flex flex-col gap-2">
+  <Heading
+    level={2}
+  >
+    Editor
+  </Heading>
+
   {#if photoUrl === undefined}
     <ReceiptQrCode />
   {:else}
