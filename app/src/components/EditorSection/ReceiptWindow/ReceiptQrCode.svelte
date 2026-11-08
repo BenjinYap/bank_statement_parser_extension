@@ -24,7 +24,7 @@
     <img
       src={qrCodeUrl}
       alt="QR code for the phone upload page"
-      class="w-64 h-64"
+      class="w-full"
     />
   {/if}
 {/if}

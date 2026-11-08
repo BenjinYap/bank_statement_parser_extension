@@ -86,7 +86,7 @@
   <Section>
     <div class="flex flex-col gap-2 items-center text-center">
       {#if !windowReady}
-        Click "Scan Receipt" in the extension to activate this page.
+        Click "Scan Receipt" in the extension to activate the uploader.
       {/if}
       {#if windowReady}
         <label

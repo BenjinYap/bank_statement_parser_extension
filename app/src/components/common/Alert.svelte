@@ -2,13 +2,14 @@
   import type { Snippet } from 'svelte';
 
   interface Props {
-    variant: 'error';
+    variant: 'error'|'info';
     children: Snippet;
   }
 
   let props:Props = $props();
 
   const VARIANT_CLASSES:Record<Variant, string> = {
+    info: 'bg-orange-300 text-amber-700',
     error: 'bg-red-300 text-red-500',
   };
 </script>

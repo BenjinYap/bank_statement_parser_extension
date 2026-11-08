@@ -19,11 +19,11 @@
   }
 </script>
 
-<div class="relative w-fit">
+<div class="relative h-full">
   <img
     src={props.photoUrl}
     alt="Receipt"
-    class="block max-h-[80vh] max-w-full"
+    class="w-full"
   />
 
   {#each boundingBoxes as boundingBox}

@@ -4,6 +4,8 @@
   import { analyzeExpense, type LineItemResult } from '../../../utils/textract';
   import Section from '../../common/Section.svelte';
   import Heading from '../../common/Heading.svelte';
+  import Alert from '../../common/Alert.svelte';
+  import mockReceiptUrl from './mock-receipt.jpg';
 
   // The receipt server plugin in app/vite/receiptServer.ts serves this endpoint during `npm run dev`.
   // 5173 is the default Vite port.
@@ -61,7 +63,8 @@
 
     async function poll() {
       try {
-        const response:Response = await fetch(PHOTO_URL, { cache: 'no-store' });
+        // const response:Response = await fetch(PHOTO_URL, { cache: 'no-store' });
+        const response:Response = await fetch(mockReceiptUrl, { cache: 'no-store' });
         if (stopped) {
           return;
         }
@@ -74,18 +77,19 @@
 
           pollError = undefined;
           showPhoto(blob);
+          return;
         } else if (response.status === 204) {
           // A 204 status means that no new photo is waiting.
           pollError = undefined;
         } else {
-          pollError = `The dev server returned status ${response.status}.`;
+          pollError = `The uploder returned an unexpected ${response.status}.`;
         }
       } catch {
         if (stopped) {
           return;
         }
 
-        pollError = 'The dev server is not reachable. Run `npm run dev` in app/.';
+        pollError = 'The uploader is not running.';
       }
 
       timeoutId = setTimeout(poll, POLL_INTERVAL_MS);
@@ -103,7 +107,7 @@
   });
 </script>
 
-<div class="flex flex-col gap-2">
+<div class="flex flex-col gap-2 w-xs">
   <Heading
     level={2}
   >
@@ -112,6 +116,7 @@
 
   {#if photoUrl === undefined}
     <ReceiptQrCode />
+    <Alert variant="info">Waiting for the uploader...</Alert>
   {:else}
     <ReceiptPhoto
       {photoUrl}
@@ -119,8 +124,10 @@
     />
   {/if}
 
+  <h1>hello</h1>
+
   {#if pollError !== undefined}
-    <p class="text-red-400">{pollError}</p>
+    <Alert variant="error">{pollError}</Alert>
   {/if}
 
   {#if analysisError !== undefined}

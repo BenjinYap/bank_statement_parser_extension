@@ -13,7 +13,7 @@
 <div class="fixed inset-0 z-10 flex items-center justify-center p-2 bg-black/70">
   <Section
     title="Scan Receipt"
-    className="flex flex-col max-h-full max-w-full bg-surface-950"
+    className="flex flex-col h-full bg-surface-950"
   >
     <div class="flex gap-2">
       <ReceiptEditor />
