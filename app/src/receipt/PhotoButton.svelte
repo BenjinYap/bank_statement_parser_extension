@@ -7,8 +7,6 @@
 
   let props:Props = $props();
 
-  let colorClass:string = $derived(props.disabled ? 'bg-surface-600 pointer-events-none' : 'bg-primary-600');
-
   function handleChange(event:Event & { currentTarget:HTMLInputElement }) {
     const input:HTMLInputElement = event.currentTarget;
     const photo:File|undefined = input.files?.[0];
@@ -23,7 +21,7 @@
 </script>
 
 <label
-  class="flex items-center justify-center w-full max-w-md h-48 p-6 rounded-3xl text-3xl font-semibold text-center text-white {colorClass}"
+  class="cursor-pointer bg-primary-600 text-white rounded px-3 py-1.5 hover:bg-primary-500 active:bg-primary-700"
 >
   {props.text}
   <input

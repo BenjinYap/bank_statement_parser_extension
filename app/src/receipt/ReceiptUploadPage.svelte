@@ -1,6 +1,7 @@
 <script lang="ts">
   import PhotoButton from './PhotoButton.svelte';
   import { shrinkPhoto } from './shrinkPhoto';
+  import Section from '../components/common/Section.svelte';
 
   const STATUS_URL = '/receipt/status';
   const PHOTO_URL = '/receipt/photo';
@@ -79,14 +80,24 @@
   });
 </script>
 
-<main class="flex flex-col items-center justify-center gap-6 min-h-screen p-6">
-  <PhotoButton
-    text={buttonText}
-    disabled={!windowReady || uploading}
-    onphoto={upload}
-  />
-  <p class="min-h-6 text-xl text-center">{message}</p>
-</main>
+<div class="max-w-6xl mx-auto w-full py-4 flex flex-col gap-2">
+  <Section
+    title="Receipt Scanner"
+
+  >
+    <div class="flex flex-col gap-2 items-center">
+      {#if !windowReady}
+        Click "Scan Receipt" in the extension to activate this page.
+      {/if}
+      <PhotoButton
+        text={buttonText}
+        disabled={!windowReady || uploading}
+        onphoto={upload}
+      />
+      <p class="min-h-6 text-xl text-center">{message}</p>
+    </div>
+  </Section>
+</div>
 
 <style>
   :global(.banker) {
