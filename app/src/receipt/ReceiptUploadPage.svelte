@@ -8,12 +8,11 @@
 
   // True while the receipt window in the extension polls the dev server for a photo.
   let windowReady:boolean = $state(false);
-  let uploading:boolean = $state(false);
+  // The status of the last upload. It is empty until the first upload in the current receipt window.
   let message:string = $state('');
 
   async function upload(photo:File) {
-    uploading = true;
-    message = '';
+    message = 'Uploading...';
     try {
       const response:Response = await fetch(PHOTO_URL, {
         method: 'POST',
@@ -28,8 +27,6 @@
       message = 'Uploaded. Check the extension.';
     } catch (caught) {
       message = `Upload failed: ${(caught as Error).message}`;
-    } finally {
-      uploading = false;
     }
   }
 
@@ -68,6 +65,11 @@
         windowReady = false;
       }
 
+      // The message belongs to the receipt window that is now closed.
+      if (!windowReady) {
+        message = '';
+      }
+
       timeoutId = setTimeout(pollStatus, STATUS_POLL_INTERVAL_MS);
     }
 
@@ -86,7 +88,7 @@
       {#if !windowReady}
         Click "Scan Receipt" in the extension to activate this page.
       {/if}
-      {#if windowReady && !message}
+      {#if windowReady}
         <label
           class="cursor-pointer bg-primary-600 text-white rounded px-3 py-1.5 hover:bg-primary-500 active:bg-primary-700"
         >

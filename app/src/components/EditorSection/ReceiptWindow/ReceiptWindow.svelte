@@ -18,22 +18,52 @@
 
   let photoUrl:string|undefined = $state();
   let lineItems:LineItemResult[] = $state([]);
-  let error:string|undefined = $state();
+  let pollError:string|undefined = $state();
+  let analysisError:string|undefined = $state();
+  // Counts the photos sent to Textract, so that a slow response for an older photo is ignored.
+  // It is not $state, because the template does not show it.
+  let analysisCount:number = 0;
 
   async function analyzePhoto(photo:Blob) {
+    analysisCount += 1;
+    const analysisNumber:number = analysisCount;
     try {
-      lineItems = await analyzeExpense(photo);
+      const result:LineItemResult[] = await analyzeExpense(photo);
+      if (analysisNumber !== analysisCount) {
+        return;
+      }
+
+      lineItems = result;
     } catch (caught) {
       console.error(caught);
-      error = `Textract failed: ${(caught as Error).message}`;
+      if (analysisNumber !== analysisCount) {
+        return;
+      }
+
+      analysisError = `Textract failed: ${(caught as Error).message}`;
     }
   }
 
-  // Asks the dev server for a photo each second until a photo arrives or the window closes.
+  // Asks the dev server for a new photo each second until the window closes.
+  // Each new photo from the phone replaces the current photo.
   $effect(() => {
     let stopped:boolean = false;
     let timeoutId:ReturnType<typeof setTimeout>|undefined;
     let objectUrl:string|undefined;
+
+    function showPhoto(photo:Blob) {
+      if (objectUrl !== undefined) {
+        URL.revokeObjectURL(objectUrl);
+      }
+
+      objectUrl = URL.createObjectURL(photo);
+      photoUrl = objectUrl;
+      // A new photo removes all work on the previous photo.
+      lineItems = [];
+      analysisError = undefined;
+      // Not awaited. analyzePhoto shows its own errors.
+      analyzePhoto(photo);
+    }
 
     async function poll() {
       try {
@@ -48,28 +78,22 @@
             return;
           }
 
-          objectUrl = URL.createObjectURL(blob);
-          photoUrl = objectUrl;
-          // Not awaited. analyzePhoto shows its own errors.
-          analyzePhoto(blob);
-          return;
-        }
-
-        // A 204 status means that no photo is waiting yet.
-        if (response.status === 204) {
-          error = undefined;
+          pollError = undefined;
+          showPhoto(blob);
+        } else if (response.status === 204) {
+          // A 204 status means that no new photo is waiting.
+          pollError = undefined;
         } else {
-          error = `The dev server returned status ${response.status}.`;
+          pollError = `The dev server returned status ${response.status}.`;
         }
       } catch {
         if (stopped) {
           return;
         }
 
-        error = 'The dev server is not reachable. Run `npm run dev` in app/.';
+        pollError = 'The dev server is not reachable. Run `npm run dev` in app/.';
       }
 
-      // Retry after a 204 status, an error status, or an unreachable server.
       timeoutId = setTimeout(poll, POLL_INTERVAL_MS);
     }
 
@@ -101,8 +125,12 @@
         />
       {/if}
 
-      {#if error !== undefined}
-        <p class="text-red-400">{error}</p>
+      {#if pollError !== undefined}
+        <p class="text-red-400">{pollError}</p>
+      {/if}
+
+      {#if analysisError !== undefined}
+        <p class="text-red-400">{analysisError}</p>
       {/if}
 
       <Button

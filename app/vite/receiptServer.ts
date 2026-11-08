@@ -96,8 +96,6 @@ export function receiptServer(ngrokDomain:string|undefined):Plugin {
     response.setHeader('Content-Type', 'image/jpeg');
     response.end(photo);
     photo = undefined;
-    // The window stops polling after it gets a photo, so block more uploads now. The next poll allows uploads again.
-    lastPollTime = 0;
   }
 
   function sendStatus(response:ServerResponse) {
