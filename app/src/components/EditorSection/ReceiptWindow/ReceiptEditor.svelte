@@ -2,7 +2,6 @@
   import ReceiptQrCode from './ReceiptQrCode.svelte';
   import ReceiptPhoto from './ReceiptPhoto.svelte';
   import { analyzeExpense, type LineItemResult } from '../../../utils/textract';
-  import Section from '../../common/Section.svelte';
   import Heading from '../../common/Heading.svelte';
   import Alert from '../../common/Alert.svelte';
   import mockReceiptUrl from './mock-receipt.jpg';
@@ -63,8 +62,8 @@
 
     async function poll() {
       try {
-        const response:Response = await fetch(PHOTO_URL, { cache: 'no-store' });
-        // const response:Response = await fetch(mockReceiptUrl, { cache: 'no-store' });
+        // const response:Response = await fetch(PHOTO_URL, { cache: 'no-store' });
+        const response:Response = await fetch(mockReceiptUrl, { cache: 'no-store' });
         if (stopped) {
           return;
         }
@@ -117,6 +116,10 @@
   {#if photoUrl === undefined}
     <ReceiptQrCode />
     <Alert variant="info">Waiting for the uploader...</Alert>
+
+    {#if pollError !== undefined}
+      <Alert variant="error">{pollError}</Alert>
+    {/if}
   {:else}
     <div class="flex-1 min-h-0 overflow-y-auto">
       <ReceiptPhoto
@@ -124,13 +127,13 @@
         {lineItems}
       />
     </div>
-  {/if}
 
-  {#if pollError !== undefined}
-    <Alert variant="error">{pollError}</Alert>
-  {/if}
+    {#if lineItems.length === 0}
+      <Alert variant="info">Scanning...</Alert>
+    {/if}
 
-  {#if analysisError !== undefined}
-    <p class="text-red-400">{analysisError}</p>
+    {#if analysisError !== undefined}
+      <p class="text-red-400">{analysisError}</p>
+    {/if}
   {/if}
 </div>
