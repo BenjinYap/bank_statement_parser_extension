@@ -2,7 +2,8 @@
   import Section from '../../common/Section.svelte';
   import Button from '../../common/Button.svelte';
   import ReceiptQrCode from './ReceiptQrCode.svelte';
-  import { analyzeExpense } from '../../../utils/textract';
+  import ReceiptPhoto from './ReceiptPhoto.svelte';
+  import { analyzeExpense, type LineItemResult } from '../../../utils/textract';
 
   interface Props {
     onclose: () => void;
@@ -16,12 +17,12 @@
   const POLL_INTERVAL_MS = 1000;
 
   let photoUrl:string|undefined = $state();
+  let lineItems:LineItemResult[] = $state([]);
   let error:string|undefined = $state();
 
   async function analyzePhoto(photo:Blob) {
     try {
-      // TODO: Replace this log with the box overlay when the box mapping step exists.
-      console.log('Textract AnalyzeExpense response', await analyzeExpense(photo));
+      lineItems = await analyzeExpense(photo);
     } catch (caught) {
       console.error(caught);
       error = `Textract failed: ${(caught as Error).message}`;
@@ -94,10 +95,9 @@
         <p>Scan the QR code with the phone, then take a photo of the receipt.</p>
         <ReceiptQrCode />
       {:else}
-        <img
-          src={photoUrl}
-          alt="Receipt"
-          class="max-h-[80vh] max-w-full object-contain"
+        <ReceiptPhoto
+          {photoUrl}
+          {lineItems}
         />
       {/if}
 
