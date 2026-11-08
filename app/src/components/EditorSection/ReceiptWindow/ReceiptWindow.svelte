@@ -14,8 +14,9 @@
   <Section
     title="Scan Receipt"
     className="flex flex-col h-full bg-surface-950"
+    bodyClassName="flex flex-col flex-1 min-h-0"
   >
-    <div class="flex gap-2">
+    <div class="flex gap-2 flex-1 min-h-0">
       <ReceiptEditor />
       <ReceiptSummary oncancel={props.onclose} />
     </div>

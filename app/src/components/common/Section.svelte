@@ -6,6 +6,7 @@
     children:Snippet;
     title?:string;
     className?:string;
+    bodyClassName?:string;
     style?:string;
     expanded?:boolean;
   }
@@ -32,7 +33,7 @@
     </div>
   {/if}
   {#if expanded !== false}
-    <div class="p-2">
+    <div class="p-2 {props.bodyClassName ?? ''}">
       {@render props?.children()}
     </div>
   {/if}

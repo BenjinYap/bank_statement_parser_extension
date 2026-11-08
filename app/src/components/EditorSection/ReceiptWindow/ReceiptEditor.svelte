@@ -63,8 +63,8 @@
 
     async function poll() {
       try {
-        // const response:Response = await fetch(PHOTO_URL, { cache: 'no-store' });
-        const response:Response = await fetch(mockReceiptUrl, { cache: 'no-store' });
+        const response:Response = await fetch(PHOTO_URL, { cache: 'no-store' });
+        // const response:Response = await fetch(mockReceiptUrl, { cache: 'no-store' });
         if (stopped) {
           return;
         }
@@ -107,7 +107,7 @@
   });
 </script>
 
-<div class="flex flex-col gap-2 w-xs">
+<div class="flex flex-col gap-2 w-xs min-h-0">
   <Heading
     level={2}
   >
@@ -118,13 +118,13 @@
     <ReceiptQrCode />
     <Alert variant="info">Waiting for the uploader...</Alert>
   {:else}
-    <ReceiptPhoto
-      {photoUrl}
-      {lineItems}
-    />
+    <div class="flex-1 min-h-0 overflow-y-auto">
+      <ReceiptPhoto
+        {photoUrl}
+        {lineItems}
+      />
+    </div>
   {/if}
-
-  <h1>hello</h1>
 
   {#if pollError !== undefined}
     <Alert variant="error">{pollError}</Alert>

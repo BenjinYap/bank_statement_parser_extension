@@ -19,7 +19,8 @@
   }
 </script>
 
-<div class="relative h-full">
+<!-- This div must not scroll. If it scrolls, the bounding box percents use the visible height, not the image height. -->
+<div class="relative">
   <img
     src={props.photoUrl}
     alt="Receipt"
