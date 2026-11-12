@@ -10,6 +10,7 @@
   import EditorSection from './components/EditorSection/EditorSection.svelte';
   import ReplacementsSection from './components/ReplacementsSection/ReplacementsSection.svelte';
   import CredentialsWindow from './components/CredentialsWindow/CredentialsWindow.svelte';
+  import RowSortingWindow from './components/RowSortingWindow/RowSortingWindow.svelte';
 
   const DEV_DATE_FROM = new Date('Sep 10, 2024');
   const isDevMode = !chrome.runtime;
@@ -109,9 +110,10 @@
 </svelte:head>
 
 <div class="max-w-6xl mx-auto w-full py-4 flex flex-col gap-2">
-  <CredentialsWindow
-
-  />
+  <div class="flex flex-col gap-2 fixed left-4 top-4 w-[300px]">
+    <CredentialsWindow />
+    <RowSortingWindow />
+  </div>
 
   <ReplacementsSection
     itemReplacements={itemReplacements}

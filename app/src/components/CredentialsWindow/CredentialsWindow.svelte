@@ -25,7 +25,6 @@
 <Section
   title="Credentials"
   bind:expanded
-  className="fixed left-4 top-4 w-[300px]"
 >
   <div class="grid grid-rows-[auto] grid-cols-[100px_1fr] gap-2 items-center">
     <div class="col-span-2">
