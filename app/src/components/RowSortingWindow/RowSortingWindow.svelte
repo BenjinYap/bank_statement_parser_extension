@@ -3,7 +3,7 @@
   import Button from '../common/Button.svelte';
   import { sortRows } from './rowSorting';
 
-  let expanded:boolean = $state(true);
+  let expanded:boolean = $state(false);
   let csv:string = $state('');
 
   function handleSort() {
