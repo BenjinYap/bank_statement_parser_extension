@@ -2,18 +2,24 @@
   import ReceiptQrCode from './ReceiptQrCode.svelte';
   import ReceiptPhoto from './ReceiptPhoto.svelte';
   import { analyzeExpense, type LineItemResult } from '../../../utils/textract';
+  import { pollPhoto, type PollResult } from './pollPhoto';
   import Heading from '../../common/Heading.svelte';
   import Alert from '../../common/Alert.svelte';
   import mockReceiptUrl from './mock-receipt.jpg';
+  import Button from '../../common/Button.svelte';
 
   // The receipt server plugin in app/vite/receiptServer.ts serves this endpoint during `npm run dev`.
   // 5173 is the default Vite port.
   const PHOTO_URL = 'http://localhost:5173/receipt/photo';
   const POLL_INTERVAL_MS = 1000;
 
+  let objectUrl:string|undefined;
   let photoUrl:string|undefined = $state();
+  let pollTimeout:ReturnType<typeof setTimeout>|undefined;
+  // Becomes true when the component is destroyed, so that a request that is still running does not start a new poll.
+  let stopped:boolean = false;
+  let pollResult:PollResult|undefined = $state();
   let lineItems:LineItemResult[] = $state([]);
-  let pollError:string|undefined = $state();
   let analysisError:string|undefined = $state();
   // Counts the photos sent to Textract, so that a slow response for an older photo is ignored.
   // It is not $state, because the template does not show it.
@@ -39,66 +45,48 @@
     }
   }
 
-  // Asks the dev server for a new photo each second until the window closes.
-  // Each new photo from the phone replaces the current photo.
-  $effect(() => {
-    let stopped:boolean = false;
-    let timeoutId:ReturnType<typeof setTimeout>|undefined;
-    let objectUrl:string|undefined;
+  function showPhoto(photo:Blob) {
+    objectUrl = URL.createObjectURL(photo);
+    photoUrl = objectUrl;
+    // A new photo removes all work on the previous photo.
+    lineItems = [];
+    analysisError = undefined;
+    // Not awaited. analyzePhoto shows its own errors.
+    analyzePhoto(photo);
+  }
 
-    function showPhoto(photo:Blob) {
-      if (objectUrl !== undefined) {
-        URL.revokeObjectURL(objectUrl);
-      }
-
-      objectUrl = URL.createObjectURL(photo);
-      photoUrl = objectUrl;
-      // A new photo removes all work on the previous photo.
-      lineItems = [];
-      analysisError = undefined;
-      // Not awaited. analyzePhoto shows its own errors.
-      analyzePhoto(photo);
+  async function poll() {
+    const result:PollResult = await pollPhoto(PHOTO_URL);
+    // const result:PollResult = await pollPhoto(mockReceiptUrl);
+    if (stopped) {
+      return;
     }
 
-    async function poll() {
-      try {
-        // const response:Response = await fetch(PHOTO_URL, { cache: 'no-store' });
-        const response:Response = await fetch(mockReceiptUrl, { cache: 'no-store' });
-        if (stopped) {
-          return;
-        }
-
-        if (response.status === 200) {
-          const blob:Blob = await response.blob();
-          if (stopped) {
-            return;
-          }
-
-          pollError = undefined;
-          showPhoto(blob);
-          return;
-        } else if (response.status === 204) {
-          // A 204 status means that no new photo is waiting.
-          pollError = undefined;
-        } else {
-          pollError = `The uploder returned an unexpected ${response.status}.`;
-        }
-      } catch {
-        if (stopped) {
-          return;
-        }
-
-        pollError = 'The uploader is not running.';
-      }
-
-      timeoutId = setTimeout(poll, POLL_INTERVAL_MS);
+    pollResult = result;
+    if (result.error) {
+      return;
     }
 
+    if (result.photo) {
+      showPhoto(result.photo);
+      return;
+    }
+
+    pollTimeout = setTimeout(poll, POLL_INTERVAL_MS);
+  }
+
+  function startPoll() {
+    pollResult = undefined;
     poll();
+  }
+
+  // Starts the poll when the window opens. Stops the poll and releases the photo when the window closes.
+  $effect(() => {
+    startPoll();
 
     return () => {
       stopped = true;
-      clearTimeout(timeoutId);
+      clearTimeout(pollTimeout);
       if (objectUrl !== undefined) {
         URL.revokeObjectURL(objectUrl);
       }
@@ -115,10 +103,17 @@
 
   {#if photoUrl === undefined}
     <ReceiptQrCode />
-    <Alert variant="info">Waiting for the uploader...</Alert>
 
-    {#if pollError !== undefined}
-      <Alert variant="error">{pollError}</Alert>
+    {#if !pollResult?.photo && !pollResult?.error}
+      <Alert variant="info">Waiting for the uploader...</Alert>
+    {:else if pollResult?.error}
+      <Alert variant="error">{pollResult.error}</Alert>
+      <Button
+        variant="primary"
+        onclick={startPoll}
+      >
+        Retry
+      </Button>
     {/if}
   {:else}
     <div class="flex-1 min-h-0 overflow-y-auto">
