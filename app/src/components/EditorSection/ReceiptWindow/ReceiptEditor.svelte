@@ -80,6 +80,26 @@
     poll();
   }
 
+  function releasePhoto() {
+    if (objectUrl === undefined) {
+      return;
+    }
+
+    URL.revokeObjectURL(objectUrl);
+    objectUrl = undefined;
+  }
+
+  // Removes the current photo and asks the uploader for a new photo.
+  function reupload() {
+    releasePhoto();
+    photoUrl = undefined;
+    lineItems = [];
+    analysisError = undefined;
+    // Makes analyzePhoto ignore the response for the removed photo.
+    analysisCount += 1;
+    startPoll();
+  }
+
   // Starts the poll when the window opens. Stops the poll and releases the photo when the window closes.
   $effect(() => {
     startPoll();
@@ -87,9 +107,7 @@
     return () => {
       stopped = true;
       clearTimeout(pollTimeout);
-      if (objectUrl !== undefined) {
-        URL.revokeObjectURL(objectUrl);
-      }
+      releasePhoto();
     };
   });
 </script>
@@ -116,6 +134,13 @@
       </Button>
     {/if}
   {:else}
+    <Button
+      variant="primary"
+      onclick={reupload}
+    >
+      Reupload
+    </Button>
+
     <div class="flex-1 min-h-0 overflow-y-auto">
       <ReceiptPhoto
         {photoUrl}
