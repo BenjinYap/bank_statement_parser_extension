@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { BoundingBox } from '@aws-sdk/client-textract';
   import type { LineItemResult } from '../../../utils/textract';
+  import LineItemOverlay from './LineItemOverlay.svelte';
 
   interface Props {
     photoUrl:string;
@@ -9,17 +9,10 @@
 
   let props:Props = $props();
 
-  let boundingBoxes:BoundingBox[] = $derived(
-    props.lineItems.flatMap((lineItem) => [lineItem.item.boundingBox, lineItem.price.boundingBox])
-  );
-
-  // Textract gives each bounding box value as a ratio from 0 to 1 of the image size.
-  function toPercent(ratio:number|undefined):string {
-    return `${(ratio ?? 0) * 100}%`;
-  }
+  let selectedIndex:number|undefined = $state(undefined);
 </script>
 
-<!-- This div must not scroll. If it scrolls, the bounding box percents use the visible height, not the image height. -->
+<!-- This div must not scroll. If it scrolls, the SVG uses the visible height, not the image height. -->
 <div class="relative">
   <img
     src={props.photoUrl}
@@ -27,13 +20,18 @@
     class="w-full"
   />
 
-  {#each boundingBoxes as boundingBox}
-    <div
-      class="absolute border-2 border-red-500 pointer-events-none"
-      style:left={toPercent(boundingBox.Left)}
-      style:top={toPercent(boundingBox.Top)}
-      style:width={toPercent(boundingBox.Width)}
-      style:height={toPercent(boundingBox.Height)}
-    ></div>
-  {/each}
+  <!-- Textract gives each bounding box value as a ratio from 0 to 1 of the image size. The viewBox uses the same range. -->
+  <svg
+    class="absolute inset-0 w-full h-full pointer-events-none"
+    viewBox="0 0 1 1"
+    preserveAspectRatio="none"
+  >
+    {#each props.lineItems as lineItem, index}
+      <LineItemOverlay
+        lineItem={lineItem}
+        selected={index === selectedIndex}
+        onselect={() => { selectedIndex = index; }}
+      />
+    {/each}
+  </svg>
 </div>
