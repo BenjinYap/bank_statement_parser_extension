@@ -13,46 +13,63 @@
   const PHOTO_URL = 'http://localhost:5173/receipt/photo';
   const POLL_INTERVAL_MS = 1000;
 
+  type TextractResult = {
+    // The line items that Textract found. It is undefined if the request failed.
+    lineItems:LineItemResult[]|undefined;
+    // The error message. It is undefined if the request succeeded.
+    error:string|undefined;
+  };
+
+  // The Retry button sends this photo to Textract again.
+  // It is not $state, because the template does not show it.
+  let currentPhoto:Blob|undefined;
   let objectUrl:string|undefined;
   let photoUrl:string|undefined = $state();
   let pollTimeout:ReturnType<typeof setTimeout>|undefined;
   // Becomes true when the component is destroyed, so that a request that is still running does not start a new poll.
   let stopped:boolean = false;
   let pollResult:PollResult|undefined = $state();
-  let lineItems:LineItemResult[] = $state([]);
-  let analysisError:string|undefined = $state();
+  // It is undefined while Textract scans the photo.
+  let textractResult:TextractResult|undefined = $state();
   // Counts the photos sent to Textract, so that a slow response for an older photo is ignored.
   // It is not $state, because the template does not show it.
   let analysisCount:number = 0;
 
   async function analyzePhoto(photo:Blob) {
+    textractResult = undefined;
     analysisCount += 1;
     const analysisNumber:number = analysisCount;
     try {
-      const result:LineItemResult[] = await analyzeExpense(photo);
+      const lineItems:LineItemResult[] = await analyzeExpense(photo);
       if (analysisNumber !== analysisCount) {
         return;
       }
 
-      lineItems = result;
+      textractResult = { lineItems, error: undefined };
     } catch (caught) {
       console.error(caught);
       if (analysisNumber !== analysisCount) {
         return;
       }
 
-      analysisError = `Textract failed: ${(caught as Error).message}`;
+      textractResult = { lineItems: undefined, error: `Textract failed: ${(caught as Error).message}` };
     }
   }
 
   function showPhoto(photo:Blob) {
+    currentPhoto = photo;
     objectUrl = URL.createObjectURL(photo);
     photoUrl = objectUrl;
-    // A new photo removes all work on the previous photo.
-    lineItems = [];
-    analysisError = undefined;
     // Not awaited. analyzePhoto shows its own errors.
     analyzePhoto(photo);
+  }
+
+  function retryAnalysis() {
+    if (currentPhoto === undefined) {
+      return;
+    }
+
+    analyzePhoto(currentPhoto);
   }
 
   async function poll() {
@@ -92,9 +109,9 @@
   // Removes the current photo and asks the uploader for a new photo.
   function reupload() {
     releasePhoto();
+    currentPhoto = undefined;
     photoUrl = undefined;
-    lineItems = [];
-    analysisError = undefined;
+    textractResult = undefined;
     // Makes analyzePhoto ignore the response for the removed photo.
     analysisCount += 1;
     startPoll();
@@ -144,16 +161,20 @@
     <div class="flex-1 min-h-0 overflow-y-auto">
       <ReceiptPhoto
         {photoUrl}
-        {lineItems}
+        lineItems={textractResult?.lineItems ?? []}
       />
     </div>
 
-    {#if lineItems.length === 0}
+    {#if textractResult === undefined}
       <Alert variant="info">Scanning...</Alert>
-    {/if}
-
-    {#if analysisError !== undefined}
-      <p class="text-red-400">{analysisError}</p>
+    {:else if textractResult.error}
+      <Alert variant="error">{textractResult.error}</Alert>
+      <Button
+        variant="primary"
+        onclick={retryAnalysis}
+      >
+        Retry
+      </Button>
     {/if}
   {/if}
 </div>
