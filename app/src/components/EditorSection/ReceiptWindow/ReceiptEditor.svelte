@@ -73,8 +73,8 @@
   }
 
   async function poll() {
-    const result:PollResult = await pollPhoto(PHOTO_URL);
-    // const result:PollResult = await pollPhoto(mockReceiptUrl);
+    // const result:PollResult = await pollPhoto(PHOTO_URL);
+    const result:PollResult = await pollPhoto(mockReceiptUrl);
     if (stopped) {
       return;
     }
