@@ -10,8 +10,8 @@ The new photo mode does this:
 2. A full-screen overlay shows a QR code for a phone upload page. The phone page is served through ngrok. The extension polls the dev server for a photo.
 3. The user takes the photo on the phone. The phone page shrinks it and uploads it.
 4. The extension fetches the photo, and the dev server deletes it. The extension sends the photo to AWS Textract AnalyzeExpense.
-5. The overlay shows the photo with one box on each line item. A left-click on a box opens a category dropdown and an item text input. A right-click clears the assignment.
-6. On Accept, the extension groups the assigned boxes by category + item and sums their prices. It adds a flat 13% tax to each row. These rows replace the whole edit grid. Untouched boxes are ignored.
+5. The overlay shows the photo with one box on each line item. A left-click on a box opens an item text input. A right-click clears the assignment.
+6. On Accept, the extension groups the assigned boxes by item and sums their prices. It adds a flat 13% tax to each row. The category rules set the category of each row. These rows replace the whole edit grid. Untouched boxes are ignored.
 
 Out of scope for this work: the known-item database, auto-assignment, and a database editor. These come later.
 
@@ -27,6 +27,7 @@ Out of scope for this work: the known-item database, auto-assignment, and a data
 | Photo storage | One slot in memory. The server deletes the photo when the extension fetches it. |
 | Box state | Two colors only: assigned and not assigned. |
 | Tax | Flat 13% on each grouped row, through the existing tax logic. |
+| Category | The user types only the item. Only the category rules run, not the item rules. If no rule matches, the category is empty. |
 | Grid | Accept replaces the entire edit grid. After that, the grid works as it does now. Ctrl+S still saves. |
 | Tests | None for now. Run the existing suite. |
 
@@ -55,8 +56,9 @@ Out of scope for this work: the known-item database, auto-assignment, and a data
 ### 4. Grouping
 
 - New `app/src/utils/receipts/group.ts`: `toEditTransactions(lineItems, assignments):EditTransaction[]`.
-  - `assignments` is a `Map<string, { category:string; item:string }>` keyed by line item `id`.
-  - Group by category + item in first-assigned order. Sum in integer cents. Call `applyTax` on each sum.
+  - `assignments` is a `Map<string, string>` from line item `id` to item name.
+  - Group by item in first-assigned order. Sum in integer cents. Call `applyTax` on each sum.
+  - The category of each row is an empty string. `TransactionEditPanel` sets it with the category rules on accept.
 
 ### 5. Vite plugin for the phone
 
@@ -84,8 +86,9 @@ All new components go in `app/src/components/ReceiptOverlay/`. Each stays under 
 - `ReceiptWaiting.svelte`: the QR code for `https://<VITE_NGROK_DOMAIN>/receipt`, the URL as text, and Cancel. An `$effect` polls `http://localhost:5173/receipt/photo` each second and clears the interval on cleanup. Add the `qrcode` dependency and `@types/qrcode`.
 - `ReceiptMapper.svelte`: the photo in a relative container with one `ReceiptBox` for each line item. It has the Accept and Cancel buttons. Accept calls `toEditTransactions`.
 - `ReceiptBox.svelte`: an absolutely placed `<button>` with `%` positions from `box`. Left-click calls `onselect`. Right-click calls `preventDefault` and `onclear`. It uses one color when assigned and another when not.
-- `ReceiptAssignPopover.svelte`: shown next to the selected box. It has the `CATEGORIES` dropdown from `app/src/utils/categories.ts`, an item text input, and an OK button. Enter confirms and Escape closes. It fills with the current values when the box is already assigned.
-- `app/src/components/EditorSection/TransactionEditPanel.svelte`: add a "Photo" button and an `open:boolean` `$state`. On accept, set `editTransactions` to the rows and close the overlay. The `EditGrid` focus reset in its `$effect` runs because the array reference changes.
+- `ReceiptAssignPopover.svelte`: shown next to the selected box. It has an item text input and an OK button. Enter confirms and Escape closes. It fills with the current item when the box is already assigned.
+- `app/src/components/EditorSection/TransactionEditPanel.svelte`: add a "Photo" button and an `open:boolean` `$state`. On accept, set the category of each row to `doReplacement(item, amount, categoryRules) ?? ''`. The amount includes tax. Then set `editTransactions` to the rows and close the overlay. The `EditGrid` focus reset in its `$effect` runs because the array reference changes.
+- `categoryRules` comes from `App.svelte`. Pass it as a prop through `EditorSection` to `TransactionEditPanel`.
 
 ### 9. README
 
@@ -100,6 +103,7 @@ All new components go in `app/src/components/ReceiptOverlay/`. Each stays under 
 - The extension needs the dev server and ngrok to run during photo mode. The rest of the extension does not need them.
 - The Textract `PRICE` field is usually the line total. If a receipt shows a unit price with a quantity, the box may hold the unit price. The user can fix the row in the edit grid after accept.
 - Flat 13% tax also goes on untaxed groceries. This is the chosen behavior.
+- The category rules match a substring of the item. A typed item such as "Dog food" matches the `food` rule and gets the Eunice category. The user can fix the category in the edit grid before save.
 - The phone page has no protection. Anyone with the ngrok URL can upload an image while ngrok runs. That image only appears in the overlay. It does not go anywhere else.
 
 ## Verification
@@ -108,6 +112,6 @@ All new components go in `app/src/components/ReceiptOverlay/`. Each stays under 
 2. Run `npm run build`, then reload the unpacked extension in Chrome.
 3. Run `npm run dev:receipts`. Confirm that the phone opens `https://<domain>/receipt`.
 4. Open a statement, parse it, and select a Walmart transaction. Click Photo. Scan the QR code and take a receipt photo.
-5. Confirm that the overlay shows boxes on the line items. Assign several boxes to two category + item pairs. Right-click one box and confirm that it clears.
-6. Click Accept. Confirm that the edit grid has one row for each pair, and that each amount is the sum of its prices plus 13%. Press Ctrl+S and confirm that the table updates.
+5. Confirm that the overlay shows boxes on the line items. Assign several boxes to two items. Use one item that has a category rule and one item that has no rule. Right-click one box and confirm that it clears.
+6. Click Accept. Confirm that the edit grid has one row for each item, and that each amount is the sum of its prices plus 13%. Confirm that the item with a rule has the rule's category, and that the other item has an empty category. Press Ctrl+S and confirm that the table updates.
 7. Run the `code-readability-jin` agent on the changed files.
