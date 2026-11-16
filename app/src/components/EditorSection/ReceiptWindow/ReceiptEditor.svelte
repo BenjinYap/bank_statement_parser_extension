@@ -13,6 +13,13 @@
   const PHOTO_URL = 'http://localhost:5173/receipt/photo';
   const POLL_INTERVAL_MS = 1000;
 
+  interface Props {
+    // Receives an empty array when the photo goes away or Textract starts a new scan.
+    onlineitemschange:(lineItems:LineItemResult[]) => void;
+  }
+
+  let props:Props = $props();
+
   type TextractResult = {
     // The line items that Textract found. It is undefined if the request failed.
     lineItems:LineItemResult[]|undefined;
@@ -37,6 +44,7 @@
 
   async function analyzePhoto(photo:Blob) {
     textractResult = undefined;
+    props.onlineitemschange([]);
     analysisCount += 1;
     const analysisNumber:number = analysisCount;
     try {
@@ -46,6 +54,7 @@
       }
 
       textractResult = { lineItems, error: undefined };
+      props.onlineitemschange(lineItems);
     } catch (caught) {
       console.error(caught);
       if (analysisNumber !== analysisCount) {
@@ -112,6 +121,7 @@
     currentPhoto = undefined;
     photoUrl = undefined;
     textractResult = undefined;
+    props.onlineitemschange([]);
     // Makes analyzePhoto ignore the response for the removed photo.
     analysisCount += 1;
     startPoll();

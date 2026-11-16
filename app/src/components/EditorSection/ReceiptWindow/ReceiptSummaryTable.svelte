@@ -16,7 +16,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each props.rows as row}
+    {#each props.rows as row (row.item)}
       <tr>
         <td class="px-2 py-1 border-y-1 border-surface-900">{row.item}</td>
         <td class="px-2 py-1 border-y-1 border-surface-900 text-right">${row.amount.toFixed(2)}</td>
