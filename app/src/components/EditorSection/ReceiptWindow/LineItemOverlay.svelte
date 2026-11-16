@@ -5,6 +5,8 @@
   interface Props {
     lineItem:LineItemResult;
     selected:boolean;
+    // True when the line item has an item name.
+    named:boolean;
     onselect:() => void;
   }
 
@@ -24,13 +26,28 @@
   let item:Box = $derived(toBox(props.lineItem.item.boundingBox));
   let price:Box = $derived(toBox(props.lineItem.price.boundingBox));
 
+  type ColorClasses = { box:string, line:string };
+
   const SELECTED_CLASSES = { box: 'fill-gray-800/50', line: 'stroke-gray-800' };
   const UNSELECTED_CLASSES = {
     box: 'fill-gray-500/30 group-hover:fill-gray-600/40',
     line: 'stroke-gray-500 group-hover:stroke-gray-600',
   };
+  const NAMED_SELECTED_CLASSES = { box: 'fill-primary-800/50', line: 'stroke-primary-800' };
+  const NAMED_UNSELECTED_CLASSES = {
+    box: 'fill-primary-500/30 group-hover:fill-primary-600/40',
+    line: 'stroke-primary-500 group-hover:stroke-primary-600',
+  };
 
-  let colorClasses:{ box:string, line:string } = $derived(props.selected ? SELECTED_CLASSES : UNSELECTED_CLASSES);
+  function getColorClasses(named:boolean, selected:boolean):ColorClasses {
+    if (named) {
+      return selected ? NAMED_SELECTED_CLASSES : NAMED_UNSELECTED_CLASSES;
+    }
+
+    return selected ? SELECTED_CLASSES : UNSELECTED_CLASSES;
+  }
+
+  let colorClasses:ColorClasses = $derived(getColorClasses(props.named, props.selected));
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->

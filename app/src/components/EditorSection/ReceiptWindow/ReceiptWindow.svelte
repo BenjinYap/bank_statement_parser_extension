@@ -41,7 +41,10 @@
     bodyClassName="flex flex-col flex-1 min-h-0"
   >
     <div class="flex gap-2 flex-1 min-h-0">
-      <ReceiptEditor onlineitemschange={setLineItemsAndClearNames} />
+      <ReceiptEditor
+        itemNames={itemNames}
+        onlineitemschange={setLineItemsAndClearNames}
+      />
       <ReceiptSummary
         lineItems={lineItems}
         itemNames={itemNames}

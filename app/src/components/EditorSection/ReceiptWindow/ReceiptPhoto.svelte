@@ -5,6 +5,8 @@
   interface Props {
     photoUrl:string;
     lineItems:LineItemResult[];
+    // Maps a line item index to its item name. Line items without a name are not in the map.
+    itemNames:Map<number, string>;
   }
 
   let props:Props = $props();
@@ -30,6 +32,7 @@
       <LineItemOverlay
         lineItem={lineItem}
         selected={index === selectedIndex}
+        named={props.itemNames.has(index)}
         onselect={() => { selectedIndex = index; }}
       />
     {/each}

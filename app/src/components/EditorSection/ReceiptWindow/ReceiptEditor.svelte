@@ -14,6 +14,8 @@
   const POLL_INTERVAL_MS = 1000;
 
   interface Props {
+    // Maps a line item index to its item name. Line items without a name are not in the map.
+    itemNames:Map<number, string>;
     // Receives an empty array when the photo goes away or Textract starts a new scan.
     onlineitemschange:(lineItems:LineItemResult[]) => void;
   }
@@ -172,6 +174,7 @@
       <ReceiptPhoto
         {photoUrl}
         lineItems={textractResult?.lineItems ?? []}
+        itemNames={props.itemNames}
       />
     </div>
 
