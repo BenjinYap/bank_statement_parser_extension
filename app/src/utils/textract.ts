@@ -13,9 +13,21 @@ export type LineItemResult = {
   },
   price: {
     text: string,
+    // The price from the text, as a number.
+    amount: number,
     boundingBox: BoundingBox,
   }
 };
+
+// Removes '$', ',' and trailing tax letters. A trailing '-' makes the price negative.
+// Returns NaN if the text has no number.
+export function parsePrice(text:string):number {
+  const cleaned:string = text.replace(/[$,]/g, '').replace(/[A-Za-z\s]+$/, '').trim();
+  const isNegative:boolean = cleaned.endsWith('-');
+  const digits:string = isNegative ? cleaned.slice(0, -1) : cleaned;
+  const value:number = parseFloat(digits);
+  return isNegative ? -value : value;
+}
 
 // Sends a receipt image to Textract AnalyzeExpense. Textract accepts at most 5 MB of image bytes.
 export async function analyzeExpense(image:Blob):Promise<LineItemResult[]> {
@@ -34,13 +46,25 @@ export async function analyzeExpense(image:Blob):Promise<LineItemResult[]> {
       return;
     }
 
+    // Skips line items whose price is missing or does not parse.
+    const priceText:string|undefined = price.ValueDetection?.Text;
+    if (priceText === undefined) {
+      return;
+    }
+
+    const amount:number = parsePrice(priceText);
+    if (Number.isNaN(amount)) {
+      return;
+    }
+
     results.push({
       item: {
         text: item.ValueDetection?.Text!,
         boundingBox: item.ValueDetection?.Geometry?.BoundingBox!,
       },
       price: {
-        text: price.ValueDetection?.Text!,
+        text: priceText,
+        amount,
         boundingBox: price.ValueDetection?.Geometry?.BoundingBox!,
       },
     });
