@@ -8,6 +8,8 @@
     // True when the line item has an item name.
     named:boolean;
     onselect:() => void;
+    onhoverstart:() => void;
+    onhoverend:() => void;
   }
 
   let props:Props = $props();
@@ -54,6 +56,8 @@
 <g
   class="group pointer-events-auto cursor-pointer"
   onclick={props.onselect}
+  onmouseenter={props.onhoverstart}
+  onmouseleave={props.onhoverend}
 >
   {#each [item, price] as box}
     <rect

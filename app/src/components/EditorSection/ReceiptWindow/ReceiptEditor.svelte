@@ -16,6 +16,8 @@
   interface Props {
     // Maps a line item index to its item name. Line items without a name are not in the map.
     itemNames:Map<number, string>;
+    // Receives an empty name when the user removes the name.
+    onname:(index:number, name:string) => void;
     // Receives an empty array when the photo goes away or Textract starts a new scan.
     onlineitemschange:(lineItems:LineItemResult[]) => void;
   }
@@ -175,6 +177,7 @@
         {photoUrl}
         lineItems={textractResult?.lineItems ?? []}
         itemNames={props.itemNames}
+        onname={props.onname}
       />
     </div>
 

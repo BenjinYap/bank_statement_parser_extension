@@ -11,11 +11,6 @@
 
   let props:Props = $props();
 
-  // Test names for the line items of the mock Textract response, until the naming UI exists.
-  // The position of each name is the line item index.
-  // Line items 0 and 1 have the same name, so the summary shows one grouped row for them.
-  const MOCK_ITEM_NAMES:string[] = ['Drinks for home', 'Drinks for home', 'Halloween costume'];
-
   let lineItems:LineItemResult[] = $state([]);
   // Maps a line item index to its item name. Line items without a name are not in the map.
   const itemNames:SvelteMap<number, string> = new SvelteMap();
@@ -24,13 +19,16 @@
   function setLineItemsAndClearNames(newLineItems:LineItemResult[]) {
     lineItems = newLineItems;
     itemNames.clear();
-    MOCK_ITEM_NAMES.forEach((name, index) => {
-      if (index >= newLineItems.length) {
-        return;
-      }
+  }
 
-      itemNames.set(index, name);
-    });
+  // An empty name removes the name.
+  function setItemName(index:number, name:string) {
+    if (name === '') {
+      itemNames.delete(index);
+      return;
+    }
+
+    itemNames.set(index, name);
   }
 </script>
 
@@ -43,6 +41,7 @@
     <div class="flex gap-2 flex-1 min-h-0">
       <ReceiptEditor
         itemNames={itemNames}
+        onname={setItemName}
         onlineitemschange={setLineItemsAndClearNames}
       />
       <ReceiptSummary
