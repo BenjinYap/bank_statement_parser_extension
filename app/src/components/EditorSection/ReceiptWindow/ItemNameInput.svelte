@@ -33,12 +33,15 @@
   }
 </script>
 
-<input
-  class=""
-  type="text"
-  placeholder="Item name"
-  bind:this={input}
-  bind:value={value}
-  onkeydown={onKeydown}
-  onblur={props.oncancel}
-/>
+<!-- BoxAnchor turns off pointer events. Without pointer-events-auto, a click on the input goes to the photo and blurs it. -->
+<div class="relative pointer-events-auto">
+  <span class="absolute text-xs bottom-1/1 bg-primary-600 font-medium px-1">Item</span>
+  <input
+    class=""
+    type="text"
+    bind:this={input}
+    bind:value={value}
+    onkeydown={onKeydown}
+    onblur={props.oncancel}
+  />
+</div>
