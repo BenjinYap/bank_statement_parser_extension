@@ -82,7 +82,7 @@
       </BoxAnchor>
     {:else if index === hoveredIndex && props.itemNames.has(index)}
       <BoxAnchor boundingBox={lineItem.item.boundingBox}>
-        <span class="px-1 text-sm rounded-md bg-surface-900 whitespace-nowrap">{props.itemNames.get(index)}</span>
+        <span class="px-1.5 text-sm bg-surface-900 whitespace-nowrap">{props.itemNames.get(index)}</span>
       </BoxAnchor>
     {/if}
   {/each}

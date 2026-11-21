@@ -34,7 +34,7 @@
 </script>
 
 <input
-  class="w-40 px-1 text-sm rounded-md bg-surface-900 pointer-events-auto"
+  class=""
   type="text"
   placeholder="Item name"
   bind:this={input}
