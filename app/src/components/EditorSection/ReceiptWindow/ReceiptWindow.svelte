@@ -5,6 +5,9 @@
   import ReceiptEditor from './ReceiptEditor.svelte';
   import ReceiptSummary from './ReceiptSummary.svelte';
 
+  // With Ctrl, these keys are shortcuts of the edit panel and the edit grid.
+  const BLOCKED_SHORTCUT_KEYS = ['s', '+', '=', '-'];
+
   interface Props {
     onclose: () => void;
   }
@@ -30,7 +33,19 @@
 
     itemNames.set(index, name);
   }
+
+  // The capture phase runs before the keydown listeners of the edit panel and the edit grid.
+  function blockShortcuts(event:KeyboardEvent) {
+    if (!event.ctrlKey || !BLOCKED_SHORTCUT_KEYS.includes(event.key)) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+  }
 </script>
+
+<svelte:window onkeydowncapture={blockShortcuts} />
 
 <div class="fixed inset-0 z-10 flex items-center justify-center p-2 bg-black/70">
   <Section
