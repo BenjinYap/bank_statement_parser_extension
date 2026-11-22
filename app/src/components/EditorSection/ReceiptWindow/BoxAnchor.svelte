@@ -4,6 +4,8 @@
 
   interface Props {
     boundingBox:BoundingBox;
+    // True when the content must show above the content of all other anchors.
+    raised?:boolean;
     children:Snippet;
   }
 
@@ -17,7 +19,7 @@
 <!-- Places the content right of the box, centered on the vertical middle of the box. -->
 <!-- The content must set pointer-events-auto to get clicks, so that the empty area does not block the boxes. -->
 <div
-  class="absolute z-10 pl-1 -translate-y-1/2 pointer-events-none"
+  class="absolute pl-1 -translate-y-1/2 pointer-events-none {props.raised ? 'z-20' : 'z-10'}"
   style="left: {leftPercent}%; top: {topPercent}%;"
 >
   {@render props.children()}

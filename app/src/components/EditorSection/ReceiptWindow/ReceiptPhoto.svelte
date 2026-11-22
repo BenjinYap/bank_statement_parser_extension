@@ -18,6 +18,8 @@
   // The item name input shows next to the selected line item.
   let selectedIndex:number|undefined = $state(undefined);
   let hoveredIndex:number|undefined = $state(undefined);
+  // A hovered or selected line item hides the names of the other line items, also when it has no name.
+  let showAllNames:boolean = $derived(hoveredIndex === undefined && selectedIndex === undefined);
 
   // Moves the input to the next line item, so that the user can name the whole receipt with the keyboard.
   function saveName(index:number, name:string) {
@@ -80,9 +82,12 @@
           oncancel={() => cancelName(index)}
         />
       </BoxAnchor>
-    {:else if index === hoveredIndex && props.itemNames.has(index)}
-      <BoxAnchor boundingBox={lineItem.item.boundingBox}>
-        <span class="px-1.5 text-sm bg-surface-900 whitespace-nowrap">{props.itemNames.get(index)}</span>
+    {:else if props.itemNames.has(index) && (showAllNames || index === hoveredIndex)}
+      <BoxAnchor
+        boundingBox={lineItem.item.boundingBox}
+        raised={index === hoveredIndex}
+      >
+        <span class="border-l-1 border-black px-1.5 text-sm bg-surface-900 whitespace-nowrap">{props.itemNames.get(index)}</span>
       </BoxAnchor>
     {/if}
   {/each}
