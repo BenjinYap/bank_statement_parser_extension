@@ -18,7 +18,7 @@
   let rows:EditTransaction[] = $derived(toEditTransactions(props.lineItems, props.itemNames));
 </script>
 
-<div class="flex flex-col gap-2">
+<div class="flex flex-col gap-2 min-w-xs">
   <Heading
     level={2}
   >
