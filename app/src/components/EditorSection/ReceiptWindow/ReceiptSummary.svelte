@@ -10,6 +10,7 @@
     lineItems:LineItemResult[];
     // Maps a line item index to its item name. Line items without a name are not in the map.
     itemNames:Map<number, string>;
+    onapply:(rows:EditTransaction[]) => void;
     oncancel:() => void;
   }
 
@@ -27,6 +28,9 @@
   <ReceiptSummaryTable rows={rows} />
   <Button
     variant="primary"
+    className="disabled:opacity-50 disabled:cursor-not-allowed"
+    disabled={rows.length === 0}
+    onclick={() => props.onapply(rows)}
   >
     Apply
   </Button>

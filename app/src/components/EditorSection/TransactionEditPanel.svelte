@@ -2,6 +2,7 @@
   import type { TransactionGroup } from '../../models/TransactionGroup';
   import type { ParsedTransaction } from '../../models/ParsedTransaction';
   import type { EditTransaction } from '../../models/EditTransaction';
+  import { doReplacement, type Rule } from '../../utils/replacements/engine';
   import EditGrid from './EditGrid/EditGrid.svelte';
   import Section from "../common/Section.svelte";
   import Heading from "../common/Heading.svelte";
@@ -11,6 +12,7 @@
 
   interface Props {
     selectedGroup: TransactionGroup;
+    categoryRules:Rule[];
     onsave: (newTransactions: ParsedTransaction[]) => void;
   }
 
@@ -35,6 +37,15 @@
       amount: t.amount,
     }));
     props.onsave(newTransactions);
+  }
+
+  // Runs only the category rules. The item rules convert raw bank text, and the user types clean item names.
+  function applyReceipt(receiptRows:EditTransaction[]) {
+    editTransactions = receiptRows.map((row) => ({
+      ...row,
+      category: doReplacement(row.item, row.amount, props.categoryRules) ?? '',
+    }));
+    receiptWindowOpen = false;
   }
 
   function handleKeydown(event:KeyboardEvent) {
@@ -99,6 +110,7 @@
 
   {#if receiptWindowOpen}
     <ReceiptWindow
+      onapply={applyReceipt}
       onclose={() => {
         receiptWindowOpen = false;
       }}

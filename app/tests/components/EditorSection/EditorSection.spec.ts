@@ -15,21 +15,21 @@ const mockGroup:TransactionGroup = {
 describe('EditorSection', () => {
   it('shows placeholder text when no group is selected', () => {
     const { getByText } = render(EditorSection, {
-      props: { transactionGroups: [mockGroup], ondelete: vi.fn() },
+      props: { transactionGroups: [mockGroup], categoryRules: [], ondelete: vi.fn() },
     });
     expect(getByText('Select a transaction to edit.')).toBeInTheDocument();
   });
 
   it('does not show the edit panel when no group is selected', () => {
     const { queryByText } = render(EditorSection, {
-      props: { transactionGroups: [mockGroup], ondelete: vi.fn() },
+      props: { transactionGroups: [mockGroup], categoryRules: [], ondelete: vi.fn() },
     });
     expect(queryByText('Edit Transaction')).not.toBeInTheDocument();
   });
 
   it('shows the edit panel after clicking a transaction', async () => {
     const { getByText, queryByText } = render(EditorSection, {
-      props: { transactionGroups: [mockGroup], ondelete: vi.fn() },
+      props: { transactionGroups: [mockGroup], categoryRules: [], ondelete: vi.fn() },
     });
     await fireEvent.click(getByText('Groceries'));
     await waitFor(() => expect(getByText('Edit Transaction')).toBeInTheDocument());
@@ -38,7 +38,7 @@ describe('EditorSection', () => {
 
   it('returns to placeholder text after saving', async () => {
     const { getByText, queryByText } = render(EditorSection, {
-      props: { transactionGroups: [mockGroup], ondelete: vi.fn() },
+      props: { transactionGroups: [mockGroup], categoryRules: [], ondelete: vi.fn() },
     });
     await fireEvent.click(getByText('Groceries'));
     await waitFor(() => expect(getByText('Edit Transaction')).toBeInTheDocument());
@@ -56,7 +56,7 @@ describe('EditorSection', () => {
       edited: false,
     }]);
     const { getByText } = render(EditorSection, {
-      props: { transactionGroups: groups, ondelete: vi.fn() },
+      props: { transactionGroups: groups, categoryRules: [], ondelete: vi.fn() },
     });
 
     expect(groups[0].edited).toBe(false);
@@ -70,7 +70,7 @@ describe('EditorSection', () => {
 
   it('opens the edit panel immediately when initialSelectedGroup is provided', () => {
     const { getByText, queryByText } = render(EditorSection, {
-      props: { transactionGroups: [mockGroup], initialSelectedGroup: mockGroup, ondelete: vi.fn() },
+      props: { transactionGroups: [mockGroup], categoryRules: [], initialSelectedGroup: mockGroup, ondelete: vi.fn() },
     });
     expect(getByText('Edit Transaction')).toBeInTheDocument();
     expect(queryByText('Select a transaction to edit.')).not.toBeInTheDocument();
@@ -87,7 +87,7 @@ describe('EditorSection', () => {
     };
 
     const { getByText } = render(EditorSection, {
-      props: { transactionGroups: [mockGroup, secondGroup], ondelete: vi.fn() },
+      props: { transactionGroups: [mockGroup, secondGroup], categoryRules: [], ondelete: vi.fn() },
     });
 
     await fireEvent.click(getByText('Copy CSV'));

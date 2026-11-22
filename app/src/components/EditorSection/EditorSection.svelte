@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { TransactionGroup } from '../../models/TransactionGroup';
   import type { ParsedTransaction } from '../../models/ParsedTransaction';
+  import type { Rule } from '../../utils/replacements/engine';
   import TransactionTable from './TransactionTable.svelte';
   import TransactionEditPanel from './TransactionEditPanel.svelte';
   import Section from '../common/Section.svelte';
@@ -8,6 +9,7 @@
 
   type Props = {
     transactionGroups: TransactionGroup[];
+    categoryRules:Rule[];
     initialSelectedGroup?: TransactionGroup;
     ondelete: (group:TransactionGroup) => void;
   };
@@ -67,6 +69,7 @@
       {:else}
         <TransactionEditPanel
           {selectedGroup}
+          categoryRules={props.categoryRules}
           onsave={handleSave}
         />
       {/if}

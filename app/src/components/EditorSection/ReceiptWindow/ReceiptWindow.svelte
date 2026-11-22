@@ -1,5 +1,6 @@
 <script lang="ts">
   import { SvelteMap } from 'svelte/reactivity';
+  import type { EditTransaction } from '../../../models/EditTransaction';
   import type { LineItemResult } from '../../../utils/textract';
   import Section from '../../common/Section.svelte';
   import ReceiptEditor from './ReceiptEditor.svelte';
@@ -9,6 +10,8 @@
   const BLOCKED_SHORTCUT_KEYS = ['s', '+', '=', '-'];
 
   interface Props {
+    // Receives one row for each item name. The category of each row is empty.
+    onapply:(rows:EditTransaction[]) => void;
     onclose: () => void;
   }
 
@@ -62,6 +65,7 @@
       <ReceiptSummary
         lineItems={lineItems}
         itemNames={itemNames}
+        onapply={props.onapply}
         oncancel={props.onclose}
       />
     </div>

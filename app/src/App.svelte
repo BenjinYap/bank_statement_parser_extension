@@ -129,6 +129,7 @@
     {#key transactionGroups}
       <EditorSection
         transactionGroups={transactionGroups}
+        categoryRules={categoryRules}
         {initialSelectedGroup}
         ondelete={deleteTransactionGroup}
       />
