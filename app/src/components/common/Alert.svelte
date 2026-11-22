@@ -1,8 +1,10 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
 
+  type Variant = 'error'|'info';
+
   interface Props {
-    variant: 'error'|'info';
+    variant:Variant;
     children: Snippet;
   }
 
