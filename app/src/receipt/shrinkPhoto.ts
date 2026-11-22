@@ -2,8 +2,15 @@
 const MAX_SIDE = 2500;
 const JPEG_QUALITY = 0.85;
 
-// Scales the photo down until its long side is at most MAX_SIDE pixels, and converts it to JPEG.
-export async function shrinkPhoto(photo:File):Promise<Blob> {
+// The top and bottom edges of a crop, as ratios from 0 to 1 of the photo height. The crop has the full photo width.
+export type VerticalCrop = {
+  top:number;
+  bottom:number;
+};
+
+// Crops the photo, scales it down until its long side is at most MAX_SIDE pixels, and converts it to JPEG.
+// The crop comes first, so that the receipt keeps as many pixels as possible.
+export async function shrinkPhoto(photo:File, crop:VerticalCrop):Promise<Blob> {
   const canvas:HTMLCanvasElement = document.createElement('canvas');
   const context:CanvasRenderingContext2D|null = canvas.getContext('2d');
   if (context === null) {
@@ -12,10 +19,12 @@ export async function shrinkPhoto(photo:File):Promise<Blob> {
 
   const bitmap:ImageBitmap = await createImageBitmap(photo);
   try {
-    const scale:number = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
+    const sourceY:number = Math.round(crop.top * bitmap.height);
+    const sourceHeight:number = Math.round(crop.bottom * bitmap.height) - sourceY;
+    const scale:number = Math.min(1, MAX_SIDE / Math.max(bitmap.width, sourceHeight));
     canvas.width = Math.round(bitmap.width * scale);
-    canvas.height = Math.round(bitmap.height * scale);
-    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    canvas.height = Math.round(sourceHeight * scale);
+    context.drawImage(bitmap, 0, sourceY, bitmap.width, sourceHeight, 0, 0, canvas.width, canvas.height);
   } finally {
     bitmap.close();
   }

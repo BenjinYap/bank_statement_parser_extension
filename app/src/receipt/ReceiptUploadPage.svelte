@@ -1,23 +1,30 @@
 <script lang="ts">
-  import { shrinkPhoto } from './shrinkPhoto';
+  import { shrinkPhoto, type VerticalCrop } from './shrinkPhoto';
+  import Button from '../components/common/Button.svelte';
   import Section from '../components/common/Section.svelte';
+  import ChoosePhotoButton from './ChoosePhotoButton.svelte';
+  import PhotoCropper from './PhotoCropper.svelte';
 
   const STATUS_URL = '/receipt/status';
   const PHOTO_URL = '/receipt/photo';
   const STATUS_POLL_INTERVAL_MS = 1000;
+  const FULL_PHOTO:VerticalCrop = { top: 0, bottom: 1 };
 
   // True while the receipt window in the extension polls the dev server for a photo.
   let windowReady:boolean = $state(false);
   // The status of the last upload. It is empty until the first upload in the current receipt window.
   let message:string = $state('');
+  // The photo that the user crops. It is undefined before the user chooses a photo and after Send.
+  let photoToCrop:File|undefined = $state(undefined);
+  let crop:VerticalCrop = $state(FULL_PHOTO);
 
-  async function upload(photo:File) {
+  async function upload(photo:File, photoCrop:VerticalCrop) {
     message = 'Uploading...';
     try {
       const response:Response = await fetch(PHOTO_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'image/jpeg' },
-        body: await shrinkPhoto(photo),
+        body: await shrinkPhoto(photo, photoCrop),
       });
       if (!response.ok) {
         message = `Upload failed: ${await response.text()}`;
@@ -30,17 +37,21 @@
     }
   }
 
-  function handlePhotoChange(event:Event & { currentTarget:HTMLInputElement }) {
-    const input:HTMLInputElement = event.currentTarget;
-    const photo:File|undefined = input.files?.[0];
-    // Clear the input, so that the next photo causes a change event too.
-    input.value = '';
+  function startCrop(photo:File) {
+    photoToCrop = photo;
+    crop = FULL_PHOTO;
+    message = '';
+  }
+
+  function send() {
+    const photo:File|undefined = photoToCrop;
     if (photo === undefined) {
       return;
     }
 
+    photoToCrop = undefined;
     // Not awaited. upload shows its own errors.
-    upload(photo);
+    upload(photo, crop);
   }
 
   // Asks the dev server each second whether the receipt window is open.
@@ -65,9 +76,10 @@
         windowReady = false;
       }
 
-      // The message belongs to the receipt window that is now closed.
+      // The message and the photo belong to the receipt window that is now closed.
       if (!windowReady) {
         message = '';
+        photoToCrop = undefined;
       }
 
       timeoutId = setTimeout(pollStatus, STATUS_POLL_INTERVAL_MS);
@@ -89,18 +101,25 @@
         Click "Scan Receipt" in the extension to activate the uploader.
       {/if}
       {#if windowReady}
-        <label
-          class="cursor-pointer bg-primary-600 text-white rounded px-3 py-1.5 hover:bg-primary-500 active:bg-primary-700"
-        >
-          Upload Photo
-          <input
-            type="file"
-            accept="image/*"
-            capture="environment"
-            class="hidden"
-            onchange={handlePhotoChange}
+        {#if photoToCrop}
+          <PhotoCropper
+            photo={photoToCrop}
+            crop={crop}
+            oncrop={(newCrop:VerticalCrop) => { crop = newCrop; }}
           />
-        </label>
+        {/if}
+        <div class="flex gap-2">
+          <ChoosePhotoButton onchoose={startCrop} />
+          {#if photoToCrop}
+            <Button
+              variant="primary"
+              type="button"
+              onclick={send}
+            >
+              Send
+            </Button>
+          {/if}
+        </div>
       {/if}
       {#if message}
         {message}
