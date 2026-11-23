@@ -21,11 +21,25 @@
   // A hovered or selected line item hides the names of the other line items, also when it has no name.
   let showAllNames:boolean = $derived(hoveredIndex === undefined && selectedIndex === undefined);
 
-  // Moves the input to the next line item, so that the user can name the whole receipt with the keyboard.
+  // Moves the input to the next unnamed line item, so that the user can name the whole receipt with the keyboard.
+  // The parent gives the name to the other line items with the same text first, so the search skips them.
   function saveName(index:number, name:string) {
     props.onname(index, name);
-    const nextIndex:number = index + 1;
-    selectedIndex = nextIndex < props.lineItems.length ? nextIndex : undefined;
+    selectedIndex = findNextUnnamedIndex(index);
+  }
+
+  // The search goes back to the top after the last line item. It does not return the start index.
+  // Returns undefined when all other line items have a name.
+  function findNextUnnamedIndex(startIndex:number):number|undefined {
+    const count:number = props.lineItems.length;
+    for (let offset:number = 1; offset < count; offset++) {
+      const index:number = (startIndex + offset) % count;
+      if (!props.itemNames.has(index)) {
+        return index;
+      }
+    }
+
+    return undefined;
   }
 
   // A blur from an input that already closed must not close the input of another line item.
