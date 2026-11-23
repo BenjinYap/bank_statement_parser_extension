@@ -2,7 +2,7 @@
   import { SvelteMap } from 'svelte/reactivity';
   import type { EditTransaction } from '../../../models/EditTransaction';
   import type { LineItemResult } from '../../../utils/textract';
-  import { findItemName, type LineItemName } from '../../../utils/replacements/lineItems';
+  import { findItemName, isSameLineItem, type LineItemName } from '../../../utils/replacements/lineItems';
   import Section from '../../common/Section.svelte';
   import ReceiptEditor from './ReceiptEditor.svelte';
   import ReceiptSummary from './ReceiptSummary.svelte';
@@ -39,14 +39,21 @@
     });
   }
 
-  // An empty name removes the name.
+  // The name goes to all line items with the same text, also the line items that already have a name.
+  // An empty name removes the name from all of them.
   function setItemName(index:number, name:string) {
-    if (name === '') {
-      itemNames.delete(index);
-      return;
-    }
+    const text:string = lineItems[index].item.text;
+    lineItems.forEach((lineItem, otherIndex) => {
+      if (!isSameLineItem(lineItem.item.text, text)) {
+        return;
+      }
 
-    itemNames.set(index, name);
+      if (name === '') {
+        itemNames.delete(otherIndex);
+      } else {
+        itemNames.set(otherIndex, name);
+      }
+    });
   }
 
   function apply(rows:EditTransaction[]) {

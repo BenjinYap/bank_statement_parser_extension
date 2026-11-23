@@ -6,9 +6,13 @@ function toMatchKey(lineItem:string):string {
   return lineItem.trim().toLowerCase();
 }
 
+export function isSameLineItem(first:string, second:string):boolean {
+  return toMatchKey(first) === toMatchKey(second);
+}
+
 // Returns undefined when no entry matches.
 export function findItemName(lineItemNames:LineItemName[], lineItem:string):string|undefined {
-  return lineItemNames.find(entry => toMatchKey(entry.lineItem) === toMatchKey(lineItem))?.itemName;
+  return lineItemNames.find(entry => isSameLineItem(entry.lineItem, lineItem))?.itemName;
 }
 
 export function sortLineItemNames(lineItemNames:LineItemName[]):LineItemName[] {
