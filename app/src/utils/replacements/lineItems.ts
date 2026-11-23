@@ -1,13 +1,14 @@
 // Maps the text of a receipt line item from Textract to the item name that the user typed.
 export type LineItemName = { lineItem:string; itemName:string };
 
-function isSameLineItem(first:string, second:string):boolean {
-  return first.trim().toLowerCase() === second.trim().toLowerCase();
+// The match is exact and ignores case. It also ignores spaces at the start and the end of the text.
+function toMatchKey(lineItem:string):string {
+  return lineItem.trim().toLowerCase();
 }
 
-// The match is exact and ignores case. Returns undefined when no entry matches.
+// Returns undefined when no entry matches.
 export function findItemName(lineItemNames:LineItemName[], lineItem:string):string|undefined {
-  return lineItemNames.find(entry => isSameLineItem(entry.lineItem, lineItem))?.itemName;
+  return lineItemNames.find(entry => toMatchKey(entry.lineItem) === toMatchKey(lineItem))?.itemName;
 }
 
 export function sortLineItemNames(lineItemNames:LineItemName[]):LineItemName[] {
@@ -19,10 +20,12 @@ export function sortLineItemNames(lineItemNames:LineItemName[]):LineItemName[] {
 // A new entry replaces the old entry for the same line item. If newEntries has the same line item more than once,
 // the last entry wins. The result is sorted by line item.
 export function recordLineItemNames(lineItemNames:LineItemName[], newEntries:LineItemName[]):LineItemName[] {
-  let result:LineItemName[] = lineItemNames;
-  for (const newEntry of newEntries) {
-    result = result.filter(entry => !isSameLineItem(entry.lineItem, newEntry.lineItem));
-    result.push({ lineItem: newEntry.lineItem.trim(), itemName: newEntry.itemName });
+  const entriesByKey:Map<string, LineItemName> = new Map();
+  for (const entry of lineItemNames) {
+    entriesByKey.set(toMatchKey(entry.lineItem), entry);
   }
-  return sortLineItemNames(result);
+  for (const newEntry of newEntries) {
+    entriesByKey.set(toMatchKey(newEntry.lineItem), { lineItem: newEntry.lineItem.trim(), itemName: newEntry.itemName });
+  }
+  return sortLineItemNames([...entriesByKey.values()]);
 }

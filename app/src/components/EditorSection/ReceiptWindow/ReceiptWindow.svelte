@@ -2,6 +2,7 @@
   import { SvelteMap } from 'svelte/reactivity';
   import type { EditTransaction } from '../../../models/EditTransaction';
   import type { LineItemResult } from '../../../utils/textract';
+  import { findItemName, type LineItemName } from '../../../utils/replacements/lineItems';
   import Section from '../../common/Section.svelte';
   import ReceiptEditor from './ReceiptEditor.svelte';
   import ReceiptSummary from './ReceiptSummary.svelte';
@@ -10,8 +11,11 @@
   const BLOCKED_SHORTCUT_KEYS = ['s', '+', '=', '-'];
 
   interface Props {
+    // Fills in the item names of line items that were named on an earlier receipt.
+    lineItemNames:LineItemName[];
     // Receives one row for each item name. The category of each row is empty.
-    onapply:(rows:EditTransaction[]) => void;
+    // Also receives the text and the item name of each named line item.
+    onapply:(rows:EditTransaction[], namedLineItems:LineItemName[]) => void;
     onclose: () => void;
   }
 
@@ -21,10 +25,18 @@
   // Maps a line item index to its item name. Line items without a name are not in the map.
   const itemNames:SvelteMap<number, string> = new SvelteMap();
 
-  // The names are keyed by index, so they do not fit new line items.
-  function setLineItemsAndClearNames(newLineItems:LineItemResult[]) {
+  // The names are keyed by index, so they do not fit new line items. The known names are filled in again.
+  function setLineItemsAndFillNames(newLineItems:LineItemResult[]) {
     lineItems = newLineItems;
     itemNames.clear();
+    newLineItems.forEach((lineItem, index) => {
+      const itemName:string|undefined = findItemName(props.lineItemNames, lineItem.item.text);
+      if (itemName === undefined) {
+        return;
+      }
+
+      itemNames.set(index, itemName);
+    });
   }
 
   // An empty name removes the name.
@@ -35,6 +47,14 @@
     }
 
     itemNames.set(index, name);
+  }
+
+  function apply(rows:EditTransaction[]) {
+    const namedLineItems:LineItemName[] = Array.from(itemNames, ([index, itemName]) => ({
+      lineItem: lineItems[index].item.text,
+      itemName,
+    }));
+    props.onapply(rows, namedLineItems);
   }
 
   // The capture phase runs before the keydown listeners of the edit panel and the edit grid.
@@ -60,12 +80,12 @@
       <ReceiptEditor
         itemNames={itemNames}
         onname={setItemName}
-        onlineitemschange={setLineItemsAndClearNames}
+        onlineitemschange={setLineItemsAndFillNames}
       />
       <ReceiptSummary
         lineItems={lineItems}
         itemNames={itemNames}
-        onapply={props.onapply}
+        onapply={apply}
         oncancel={props.onclose}
       />
     </div>

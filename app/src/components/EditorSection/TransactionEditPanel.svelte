@@ -3,6 +3,7 @@
   import type { ParsedTransaction } from '../../models/ParsedTransaction';
   import type { EditTransaction } from '../../models/EditTransaction';
   import { doReplacement, type Rule } from '../../utils/replacements/engine';
+  import type { LineItemName } from '../../utils/replacements/lineItems';
   import EditGrid from './EditGrid/EditGrid.svelte';
   import Section from "../common/Section.svelte";
   import Heading from "../common/Heading.svelte";
@@ -13,7 +14,10 @@
   interface Props {
     selectedGroup: TransactionGroup;
     categoryRules:Rule[];
+    lineItemNames:LineItemName[];
     onsave: (newTransactions: ParsedTransaction[]) => void;
+    // Receives the line item names from receipt Apply. They are recorded also if the edit is not saved.
+    onrecordlineitemnames:(newEntries:LineItemName[]) => void;
   }
 
   let props:Props = $props();
@@ -40,7 +44,8 @@
   }
 
   // Runs only the category rules. The item rules convert raw bank text, and the user types clean item names.
-  function applyReceipt(receiptRows:EditTransaction[]) {
+  function applyReceipt(receiptRows:EditTransaction[], namedLineItems:LineItemName[]) {
+    props.onrecordlineitemnames(namedLineItems);
     editTransactions = receiptRows.map((row) => ({
       ...row,
       category: doReplacement(row.item, row.amount, props.categoryRules) ?? '',
@@ -110,6 +115,7 @@
 
   {#if receiptWindowOpen}
     <ReceiptWindow
+      lineItemNames={props.lineItemNames}
       onapply={applyReceipt}
       onclose={() => {
         receiptWindowOpen = false;

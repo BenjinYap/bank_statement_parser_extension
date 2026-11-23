@@ -18,7 +18,7 @@ const otherMockGroup:TransactionGroup = {
 describe('TransactionEditPanel', () => {
   it('renders the original item and formatted amount', () => {
     const { getByText, getAllByRole } = render(TransactionEditPanel, {
-      props: { selectedGroup: mockGroup, categoryRules: [], onsave: vi.fn() },
+      props: { selectedGroup: mockGroup, categoryRules: [], lineItemNames: [], onrecordlineitemnames: vi.fn(), onsave: vi.fn() },
     });
     // 'Groceries' is unique to the original section (not in CATEGORIES)
     expect(getByText('Groceries')).toBeInTheDocument();
@@ -30,7 +30,7 @@ describe('TransactionEditPanel', () => {
   it('clicking Save calls onsave with the parsed transactions', async () => {
     const onsave = vi.fn();
     const { getByText } = render(TransactionEditPanel, {
-      props: { selectedGroup: mockGroup, categoryRules: [], onsave },
+      props: { selectedGroup: mockGroup, categoryRules: [], lineItemNames: [], onrecordlineitemnames: vi.fn(), onsave },
     });
     await fireEvent.click(getByText('Save'));
     expect(onsave).toHaveBeenCalledWith([
@@ -41,7 +41,7 @@ describe('TransactionEditPanel', () => {
   it('pressing Ctrl+S calls onsave with the parsed transactions', async () => {
     const onsave = vi.fn();
     render(TransactionEditPanel, {
-      props: { selectedGroup: mockGroup, categoryRules: [], onsave },
+      props: { selectedGroup: mockGroup, categoryRules: [], lineItemNames: [], onrecordlineitemnames: vi.fn(), onsave },
     });
     await fireEvent.keyDown(window, { key: 's', ctrlKey: true });
     expect(onsave).toHaveBeenCalledWith([
@@ -51,17 +51,17 @@ describe('TransactionEditPanel', () => {
 
   it('focuses the first category dropdown on initial load', () => {
     const { getAllByRole } = render(TransactionEditPanel, {
-      props: { selectedGroup: mockGroup, categoryRules: [], onsave: vi.fn() },
+      props: { selectedGroup: mockGroup, categoryRules: [], lineItemNames: [], onrecordlineitemnames: vi.fn(), onsave: vi.fn() },
     });
     expect(getAllByRole('combobox')[0]).toHaveFocus();
   });
 
   it('focuses the first category dropdown after switching to a different group', async () => {
     const { getAllByRole, rerender } = render(TransactionEditPanel, {
-      props: { selectedGroup: mockGroup, categoryRules: [], onsave: vi.fn() },
+      props: { selectedGroup: mockGroup, categoryRules: [], lineItemNames: [], onrecordlineitemnames: vi.fn(), onsave: vi.fn() },
     });
     getAllByRole('combobox')[0].blur();
-    await rerender({ selectedGroup: otherMockGroup, categoryRules: [], onsave: vi.fn() });
+    await rerender({ selectedGroup: otherMockGroup, categoryRules: [], lineItemNames: [], onrecordlineitemnames: vi.fn(), onsave: vi.fn() });
     expect(getAllByRole('combobox')[0]).toHaveFocus();
   });
 });

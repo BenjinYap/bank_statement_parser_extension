@@ -12,10 +12,6 @@
 
   let props:Props = $props();
   let expanded:boolean = $state(false);
-
-  function deleteEntry(index:number) {
-    props.lineItemNames.splice(index, 1);
-  }
 </script>
 
 <div class="flex flex-col gap-2">
@@ -36,7 +32,8 @@
         </tr>
       </thead>
       <tbody>
-        {#each props.lineItemNames as entry, index}
+        <!-- The line items are unique, because recordLineItemNames replaces an entry for the same line item. -->
+        {#each props.lineItemNames as entry, index (entry.lineItem)}
           <tr class="group">
             <td class="px-2 break-all">{entry.lineItem}</td>
             <td>
@@ -50,7 +47,7 @@
               <div class="flex justify-end leading-0 invisible group-hover:visible">
                 <IconButton
                   name="delete"
-                  onclick={() => deleteEntry(index)}
+                  onclick={() => props.lineItemNames.splice(index, 1)}
                 />
               </div>
             </td>

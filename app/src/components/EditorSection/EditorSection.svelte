@@ -2,6 +2,7 @@
   import type { TransactionGroup } from '../../models/TransactionGroup';
   import type { ParsedTransaction } from '../../models/ParsedTransaction';
   import type { Rule } from '../../utils/replacements/engine';
+  import type { LineItemName } from '../../utils/replacements/lineItems';
   import TransactionTable from './TransactionTable.svelte';
   import TransactionEditPanel from './TransactionEditPanel.svelte';
   import Section from '../common/Section.svelte';
@@ -10,8 +11,10 @@
   type Props = {
     transactionGroups: TransactionGroup[];
     categoryRules:Rule[];
+    lineItemNames:LineItemName[];
     initialSelectedGroup?: TransactionGroup;
     ondelete: (group:TransactionGroup) => void;
+    onrecordlineitemnames:(newEntries:LineItemName[]) => void;
   };
 
   let props:Props = $props();
@@ -70,7 +73,9 @@
         <TransactionEditPanel
           {selectedGroup}
           categoryRules={props.categoryRules}
+          lineItemNames={props.lineItemNames}
           onsave={handleSave}
+          onrecordlineitemnames={props.onrecordlineitemnames}
         />
       {/if}
     </div>

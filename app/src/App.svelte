@@ -3,6 +3,7 @@
   import { applyReplacements, parseDom } from './utils/parser';
   import { toItemReplacements, toRules, type ItemReplacement } from './utils/replacements/items';
   import { loadReplacements, saveReplacements, type Replacements } from './utils/replacements/storage';
+  import { recordLineItemNames, type LineItemName } from './utils/replacements/lineItems';
   import type { Rule } from './utils/replacements/engine';
   import type { TransactionGroup } from './models/TransactionGroup';
   import type { ParsedTransaction } from './models/ParsedTransaction';
@@ -19,6 +20,7 @@
   let itemReplacements:ItemReplacement[] = $state([]);
   const itemRules:Rule[] = $derived(toRules(itemReplacements));
   let categoryRules:Rule[] = $state([]);
+  let lineItemNames:LineItemName[] = $state([]);
   let transactionGroups:TransactionGroup[]|undefined = $state(undefined);
   let initialSelectedGroup:TransactionGroup|undefined = $state(undefined);
 
@@ -59,7 +61,20 @@
     initialSelectedGroup = undefined;
     transactionGroups = [...transactionGroups];
 
-    await saveReplacements({ itemRules, categoryRules });
+    await saveAllReplacements();
+  }
+
+  // Saves the Categories and Items tables as they are, including edits that were not applied.
+  // Also removes the line item entries that have an empty item name.
+  async function saveAllReplacements() {
+    // Without this filter, the receipt window fills in an empty name.
+    lineItemNames = lineItemNames.filter((entry) => entry.itemName.trim() !== '');
+    await saveReplacements({ itemRules, categoryRules, lineItemNames });
+  }
+
+  async function recordAndSaveLineItemNames(newEntries:LineItemName[]) {
+    lineItemNames = recordLineItemNames(lineItemNames, newEntries);
+    await saveAllReplacements();
   }
 
   function deleteTransactionGroup(group:TransactionGroup) {
@@ -99,6 +114,7 @@
     const replacements:Replacements = await loadReplacements();
     itemReplacements = toItemReplacements(replacements.itemRules);
     categoryRules = replacements.categoryRules;
+    lineItemNames = replacements.lineItemNames;
 
     buildTransactionGroups();
   })();
@@ -118,7 +134,9 @@
   <ReplacementsSection
     itemReplacements={itemReplacements}
     categoryRules={categoryRules}
+    lineItemNames={lineItemNames}
     onApplyRules={applyRules}
+    onSaveLineItemNames={saveAllReplacements}
   />
 
   {#if transactionGroups === undefined}
@@ -130,7 +148,9 @@
       <EditorSection
         transactionGroups={transactionGroups}
         categoryRules={categoryRules}
+        lineItemNames={lineItemNames}
         {initialSelectedGroup}
+        onrecordlineitemnames={recordAndSaveLineItemNames}
         ondelete={deleteTransactionGroup}
       />
     {/key}
