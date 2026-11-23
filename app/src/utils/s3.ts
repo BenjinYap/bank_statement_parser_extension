@@ -9,13 +9,25 @@ async function createClient():Promise<S3Client> {
 
 export async function putObject(key:string, body:string) {
   const client:S3Client = await createClient();
-  const command:PutObjectCommand = new PutObjectCommand({ Bucket: S3_BUCKET, Key: key, Body: body });
+  // S3 stores this header with the object, so that the browser checks with S3 before it uses a cached copy.
+  const command:PutObjectCommand = new PutObjectCommand({
+    Bucket: S3_BUCKET,
+    Key: key,
+    Body: body,
+    CacheControl: 'no-cache',
+  });
   await client.send(command);
 }
 
 export async function getObject(key:string):Promise<string> {
   const client:S3Client = await createClient();
-  const command:GetObjectCommand = new GetObjectCommand({ Bucket: S3_BUCKET, Key: key });
+  // The SDK sends the same URL on each read, so without this the browser can return an old cached response.
+  // This value also goes into the URL, so the browser does not use cache entries from before this change.
+  const command:GetObjectCommand = new GetObjectCommand({
+    Bucket: S3_BUCKET,
+    Key: key,
+    ResponseCacheControl: 'no-cache',
+  });
   const response:GetObjectCommandOutput = await client.send(command);
   if (response.Body === undefined) {
     throw new Error(`The S3 object "${key}" has no body.`);
