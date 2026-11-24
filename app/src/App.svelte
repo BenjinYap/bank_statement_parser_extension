@@ -12,6 +12,7 @@
   import ReplacementsSection from './components/ReplacementsSection/ReplacementsSection.svelte';
   import CredentialsWindow from './components/CredentialsWindow/CredentialsWindow.svelte';
   import RowSortingWindow from './components/RowSortingWindow/RowSortingWindow.svelte';
+  import ReplacementsWindow from './components/ReplacementsWindow/ReplacementsWindow.svelte';
 
   const DEV_DATE_FROM = new Date('Sep 10, 2024');
   const isDevMode = !chrome.runtime;
@@ -64,7 +65,12 @@
     await saveAllReplacements();
   }
 
-  // Saves the Categories and Items tables as they are, including edits that were not applied.
+  async function applyCategoryRules(rules:Rule[]) {
+    categoryRules = rules;
+    await applyRules();
+  }
+
+  // Saves the category rules and the Items table as they are, including Items edits that were not applied.
   // Also removes the line item entries that have an empty item name.
   async function saveAllReplacements() {
     // Without this filter, the receipt window fills in an empty name.
@@ -128,12 +134,15 @@
 <div class="max-w-6xl mx-auto w-full py-4 flex flex-col gap-2">
   <div class="flex flex-col gap-2 fixed left-4 top-4 w-[300px]">
     <CredentialsWindow />
+    <ReplacementsWindow
+      categoryRules={categoryRules}
+      onApplyCategoryRules={applyCategoryRules}
+    />
     <RowSortingWindow />
   </div>
 
   <ReplacementsSection
     itemReplacements={itemReplacements}
-    categoryRules={categoryRules}
     lineItemNames={lineItemNames}
     onApplyRules={applyRules}
     onSaveLineItemNames={saveAllReplacements}
