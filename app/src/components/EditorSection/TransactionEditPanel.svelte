@@ -8,8 +8,28 @@
   import Section from "../common/Section.svelte";
   import Heading from "../common/Heading.svelte";
   import Button from "../common/Button.svelte";
-  import TransactionEditShortcutPanel from "./TransactionEditShortcutPanel.svelte";
+  import ShortcutPanel from "../common/ShortcutPanel.svelte";
   import ReceiptWindow from "./ReceiptWindow/ReceiptWindow.svelte";
+  import { KEY_CTRL, KEY_ENTER, KEY_MINUS, KEY_PLUS, KEY_S, KEY_SHIFT, type Shortcut } from "../../utils/shortcuts";
+
+  const SHORTCUTS:Shortcut[] = [
+    {
+      keys: [KEY_CTRL, KEY_PLUS],
+      actionName: 'Add new transaction',
+    },
+    {
+      keys: [KEY_CTRL, KEY_MINUS],
+      actionName: 'Subtract from first transaction',
+    },
+    {
+      keys: [KEY_SHIFT, KEY_ENTER],
+      actionName: 'Commit amount without tax',
+    },
+    {
+      keys: [KEY_CTRL, KEY_S],
+      actionName: 'Save transaction',
+    },
+  ];
 
   interface Props {
     selectedGroup: TransactionGroup;
@@ -111,7 +131,9 @@
     </div>
   </Section>
 
-  <TransactionEditShortcutPanel />
+  <div class="absolute top-0 left-[calc(100%+var(--spacing)*4+6px)]">
+    <ShortcutPanel shortcuts={SHORTCUTS} />
+  </div>
 
   {#if receiptWindowOpen}
     <ReceiptWindow
