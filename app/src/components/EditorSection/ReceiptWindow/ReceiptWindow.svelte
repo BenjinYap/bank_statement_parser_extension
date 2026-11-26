@@ -4,9 +4,10 @@
   import type { LineItemResult } from '../../../utils/textract';
   import { findItemName, isSameLineItem, type LineItemName } from '../../../utils/replacements/lineItems';
   import Section from '../../common/Section.svelte';
-  import BlockEditorShortcuts from '../../common/BlockEditorShortcuts.svelte';
+  import ShortcutPanel from '../../common/ShortcutPanel.svelte';
   import ReceiptEditor from './ReceiptEditor.svelte';
   import ReceiptSummary from './ReceiptSummary.svelte';
+  import { registerShortcutScope, type Shortcut } from '../../../utils/shortcuts';
 
   interface Props {
     // Fills in the item names of line items that were named on an earlier receipt.
@@ -18,6 +19,11 @@
   }
 
   let props:Props = $props();
+
+  // The scope is empty, but it still makes the editor shortcuts inactive while the window is open.
+  const SHORTCUTS:Shortcut[] = [];
+
+  $effect(() => registerShortcutScope(SHORTCUTS));
 
   let lineItems:LineItemResult[] = $state([]);
   // Maps a line item index to its item name. Line items without a name are not in the map.
@@ -63,26 +69,31 @@
   }
 </script>
 
-<BlockEditorShortcuts />
-
 <div class="fixed inset-0 z-10 flex items-center justify-center p-2 bg-black/70">
-  <Section
-    title="Scan Receipt"
-    className="flex flex-col h-full bg-surface-950"
-    bodyClassName="flex flex-col flex-1 min-h-0"
-  >
-    <div class="flex gap-2 flex-1 min-h-0">
-      <ReceiptEditor
-        itemNames={itemNames}
-        onname={setItemName}
-        onlineitemschange={setLineItemsAndFillNames}
-      />
-      <ReceiptSummary
-        lineItems={lineItems}
-        itemNames={itemNames}
-        onapply={apply}
-        oncancel={props.onclose}
-      />
+  <!-- The wrapper is the anchor of the shortcut panel. The window alone stays at the center of the screen. -->
+  <div class="relative flex flex-col h-full">
+    <Section
+      title="Scan Receipt"
+      className="flex flex-col flex-1 min-h-0 bg-surface-950"
+      bodyClassName="flex flex-col flex-1 min-h-0"
+    >
+      <div class="flex gap-2 flex-1 min-h-0">
+        <ReceiptEditor
+          itemNames={itemNames}
+          onname={setItemName}
+          onlineitemschange={setLineItemsAndFillNames}
+        />
+        <ReceiptSummary
+          lineItems={lineItems}
+          itemNames={itemNames}
+          onapply={apply}
+          oncancel={props.onclose}
+        />
+      </div>
+    </Section>
+
+    <div class="absolute top-1/2 left-[calc(100%+var(--spacing)*2)] -translate-y-1/2 rounded-md bg-surface-950">
+      <ShortcutPanel shortcuts={SHORTCUTS} />
     </div>
-  </Section>
+  </div>
 </div>

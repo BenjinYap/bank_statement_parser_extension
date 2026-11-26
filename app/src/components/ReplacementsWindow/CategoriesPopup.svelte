@@ -2,11 +2,10 @@
   import type { Rule } from '../../utils/replacements/engine';
   import Section from '../common/Section.svelte';
   import Button from '../common/Button.svelte';
-  import BlockEditorShortcuts from '../common/BlockEditorShortcuts.svelte';
   import ShortcutPanel from '../common/ShortcutPanel.svelte';
   import CategoriesTable from './CategoriesTable.svelte';
   import { portal } from '../../utils/portal';
-  import type { Shortcut } from '../../utils/shortcuts';
+  import { registerShortcutScope, type Shortcut } from '../../utils/shortcuts';
 
   type Props = {
     rules:Rule[];
@@ -16,7 +15,10 @@
 
   let props:Props = $props();
 
+  // The scope is empty, but it still makes the editor shortcuts inactive while the popup is open.
   const SHORTCUTS:Shortcut[] = [];
+
+  $effect(() => registerShortcutScope(SHORTCUTS));
 
   // The popup edits a copy, so Close discards the edits. Only Apply gives the rules to the parent.
   let rules:Rule[] = $state($state.snapshot(props.rules));
@@ -26,8 +28,6 @@
     props.onclose();
   }
 </script>
-
-<BlockEditorShortcuts />
 
 <div
   class="fixed inset-0 z-10 flex items-center justify-center p-2 bg-black/70"

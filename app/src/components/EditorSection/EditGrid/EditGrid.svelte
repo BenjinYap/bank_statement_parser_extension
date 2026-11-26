@@ -32,7 +32,8 @@
     }
   });
 
-  function addTransaction() {
+  // Exported for the edit panel shortcuts.
+  export function addTransaction() {
     const previousTransaction = props.editTransactions.at(-1);
     const category = previousTransaction?.category ?? '';
     props.editTransactions.push({ category, item: '', amount: 0 });
@@ -56,26 +57,19 @@
     subtracting = false;
   }
 
-  function handleKeydown(event:KeyboardEvent) {
-    if (!event.ctrlKey) {
+  // Exported for the edit panel shortcuts. If the subtract row already shows, this focuses it.
+  export function subtract() {
+    if (subtracting) {
+      subtractRow?.focus();
+      return;
+    }
+    if (props.editTransactions.length === 0) {
       return;
     }
 
-    if (event.key === '+' || event.key === '=') {
-      event.preventDefault();
-      addTransaction();
-    } else if (event.key === '-') {
-      event.preventDefault();
-      if (subtracting) {
-        subtractRow?.focus();
-      } else if (props.editTransactions.length > 0) {
-        subtracting = true;
-      }
-    }
+    subtracting = true;
   }
 </script>
-
-<svelte:window onkeydown={handleKeydown} />
 
 <table class="border-3 border-surface-900">
   <thead>

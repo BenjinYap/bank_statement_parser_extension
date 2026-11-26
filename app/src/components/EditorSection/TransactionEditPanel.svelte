@@ -10,26 +10,7 @@
   import Button from "../common/Button.svelte";
   import ShortcutPanel from "../common/ShortcutPanel.svelte";
   import ReceiptWindow from "./ReceiptWindow/ReceiptWindow.svelte";
-  import { KEY_CTRL, KEY_ENTER, KEY_MINUS, KEY_PLUS, KEY_S, KEY_SHIFT, type Shortcut } from "../../utils/shortcuts";
-
-  const SHORTCUTS:Shortcut[] = [
-    {
-      keys: [KEY_CTRL, KEY_PLUS],
-      actionName: 'Add new transaction',
-    },
-    {
-      keys: [KEY_CTRL, KEY_MINUS],
-      actionName: 'Subtract from first transaction',
-    },
-    {
-      keys: [KEY_SHIFT, KEY_ENTER],
-      actionName: 'Commit amount without tax',
-    },
-    {
-      keys: [KEY_CTRL, KEY_S],
-      actionName: 'Save transaction',
-    },
-  ];
+  import { KEY_CTRL, KEY_ENTER, KEY_MINUS, KEY_PLUS, KEY_S, KEY_SHIFT, registerShortcutScope, type Shortcut } from "../../utils/shortcuts";
 
   interface Props {
     selectedGroup: TransactionGroup;
@@ -43,6 +24,32 @@
   let props:Props = $props();
   let editTransactions:EditTransaction[] = $state([]);
   let receiptWindowOpen:boolean = $state(false);
+  let editGrid:EditGrid|undefined = $state();
+
+  const SHORTCUTS:Shortcut[] = [
+    {
+      keys: [KEY_CTRL, KEY_PLUS],
+      actionName: 'Add new transaction',
+      action: () => editGrid?.addTransaction(),
+    },
+    {
+      keys: [KEY_CTRL, KEY_MINUS],
+      actionName: 'Subtract from first transaction',
+      action: () => editGrid?.subtract(),
+    },
+    {
+      // The amount inputs handle this key.
+      keys: [KEY_SHIFT, KEY_ENTER],
+      actionName: 'Commit amount without tax',
+    },
+    {
+      keys: [KEY_CTRL, KEY_S],
+      actionName: 'Save transaction',
+      action: save,
+    },
+  ];
+
+  $effect(() => registerShortcutScope(SHORTCUTS));
 
   $effect(() => {
     editTransactions = props.selectedGroup.current.map(t => ({
@@ -72,20 +79,7 @@
     }));
     receiptWindowOpen = false;
   }
-
-  function handleKeydown(event:KeyboardEvent) {
-    if (!event.ctrlKey) {
-      return;
-    }
-
-    if (event.key === 's') {
-      event.preventDefault();
-      save();
-    }
-  }
 </script>
-
-<svelte:window onkeydown={handleKeydown} />
 
 <div class="sticky top-2">
   <Section title="Edit Transaction">
@@ -111,7 +105,10 @@
 
       <Heading level={2}>Granular Transactions</Heading>
 
-      <EditGrid editTransactions={editTransactions} />
+      <EditGrid
+        bind:this={editGrid}
+        editTransactions={editTransactions}
+      />
 
       <Button
         variant="primary"
