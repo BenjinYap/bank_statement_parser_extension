@@ -9,7 +9,6 @@
   import type { ParsedTransaction } from './models/ParsedTransaction';
   import { createTransactionGroup } from './models/TransactionGroup';
   import EditorSection from './components/EditorSection/EditorSection.svelte';
-  import ReplacementsSection from './components/ReplacementsSection/ReplacementsSection.svelte';
   import CredentialsWindow from './components/CredentialsWindow/CredentialsWindow.svelte';
   import RowSortingWindow from './components/RowSortingWindow/RowSortingWindow.svelte';
   import ReplacementsWindow from './components/ReplacementsWindow/ReplacementsWindow.svelte';
@@ -70,8 +69,17 @@
     await applyRules();
   }
 
-  // Saves the category rules and the Items table as they are, including Items edits that were not applied.
-  // Also removes the line item entries that have an empty item name.
+  async function applyItemReplacements(newItemReplacements:ItemReplacement[]) {
+    itemReplacements = newItemReplacements;
+    await applyRules();
+  }
+
+  async function applyLineItemNames(newLineItemNames:LineItemName[]) {
+    lineItemNames = newLineItemNames;
+    await saveAllReplacements();
+  }
+
+  // Saves all the replacements. Also removes the line item entries that have an empty item name.
   async function saveAllReplacements() {
     // Without this filter, the receipt window fills in an empty name.
     lineItemNames = lineItemNames.filter((entry) => entry.itemName.trim() !== '');
@@ -136,17 +144,14 @@
     <CredentialsWindow />
     <ReplacementsWindow
       categoryRules={categoryRules}
+      itemReplacements={itemReplacements}
+      lineItemNames={lineItemNames}
       onApplyCategoryRules={applyCategoryRules}
+      onApplyItemReplacements={applyItemReplacements}
+      onApplyLineItemNames={applyLineItemNames}
     />
     <RowSortingWindow />
   </div>
-
-  <ReplacementsSection
-    itemReplacements={itemReplacements}
-    lineItemNames={lineItemNames}
-    onApplyRules={applyRules}
-    onSaveLineItemNames={saveAllReplacements}
-  />
 
   {#if transactionGroups === undefined}
     <div class="text-sm text-neutral-400">Loading...</div>

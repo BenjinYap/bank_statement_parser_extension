@@ -15,13 +15,13 @@
 
   let props:Props = $props();
 
+  // The popup edits a copy, so Close discards the edits. Only Apply gives the rules to the parent.
+  let rules:Rule[] = $state($state.snapshot(props.rules));
+
   // The scope is empty, but it still makes the editor shortcuts inactive while the popup is open.
   const SHORTCUTS:Shortcut[] = [];
 
   $effect(() => registerShortcutScope(SHORTCUTS));
-
-  // The popup edits a copy, so Close discards the edits. Only Apply gives the rules to the parent.
-  let rules:Rule[] = $state($state.snapshot(props.rules));
 
   async function apply() {
     await props.onapply(rules);
