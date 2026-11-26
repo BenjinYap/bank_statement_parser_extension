@@ -5,7 +5,7 @@
   import ShortcutPanel from '../common/ShortcutPanel.svelte';
   import ItemsTable from './ItemsTable.svelte';
   import { portal } from '../../utils/portal';
-  import { registerShortcutScope, type Shortcut } from '../../utils/shortcuts';
+  import { KEY_CTRL, KEY_ESCAPE, KEY_S, registerShortcutScope, type Shortcut } from '../../utils/shortcuts';
 
   type Props = {
     itemReplacements:ItemReplacement[];
@@ -15,15 +15,26 @@
 
   let props:Props = $props();
 
-  // The popup edits a copy, so Close discards the edits. Only Apply gives the replacements to the parent.
+  // The popup edits a copy, so Close discards the edits. Only Save gives the replacements to the parent.
   let itemReplacements:ItemReplacement[] = $state($state.snapshot(props.itemReplacements));
 
-  // The scope is empty, but it still makes the editor shortcuts inactive while the popup is open.
-  const SHORTCUTS:Shortcut[] = [];
+  // The scope also makes the editor shortcuts inactive while the popup is open.
+  const SHORTCUTS:Shortcut[] = [
+    {
+      keys: [KEY_CTRL, KEY_S],
+      actionName: 'Save',
+      action: save,
+    },
+    {
+      keys: [KEY_ESCAPE],
+      actionName: 'Close',
+      action: () => props.onclose(),
+    },
+  ];
 
   $effect(() => registerShortcutScope(SHORTCUTS));
 
-  async function apply() {
+  async function save() {
     await props.onapply(itemReplacements);
     props.onclose();
   }
@@ -46,9 +57,9 @@
         <Button
           className="w-full"
           variant="primary"
-          onclick={apply}
+          onclick={save}
         >
-          Apply
+          Save
         </Button>
         <Button
           className="w-full"

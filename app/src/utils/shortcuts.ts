@@ -13,6 +13,7 @@ export type Shortcut = {
 export const KEY_CTRL:Key = { label: 'Ctrl', modifier: 'ctrlKey' };
 export const KEY_SHIFT:Key = { label: 'Shift', modifier: 'shiftKey' };
 export const KEY_ENTER:Key = { label: 'Enter', values: ['Enter'] };
+export const KEY_ESCAPE:Key = { label: 'Esc', values: ['Escape'] };
 export const KEY_S:Key = { label: 'S', values: ['s'] };
 // '=' is the same physical key as '+' without Shift.
 export const KEY_PLUS:Key = { label: '+', values: ['+', '='] };
