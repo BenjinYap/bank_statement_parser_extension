@@ -33,7 +33,13 @@ function matches(event:KeyboardEvent, shortcut:Shortcut):boolean {
   });
 }
 
+// An element that handles a key calls preventDefault. Then the key is not also a shortcut.
+// For example, Escape in the item name input cancels the name and does not close the receipt window.
 function handleKeydown(event:KeyboardEvent) {
+  if (event.defaultPrevented) {
+    return;
+  }
+
   const activeScope:Shortcut[]|undefined = scopes.at(-1);
   const shortcut:Shortcut|undefined = activeScope?.find((candidate) => {
     return candidate.action !== undefined && matches(event, candidate);

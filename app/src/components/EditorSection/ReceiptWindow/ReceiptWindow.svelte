@@ -7,7 +7,8 @@
   import ShortcutPanel from '../../common/ShortcutPanel.svelte';
   import ReceiptEditor from './ReceiptEditor.svelte';
   import ReceiptSummary from './ReceiptSummary.svelte';
-  import { registerShortcutScope, type Shortcut } from '../../../utils/shortcuts';
+  import { toEditTransactions } from '../../../utils/receipts/group';
+  import { KEY_CTRL, KEY_ESCAPE, KEY_S, registerShortcutScope, type Shortcut } from '../../../utils/shortcuts';
 
   interface Props {
     // Fills in the item names of line items that were named on an earlier receipt.
@@ -20,14 +21,26 @@
 
   let props:Props = $props();
 
-  // The scope is empty, but it still makes the editor shortcuts inactive while the window is open.
-  const SHORTCUTS:Shortcut[] = [];
-
-  $effect(() => registerShortcutScope(SHORTCUTS));
-
   let lineItems:LineItemResult[] = $state([]);
   // Maps a line item index to its item name. Line items without a name are not in the map.
   const itemNames:SvelteMap<number, string> = new SvelteMap();
+  let rows:EditTransaction[] = $derived(toEditTransactions(lineItems, itemNames));
+
+  // The scope also makes the editor shortcuts inactive while the window is open.
+  const SHORTCUTS:Shortcut[] = [
+    {
+      keys: [KEY_CTRL, KEY_S],
+      actionName: 'Save',
+      action: save,
+    },
+    {
+      keys: [KEY_ESCAPE],
+      actionName: 'Close',
+      action: () => props.onclose(),
+    },
+  ];
+
+  $effect(() => registerShortcutScope(SHORTCUTS));
 
   // The names are keyed by index, so they do not fit new line items. The known names are filled in again.
   function setLineItemsAndFillNames(newLineItems:LineItemResult[]) {
@@ -60,7 +73,13 @@
     });
   }
 
-  function apply(rows:EditTransaction[]) {
+  // A name that is typed in the open item name input is not saved yet, so it is not in the rows.
+  function save() {
+    // Ctrl+S does nothing when there are no rows, the same as the disabled Save button.
+    if (rows.length === 0) {
+      return;
+    }
+
     const namedLineItems:LineItemName[] = Array.from(itemNames, ([index, itemName]) => ({
       lineItem: lineItems[index].item.text,
       itemName,
@@ -84,10 +103,9 @@
           onlineitemschange={setLineItemsAndFillNames}
         />
         <ReceiptSummary
-          lineItems={lineItems}
-          itemNames={itemNames}
-          onapply={apply}
-          oncancel={props.onclose}
+          rows={rows}
+          onsave={save}
+          onclose={props.onclose}
         />
       </div>
     </Section>

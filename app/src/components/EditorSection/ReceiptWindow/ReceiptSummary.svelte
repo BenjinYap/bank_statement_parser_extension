@@ -1,22 +1,16 @@
 <script lang="ts">
   import type { EditTransaction } from '../../../models/EditTransaction';
-  import type { LineItemResult } from '../../../utils/textract';
-  import { toEditTransactions } from '../../../utils/receipts/group';
   import Button from '../../common/Button.svelte';
   import Heading from '../../common/Heading.svelte';
   import ReceiptSummaryTable from './ReceiptSummaryTable.svelte';
 
   interface Props {
-    lineItems:LineItemResult[];
-    // Maps a line item index to its item name. Line items without a name are not in the map.
-    itemNames:Map<number, string>;
-    onapply:(rows:EditTransaction[]) => void;
-    oncancel:() => void;
+    rows:EditTransaction[];
+    onsave:() => void;
+    onclose:() => void;
   }
 
   let props:Props = $props();
-
-  let rows:EditTransaction[] = $derived(toEditTransactions(props.lineItems, props.itemNames));
 </script>
 
 <div class="flex flex-col gap-2 min-w-xs">
@@ -25,19 +19,19 @@
   >
     Summary
   </Heading>
-  <ReceiptSummaryTable rows={rows} />
+  <ReceiptSummaryTable rows={props.rows} />
   <Button
     variant="primary"
     className="disabled:opacity-50 disabled:cursor-not-allowed"
-    disabled={rows.length === 0}
-    onclick={() => props.onapply(rows)}
+    disabled={props.rows.length === 0}
+    onclick={props.onsave}
   >
-    Apply
+    Save
   </Button>
   <Button
     variant="unfilled"
-    onclick={props.oncancel}
+    onclick={props.onclose}
   >
-    Cancel
+    Close
   </Button>
 </div>
