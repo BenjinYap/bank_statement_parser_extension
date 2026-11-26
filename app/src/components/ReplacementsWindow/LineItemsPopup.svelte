@@ -6,6 +6,7 @@
   import LineItemsTable from './LineItemsTable.svelte';
   import { portal } from '../../utils/portal';
   import { KEY_CTRL, KEY_ESCAPE, KEY_S, registerShortcutScope, type Shortcut } from '../../utils/shortcuts';
+  import { lockPageScroll } from '../../utils/scrollLock';
 
   type Props = {
     lineItemNames:LineItemName[];
@@ -33,6 +34,7 @@
   ];
 
   $effect(() => registerShortcutScope(SHORTCUTS));
+  $effect(() => lockPageScroll());
 
   async function save() {
     await props.onapply(lineItemNames);

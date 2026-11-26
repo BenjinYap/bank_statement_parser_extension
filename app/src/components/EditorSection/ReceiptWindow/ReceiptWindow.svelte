@@ -9,6 +9,7 @@
   import ReceiptSummary from './ReceiptSummary.svelte';
   import { toEditTransactions } from '../../../utils/receipts/group';
   import { KEY_CTRL, KEY_ESCAPE, KEY_S, registerShortcutScope, type Shortcut } from '../../../utils/shortcuts';
+  import { lockPageScroll } from '../../../utils/scrollLock';
 
   interface Props {
     // Fills in the item names of line items that were named on an earlier receipt.
@@ -41,6 +42,7 @@
   ];
 
   $effect(() => registerShortcutScope(SHORTCUTS));
+  $effect(() => lockPageScroll());
 
   // The names are keyed by index, so they do not fit new line items. The known names are filled in again.
   function setLineItemsAndFillNames(newLineItems:LineItemResult[]) {

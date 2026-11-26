@@ -27,6 +27,11 @@
 }
 
 @layer base {
+  /* An overlay hides the page scrollbar. The gutter keeps its space, so the page content does not move. */
+  html {
+    scrollbar-gutter: stable;
+  }
+
   body {
     @apply bg-gray-950 text-sm text-neutral-300;
     font-family: 'Segoe UI', sans-serif;
